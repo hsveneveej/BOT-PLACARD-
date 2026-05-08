@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>🔥 Bot EarPlane - Sinais em Tempo Real</title>
+    <style>
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-secondary: #12163a;
+            --accent: #00d4aa;
+            --accent2: #ff4757;
+            --text: #ffffff;
+            --text-secondary: #8b8fa8;
+            --gold: #ffd700;
+            --green: #00ff88;
+            --red: #ff4757;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(180deg, #0a0e27 0%, #12163a 100%);
+            min-height: 100vh;
+            color: var(--text);
+            overflow-x: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(0, 212, 170, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 170, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 15px;
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+        }
+
+        /* ===== TELA DE START (CAMADA 1) ===== */
+        .start-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .start-logo {
+            font-size: 3em;
+            font-weight: 900;
+            letter-spacing: 5px;
+            background: linear-gradient(45deg, #00d4aa, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            animation: glow 2s infinite;
+            cursor: pointer;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        .start-subtitle {
+            color: #8b8fa8;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .btn-start {
+            background: linear-gradient(45deg, #00d4aa, #00ff88);
+            color: #000;
+            border: none;
+            padding: 20px 50px;
+            border-radius: 50px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 2px;
+            animation: pulse-btn 2s infinite;
+            text-transform: uppercase;
+            width: 100%;
+            max-width: 350px;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes pulse-btn {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 212, 170, 0.3); }
+            50% { box-shadow: 0 0 50px rgba(0, 212, 170, 0.6); }
+        }
+
+        .btn-start:hover {
+            transform: scale(1.05);
+        }
+
+        .start-icons {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0;
+            font-size: 2.5em;
+        }
+
+        .start-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .start-icon:nth-child(2) { animation-delay: 0.5s; }
+        .start-icon:nth-child(3) { animation-delay: 1s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* ===== CAMADA 2 - OVERLAY COM BOTÃO CRIAR CONTA ===== */
+        .overlay-criar-conta {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .overlay-criar-conta.active {
+            display: flex;
+        }
+
+        .modal-criar-conta {
+            background: linear-gradient(135deg, #0d1137, #1a1f4e);
+            border: 2px solid #ffd700;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            animation: slideUp 0.5s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-criar-conta .icone-cadeado {
+            font-size: 4em;
+            display: block;
+            margin-bottom: 15px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .modal-criar-conta h2 {
+            color: #ffd700;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .modal-criar-conta .texto-modal {
+            color: #8b8fa8;
+            font-size: 0.95em;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .contador-fake-modal {
+            background: rgba(255, 71, 87, 0.1);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 20px;
+            animation: pulse-border 2s infinite;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { border-color: rgba(255, 71, 87, 0.3); }
+            50% { border-color: rgba(255, 71, 87, 0.8); }
+        }
+
+        .contador-fake-modal .numero-pessoas-modal {
+            font-size: 1.8em;
+            font-weight: 900;
+            color: #ff4757;
+            display: block;
+        }
+
+        .contador-fake-modal .texto-pessoas-modal {
+            color: #ff6b81;
+            font-size: 0.85em;
+        }
+
+        .btn-criar-conta-modal {
+            display: block;
+            width: 100%;
+            background: linear-gradient(45deg, #ff4757, #ff6b81);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            letter-spacing: 1px;
+            animation: pulse-btn-red 2s infinite;
+            text-decoration: none;
+            box-shadow: 0 10px 40px rgba(255, 71, 87, 0.5);
+            margin-bottom: 15px;
+        }
+
+        .btn-criar-conta-modal::before {
+            content: '🔒 ';
+        }
+
+        .btn-criar-conta-modal:hover {
+            transform: scale(0.98);
+        }
+
+        @keyframes pulse-btn-red {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 71, 87, 0.3); }
+            50% { box-shadow: 0 0 50px rgba(255, 71, 87, 0.6); }
+        }
+
+        .texto-urgente-modal {
+            color: #ffd700;
+            font-size: 0.85em;
+            animation: piscar 1.5s infinite;
+            margin-bottom: 10px;
+        }
+
+        @keyframes piscar {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .btn-fechar-modal {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #8b8fa8;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+
+        .btn-fechar-modal:hover {
+            border-color: #ff4757;
+            color: #ff4757;
+        }
+
+        .vantagens-modal {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .vantagem-item {
+            color: #00ff88;
+            font-size: 0.9em;
+        }
+
+        .vantagem-item::before {
+            content: '✅ ';
+        }
+
+        /* ===== HOME SCREEN ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: 900;
+            letter-spacing: 3px;
+            background: linear-gradient(45deg, #00d4aa, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .status-badge {
+            background: rgba(0, 212, 170, 0.1);
+            border: 1px solid rgba(0, 212, 170, 0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: var(--accent);
+        }
+
+        .bot-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .bot-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pulse-dot {
+            width: 10px;
+            height: 10px;
+            background: #00ff88;
+            border-radius: 50%;
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.8); opacity: 0.5; }
+        }
+
+        .next-signal {
+            color: var(--gold);
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        #countdown {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.9em;
+        }
+
+        .game-interface {
+            background: linear-gradient(180deg, #0d1137 0%, #1a1f4e 100%);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .game-title {
+            text-align: center;
+            font-size: 2em;
+            font-weight: 900;
+            letter-spacing: 5px;
+            color: #00d4aa;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(0, 212, 170, 0.5);
+        }
+
+        .multipliers-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            filter: blur(6px);
+            -webkit-filter: blur(6px);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .multiplier-badge {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.1em;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .multiplier-badge.high {
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid rgba(0, 255, 136, 0.5);
+            color: #00ff88;
+        }
+
+        .multiplier-badge.medium {
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            color: #ffd700;
+        }
+
+        .multiplier-badge.low {
+            background: rgba(255, 71, 87, 0.2);
+            border: 1px solid rgba(255, 71, 87, 0.5);
+            color: #ff4757;
+        }
+
+        @keyframes fadeInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .chart-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .chart-area {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            overflow: hidden;
+            filter: blur(8px);
+            -webkit-filter: blur(8px);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .candle {
+            flex: 1;
+            background: linear-gradient(180deg, #00ff88 0%, #00d4aa 100%);
+            border-radius: 4px 4px 0 0;
+            animation: growUp 0.5s ease;
+            min-height: 20px;
+        }
+
+        .candle.red {
+            background: linear-gradient(180deg, #ff4757 0%, #ff6b81 100%);
+        }
+
+        @keyframes growUp {
+            from { height: 0; }
+        }
+
+        .multiplier-display {
+            text-align: center;
+            font-size: 3em;
+            font-weight: 900;
+            color: #00ff88;
+            margin: 15px 0;
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            filter: blur(5px);
+            -webkit-filter: blur(5px);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .signal-alert {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid rgba(255, 215, 0, 0.4);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            filter: blur(10px);
+            -webkit-filter: blur(10px);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .signal-time {
+            font-size: 2.5em;
+            font-weight: 900;
+            color: #ffd700;
+            margin: 10px 0;
+        }
+
+        .signal-info {
+            color: #8b8fa8;
+            font-size: 0.9em;
+        }
+
+        .btn-sinal {
+            display: block;
+            width: 100%;
+            background: linear-gradient(45deg, #00d4aa, #00ff88);
+            color: #000;
+            border: none;
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 0;
+            letter-spacing: 1px;
+            filter: blur(0);
+            -webkit-filter: blur(0);
+        }
+
+        .btn-sinal:hover {
+            opacity: 0.9;
+            transform: scale(0.98);
+        }
+
+        .btn-cadastrar-wrapper {
+            position: relative;
+            margin: -60px 0 15px 0;
+            z-index: 10;
+        }
+
+        .btn-cadastrar {
+            display: block;
+            width: 100%;
+            background: linear-gradient(45deg, #ff4757, #ff6b81);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            letter-spacing: 1px;
+            animation: pulse-btn 2s infinite;
+            text-decoration: none;
+            box-shadow: 0 10px 40px rgba(255, 71, 87, 0.5);
+            filter: blur(0);
+            -webkit-filter: blur(0);
+        }
+
+        .btn-cadastrar::before {
+            content: '🔒';
+            margin-right: 8px;
+        }
+
+        .btn-cadastrar:hover {
+            transform: scale(0.98);
+        }
+
+        .texto-sobre-botao {
+            text-align: center;
+            color: #ffd700;
+            font-size: 0.85em;
+            margin-bottom: 5px;
+            animation: piscar 1.5s infinite;
+        }
+
+        .info-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .info-box p {
+            color: #ffd700;
+            font-size: 0.9em;
+            margin: 5px 0;
+        }
+
+        .contador-fake {
+            text-align: center;
+            background: rgba(255, 71, 87, 0.1);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            margin: 15px 0;
+            animation: pulse-border 2s infinite;
+        }
+
+        .contador-fake .icone-pessoas {
+            font-size: 1.5em;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .contador-fake .numero-pessoas {
+            font-size: 2em;
+            font-weight: 900;
+            color: #ff4757;
+            display: block;
+        }
+
+        .contador-fake .texto-pessoas {
+            color: #ff6b81;
+            font-size: 0.85em;
+        }
+
+        .footer {
+            text-align: center;
+            color: #8b8fa8;
+            font-size: 0.75em;
+            margin-top: 20px;
+            padding: 10px;
+            opacity: 0.7;
+        }
+
+        /* ===== PAINEL ADMIN ===== */
+        .admin-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+        }
+
+        .admin-overlay.active {
+            display: flex;
+        }
+
+        .admin-panel {
+            background: linear-gradient(135deg, #0d1137, #1a1f4e);
+            border: 2px solid #ffd700;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .admin-panel h2 {
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .admin-panel label {
+            display: block;
+            color: #8b8fa8;
+            margin: 10px 0 5px 0;
+        }
+
+        .admin-panel input {
+            width: 100%;
+            padding: 12px;
+            margin: 5px 0 15px 0;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 1em;
+            outline: none;
+        }
+
+        .admin-panel input:focus {
+            border-color: #00d4aa;
+        }
+
+        .admin-stats {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .admin-stats h3 {
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #8b8fa8;
+        }
+
+        .stat-value {
+            color: #00ff88;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .btn-salvar {
+            width: 100%;
+            background: #00d4aa;
+            color: #000;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+
+        .btn-salvar:hover {
+            opacity: 0.9;
+        }
+
+        .btn-fechar-admin {
+            width: 100%;
+            background: transparent;
+            color: #ff4757;
+            border: 1px solid #ff4757;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+
+        .btn-reset {
+            width: 100%;
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+
+        .aviso-venda {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0;
+            color: #ffd700;
+            font-size: 0.85em;
+            text-align: center;
+        }
+
+        .lock-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3em;
+            z-index: 5;
+            pointer-events: none;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 10px; }
+            .game-interface { padding: 15px; }
+            .multiplier-display { font-size: 2em; }
+            .signal-time { font-size: 2em; }
+            .admin-panel { padding: 20px; }
+            .btn-cadastrar-wrapper { margin: -40px 0 15px 0; }
+            .contador-fake .numero-pessoas { font-size: 1.5em; }
+            .btn-start { padding: 18px 30px; font-size: 1.1em; }
+            .modal-criar-conta { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== CAMADA 1: TELA DE START ========== -->
+    <div class="start-screen" id="start-screen">
+        <div class="start-icons">
+            <span class="start-icon">🎯</span>
+            <span class="start-icon">📊</span>
+            <span class="start-icon">💰</span>
+        </div>
+        <div class="start-logo" id="start-logo-trigger">EARPLANE</div>
+        <p class="start-subtitle">🔥 Sinais em Tempo Real para Placard</p>
+        <p class="start-subtitle">Precisão de 92% • Resultados Comprovados</p>
+        
+        <!-- CONTADOR FAKE NA TELA DE START -->
+        <div class="contador-fake">
+            <span class="icone-pessoas">👥</span>
+            <span class="numero-pessoas" id="contador-fake-start">0</span>
+            <span class="texto-pessoas">pessoas estão usando agora</span>
+        </div>
+        
+        <!-- BOTÃO START - ABRE A CAMADA 2 -->
+        <button class="btn-start" onclick="abrirCamadaCriarConta()">
+            🚀 COMEÇAR AGORA
+        </button>
+    </div>
+
+    <!-- ========== CAMADA 2: OVERLAY COM BOTÃO CRIAR CONTA ========== -->
+    <div class="overlay-criar-conta" id="overlay-criar-conta">
+        <div class="modal-criar-conta">
+            <span class="icone-cadeado">🔒</span>
+            <h2>SINAIS BLOQUEADOS</h2>
+            <p class="texto-modal">
+                Para acessar os sinais em tempo real,<br>
+                crie sua conta na <strong style="color:#ffd700;">Placard</strong> agora mesmo!
+            </p>
+
+            <div class="vantagens-modal">
+                <div class="vantagem-item">Sinais com 92% de precisão</div>
+                <div class="vantagem-item">Atualização em tempo real</div>
+                <div class="vantagem-item">Suporte 24 horas</div>
+                <div class="vantagem-item">Cadastro 100% gratuito</div>
+            </div>
+
+            <!-- CONTADOR FAKE NO MODAL -->
+            <div class="contador-fake-modal">
+                <span class="numero-pessoas-modal" id="contador-fake-modal">0</span>
+                <span class="texto-pessoas-modal">pessoas já criaram conta hoje</span>
+            </div>
+
+            <p class="texto-urgente-modal">🔒 DESBLOQUEIE SEUS SINAIS AGORA 🔒</p>
+
+            <!-- BOTÃO CRIAR CONTA -->
+            <a id="link-cadastrar-modal" href="#" class="btn-criar-conta-modal" target="_blank" onclick="incrementarClique()">
+                CRIAR CONTA NA PLACARD
+            </a>
+
+            <button class="btn-fechar-modal" onclick="fecharCamadaCriarConta()">
+                ❌ Fechar
+            </button>
+        </div>
+    </div>
+
+    <!-- ========== HOME SCREEN ========== -->
+    <div class="container" id="home-screen" style="display:none;">
+        <div class="header">
+            <div class="logo" id="logo-admin-trigger">EARPLANE</div>
+            <div class="status-badge">🔥 ONLINE</div>
+        </div>
+
+        <div class="bot-status">
+            <div class="bot-indicator">
+                <div class="pulse-dot"></div>
+                <span>Bot Ativo</span>
+            </div>
+            <div class="next-signal">
+                Próximo sinal: <span id="countdown">2:45</span>
+            </div>
+        </div>
+
+        <div class="game-interface">
+            <div class="game-title">EARPLANE</div>
+            
+            <div class="multipliers-row" id="recent-multipliers"></div>
+            
+            <div class="chart-wrapper">
+                <div class="chart-area" id="chart-area"></div>
+                <div class="lock-overlay">🔒</div>
+            </div>
+            
+            <div class="multiplier-display" id="current-multiplier">x 3.40</div>
+            
+            <div class="signal-alert">
+                <div class="signal-info">🟢 PRÓXIMO SINAL EM:</div>
+                <div class="signal-time" id="signal-time">00:00</div>
+                <div class="signal-info" id="signal-details"></div>
+            </div>
+
+            <button class="btn-sinal" onclick="mostrarSinal()">
+                👁️ VER SINAL COMPLETO
+            </button>
+
+            <div class="contador-fake">
+                <span class="icone-pessoas">👥</span>
+                <span class="numero-pessoas" id="contador-fake-home">0</span>
+                <span class="texto-pessoas">pessoas estão usando agora</span>
+            </div>
+
+            <div class="btn-cadastrar-wrapper">
+                <p class="texto-sobre-botao">🔒 DESBLOQUEIE OS SINAIS AGORA 🔒</p>
+                <a id="link-cadastrar-home" href="#" class="btn-cadastrar" target="_blank" onclick="incrementarClique()">
+                    CRIAR CONTA NA PLACARD
+                </a>
+            </div>
+
+            <div class="info-box">
+                <p>✅ Sinais desbloqueados após cadastro</p>
+                <p>🎯 Precisão de 92% nos sinais</p>
+                <p>💰 Ganhe dinheiro com apostas esportivas</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            © 2025 Bot EarPlane - Sinais automáticos para Placard
+        </div>
+    </div>
+
+    <!-- ========== PAINEL ADMIN ========== -->
+    <div class="admin-overlay" id="admin-overlay">
+        <div class="admin-panel">
+            <h2>🔧 PAINEL ADMINISTRADOR</h2>
+            
+            <label>🔗 LINK DA PLATAFORMA ONLINE:</label>
+            <input type="text" id="admin-link-plataforma" placeholder="Cole o link da plataforma online aqui...">
+            <small style="color:#8b8fa8;display:block;margin-top:-10px;margin-bottom:15px;">
+                Este link será usado em todos os botões "CRIAR CONTA NA PLACARD"
+            </small>
+            
+            <div class="aviso-venda">
+                ⚠️ Os sinais ficam embaçados até o usuário clicar no botão de cadastro
+            </div>
+
+            <div class="admin-stats">
+                <h3>📊 ESTATÍSTICAS REAIS (OCULTO DOS USUÁRIOS)</h3>
+                
+                <div class="stat-item">
+                    <span class="stat-label">👥 Visitas totais:</span>
+                    <span class="stat-value" id="admin-visitas">0</span>
+                </div>
+                
+                <div class="stat-item">
+                    <span class="stat-label">✅ Cliques no link:</span>
+                    <span class="stat-value" id="admin-cliques">0</span>
+                </div>
+                
+                <div class="stat-item">
+                    <span class="stat-label">📅 Visitas hoje:</span>
+                    <span class="stat-value" id="admin-visitas-hoje">0</span>
+                </div>
+                
+                <div class="stat-item">
+                    <span class="stat-label">🔗 Link atual:</span>
+                    <span class="stat-value" style="font-size:0.7em;word-break:break-all;" id="admin-link-atual">Não definido</span>
+                </div>
+            </div>
+
+            <div class="aviso-venda">
+                💡 Para vender este bot: entregue o arquivo HTML + a senha do painel admin
+            </div>
+            
+            <label>🔑 SENHA DO ADMIN (para revenda):</label>
+            <input type="text" id="admin-senha" placeholder="Defina uma senha para o painel admin...">
+            
+            <button class="btn-salvar" onclick="salvarConfigAdmin()">💾 SALVAR CONFIGURAÇÕES</button>
+            <button class="btn-reset" onclick="resetarContadores()">🔄 RESETAR CONTADORES</button>
+            <button class="btn-fechar-admin" onclick="fecharAdmin()">❌ FECHAR PAINEL</button>
+        </div>
+    </div>
+
+    <script>
+        // ==================== CONFIGURAÇÃO PADRÃO ====================
+        const CONFIG_PADRAO = {
+            linkPlataforma: 'https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723',
+            senhaAdmin: 'BOTPLACARD',
+            visitas: 0,
+            cliques: 0,
+            visitasHoje: 0,
+            dataHoje: new Date().toDateString()
+        };
+
+        // ==================== CARREGAR CONFIGURAÇÕES ====================
+        function carregarConfig() {
+            const configSalva = localStorage.getItem('earplane_config');
+            if (configSalva) {
+                try {
+                    const config = JSON.parse(configSalva);
+                    
+                    // Verifica se precisa resetar visitas do dia
+                    if (config.dataHoje !== new Date().toDateString()) {
+                        config.visitasHoje = 0;
+                        config.dataHoje = new Date().toDateString();
+                        localStorage.setItem('earplane_config', JSON.stringify(config));
+                    }
+                    
+                    return config;
+                } catch(e) {
+                    console.error('Erro ao carregar config:', e);
+                    return CONFIG_PADRAO;
+                }
+            } else {
+                localStorage.setItem('earplane_config', JSON.stringify(CONFIG_PADRAO));
+                return CONFIG_PADRAO;
+            }
+        }
+
+        let CONFIG = carregarConfig();
+
+        // ==================== APLICAR LINK DA PLATAFORMA ====================
+        function aplicarLinkPlataforma() {
+            const linkModal = document.getElementById('link-cadastrar-modal');
+            const linkHome = document.getElementById('link-cadastrar-home');
+            
+            if (linkModal) linkModal.href = CONFIG.linkPlataforma;
+            if (linkHome) linkHome.href = CONFIG.linkPlataforma;
+        }
+        
+        aplicarLinkPlataforma();
+
+        // ==================== CAMADAS SOBREPOSTAS ====================
+        function abrirCamadaCriarConta() {
+            document.getElementById('overlay-criar-conta').classList.add('active');
+            incrementarVisita();
+        }
+
+        function fecharCamadaCriarConta() {
+            document.getElementById('overlay-criar-conta').classList.remove('active');
+            // Vai para a home screen
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('home-screen').style.display = 'block';
+            initBot();
+        }
+
+        // ==================== CONTADOR FAKE ====================
+        function gerarNumeroFake() {
+            return Math.floor(Math.random() * (70000 - 15000 + 1)) + 15000;
+        }
+
+        function atualizarContadorFake() {
+            const numeroFake = gerarNumeroFake();
+            const formatado = numeroFake.toLocaleString('pt-BR');
+            
+            const fakeStart = document.getElementById('contador-fake-start');
+            const fakeHome = document.getElementById('contador-fake-home');
+            const fakeModal = document.getElementById('contador-fake-modal');
+            
+            if (fakeStart) fakeStart.textContent = formatado;
+            if (fakeHome) fakeHome.textContent = formatado;
+            if (fakeModal) fakeModal.textContent = formatado;
+        }
+
+        function iniciarContadorFake() {
+            atualizarContadorFake();
+            setInterval(() => {
+                atualizarContadorFake();
+            }, Math.floor(Math.random() * 5000) + 3000);
+        }
+
+        // ==================== CONTADORES REAIS ====================
+        function incrementarVisita() {
+            CONFIG.visitas++;
+            CONFIG.visitasHoje++;
+            localStorage.setItem('earplane_config', JSON.stringify(CONFIG));
+            atualizarContadoresAdmin();
+        }
+
+        function incrementarClique() {
+            CONFIG.cliques++;
+            localStorage.setItem('earplane_config', JSON.stringify(CONFIG));
+            atualizarContadoresAdmin();
+        }
+
+        function atualizarContadoresAdmin() {
+            const adminVisitas = document.getElementById('admin-visitas');
+            const adminCliques = document.getElementById('admin-cliques');
+            const adminVisitasHoje = document.getElementById('admin-visitas-hoje');
+            const adminLinkAtual = document.getElementById('admin-link-atual');
+            
+            if (adminVisitas) adminVisitas.textContent = CONFIG.visitas;
+            if (adminCliques) adminCliques.textContent = CONFIG.cliques;
+            if (adminVisitasHoje) adminVisitasHoje.textContent = CONFIG.visitasHoje;
+            if (adminLinkAtual) adminLinkAtual.textContent = CONFIG.linkPlataforma;
+        }
+
+        // ==================== NAVEGAÇÃO ====================
+        function mostrarSinal() {
+            if (!proximoSinal) {
+                alert('⏰ Aguardando próximo sinal...');
+                return;
+            }
+            
+            const agora = new Date();
+            const diff = proximoSinal.timestamp - agora.getTime();
+            
+            if (diff <= 0) {
+                gerarProximoSinal();
+                return;
+            }
+            
+            const minutos = Math.floor(diff / 60000);
+            const segundos = Math.floor((diff % 60000) / 1000);
+            const timeStr = `${minutos}:${segundos.toString().padStart(2, '0')}`;
+            
+            incrementarClique();
+            window.open(CONFIG.linkPlataforma, '_blank');
+            
+            alert(`🌹 Próximo sinal em: ${timeStr}\n\nMultiplicador previsto: ${proximoSinal.multiplicador}x\nConfiança: ${proximoSinal.confianca}%\n\n✅ Redirecionando para cadastro na Placard!`);
+        }
+
+        // ==================== ADMIN ====================
+        let clicksNoLogo = 0;
+        let cliqueTimer = null;
+
+        const logoTrigger = document.getElementById('logo-admin-trigger');
+        if (logoTrigger) {
+            logoTrigger.addEventListener('click', function(e) {
+                clicksNoLogo++;
+                if (cliqueTimer) clearTimeout(cliqueTimer);
+                cliqueTimer = setTimeout(() => { clicksNoLogo = 0; }, 3000);
+                if (clicksNoLogo >= 5) {
+                    clicksNoLogo = 0;
+                    abrirAdmin();
+                }
+            });
+        }
+
+        const startLogoTrigger = document.getElementById('start-logo-trigger');
+        if (startLogoTrigger) {
+            startLogoTrigger.addEventListener('click', function(e) {
+                clicksNoLogo++;
+                if (cliqueTimer) clearTimeout(cliqueTimer);
+                cliqueTimer = setTimeout(() => { clicksNoLogo = 0; }, 3000);
+                if (clicksNoLogo >= 5) {
+                    clicksNoLogo = 0;
+                    abrirAdmin();
+                }
+            });
+        }
+
+        function abrirAdmin() {
+            // Usa a senha salva ou a padrão "BOTPLACARD"
+            const senhaSalva = CONFIG.senhaAdmin || CONFIG_PADRAO.senhaAdmin;
+            const senha = prompt('🔑 Digite a senha do painel administrador:');
+            
+            if (!senha) return;
+            
+            // Verifica a senha (case sensitive)
+            if (senha === senhaSalva || senha === 'BOTPLACARD') {
+                document.getElementById('admin-overlay').classList.add('active');
+                document.getElementById('admin-link-plataforma').value = CONFIG.linkPlataforma;
+                document.getElementById('admin-senha').value = CONFIG.senhaAdmin || 'BOTPLACARD';
+                atualizarContadoresAdmin();
+            } else {
+                alert('❌ Senha incorreta!');
+            }
+        }
+
+        function fecharAdmin() {
+            document.getElementById('admin-overlay').classList.remove('active');
+        }
+
+        function salvarConfigAdmin() {
+            const novoLink = document.getElementById('admin-link-plataforma').value.trim();
+            const novaSenha = document.getElementById('admin-senha').value.trim();
+            
+            if (!novoLink) {
+                alert('⚠️ Por favor, insira o link da plataforma online!');
+                return;
+            }
+            
+            if (!novaSenha) {
+                alert('⚠️ Por favor, defina uma senha!');
+                return;
+            }
+            
+            CONFIG.linkPlataforma = novoLink;
+            CONFIG.senhaAdmin = novaSenha;
+            
+            localStorage.setItem('earplane_config', JSON.stringify(CONFIG));
+            
+            aplicarLinkPlataforma();
+            atualizarContadoresAdmin();
+            
+            alert('✅ Configurações salvas com sucesso!\n\nLink da plataforma atualizado em todos os botões!\nSenha: ' + novaSenha);
+        }
+
+        function resetarContadores() {
+            if (confirm('⚠️ Tem certeza que deseja resetar todos os contadores?')) {
+                if (confirm('⚠️ Esta ação não pode ser desfeita. Continuar?')) {
+                    CONFIG.visitas = 0;
+                    CONFIG.cliques = 0;
+                    CONFIG.visitasHoje = 0;
+                    CONFIG.dataHoje = new Date().toDateString();
+                    
+                    localStorage.setItem('earplane_config', JSON.stringify(CONFIG));
+                    atualizarContadoresAdmin();
+                    
+                    alert('✅ Contadores resetados com sucesso!');
+                }
+            }
+        }
+
+        // ==================== BOT DE SINAIS ====================
+        const MULTIPLICADORES = [1.39, 1.86, 2.16, 2.91, 3.40, 4.09, 5.99];
+        const VELAS = [
+            { altura: 60, cor: 'green' },
+            { altura: 40, cor: 'red' },
+            { altura: 80, cor: 'green' },
+            { altura: 30, cor: 'red' },
+            { altura: 70, cor: 'green' },
+            { altura: 90, cor: 'green' },
+            { altura: 50, cor: 'red' }
+        ];
+
+        let proximoSinal = null;
+        let countdownInterval = null;
+        let graficoInterval = null;
+        let multInterval = null;
+
+        function initBot() {
+            gerarProximoSinal();
+            atualizarGrafico();
+            atualizarMultiplicadores();
+            iniciarCountdown();
+            
+            if (graficoInterval) clearInterval(graficoInterval);
+            if (multInterval) clearInterval(multInterval);
+            
+            graficoInterval = setInterval(atualizarGrafico, 10000);
+            multInterval = setInterval(atualizarMultiplicadores, 15000);
+        }
+
+        function gerarProximoSinal() {
+            const agora = new Date();
+            const minutosAleatorios = Math.floor(Math.random() * 4) + 2;
+            const horarioSinal = new Date(agora.getTime() + minutosAleatorios * 60000);
+            const multiplicador = MULTIPLICADORES[Math.floor(Math.random() * MULTIPLICADORES.length)];
+            const confianca = Math.floor(Math.random() * 15) + 85;
+            
+            proximoSinal = {
+                horario: horarioSinal,
+                multiplicador: multiplicador,
+                confianca: confianca,
+                timestamp: horarioSinal.getTime()
+            };
+
+            atualizarTelaSinal();
+        }
+
+        function atualizarTelaSinal() {
+            if (!proximoSinal) return;
+            
+            const agora = new Date();
+            let diff = proximoSinal.timestamp - agora.getTime();
+            
+            if (diff <= 0) {
+                gerarProximoSinal();
+                return;
+            }
+            
+            const minutos = Math.floor(diff / 60000);
+            const segundos = Math.floor((diff % 60000) / 1000);
+            const timeStr = `${minutos}:${segundos.toString().padStart(2, '0')}`;
+            
+            const signalTime = document.getElementById('signal-time');
+            const signalDetails = document.getElementById('signal-details');
+            
+            if (signalTime) signalTime.textContent = timeStr;
+            if (signalDetails) {
+                signalDetails.innerHTML = `
+                    🎯 Previsão: <strong style="color:#00ff88;">${(proximoSinal.multiplicador - 1.5).toFixed(2)}x - ${(proximoSinal.multiplicador + 1.5).toFixed(2)}x</strong><br>
+                    <small>Confiança: ${proximoSinal.confianca}%</small>
+                `;
+            }
+        }
+
+        function atualizarGrafico() {
+            const chartArea = document.getElementById('chart-area');
+            if (!chartArea) return;
+            
+            let html = '';
+            for (let i = 0; i < 7; i++) {
+                const vela = VELAS[Math.floor(Math.random() * VELAS.length)];
+                html += `<div class="candle ${vela.cor === 'red' ? 'red' : ''}" style="height: ${vela.altura}%"></div>`;
+            }
+            chartArea.innerHTML = html;
+        }
+
+        function atualizarMultiplicadores() {
+            const container = document.getElementById('recent-multipliers');
+            if (!container) return;
+            
+            const multiplicadores = [...MULTIPLICADORES]
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 6);
+            
+            let html = '';
+            multiplicadores.forEach(mult => {
+                let classe = 'medium';
+                if (mult >= 3.40) classe = 'high';
+                else if (mult <= 1.86) classe = 'low';
+                
+                html += `<span class="multiplier-badge ${classe}">${mult.toFixed(2)}x</span>`;
+            });
+            container.innerHTML = html;
+            
+            const currentMult = document.getElementById('current-multiplier');
+            if (currentMult) {
+                const multAleatorio = MULTIPLICADORES[Math.floor(Math.random() * MULTIPLICADORES.length)];
+                currentMult.textContent = `x ${multAleatorio.toFixed(2)}`;
+            }
+        }
+
+        function iniciarCountdown() {
+            if (countdownInterval) clearInterval(countdownInterval);
+            
+            countdownInterval = setInterval(() => {
+                const countdownEl = document.getElementById('countdown');
+                if (!countdownEl) return;
+                
+                if (proximoSinal) {
+                    const agora = new Date();
+                    const diff = proximoSinal.timestamp - agora.getTime();
+                    
+                    if (diff <= 0) {
+                        gerarProximoSinal();
+                        return;
+                    }
+                    
+                    const minutos = Math.floor(diff / 60000);
+                    const segundos = Math.floor((diff % 60000) / 1000);
+                    countdownEl.textContent = `${minutos}:${segundos.toString().padStart(2, '0')}`;
+                    
+                    atualizarTelaSinal();
+                }
+            }, 1000);
+        }
+
+        // ==================== INICIALIZAÇÃO ====================
+        iniciarContadorFake();
+        atualizarContadoresAdmin();
+        
+        console.log('Bot EarPlane inicializado!');
+        console.log('Senha do admin: BOTPLACARD');
+        console.log('Toque 5x no título EARPLANE para acessar o painel admin');
+    </script>
+</body>
+</html>
