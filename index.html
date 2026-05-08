@@ -204,6 +204,68 @@
             line-height: 1.5;
         }
 
+        /* NOVO: BOT AVIATOR GRÁTIS */
+        .bot-aviator-gratis {
+            background: linear-gradient(45deg, #ffd700, #ffaa00);
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            animation: pulse-gold 2s infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bot-aviator-gratis::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: brilho 3s infinite;
+        }
+
+        @keyframes brilho {
+            0% { left: -50%; }
+            100% { left: 150%; }
+        }
+
+        @keyframes pulse-gold {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.6); }
+        }
+
+        .bot-aviator-gratis .titulo-aviator {
+            font-size: 1.1em;
+            color: #000;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .bot-aviator-gratis .subtitulo-aviator {
+            font-size: 1.4em;
+            color: #000;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        .bot-aviator-gratis .icone-aviator {
+            font-size: 2em;
+            position: relative;
+            z-index: 1;
+        }
+
         .contador-fake-modal {
             background: rgba(255, 71, 87, 0.1);
             border: 1px solid rgba(255, 71, 87, 0.3);
@@ -827,7 +889,7 @@
         
         <!-- BOTÃO START - ABRE A CAMADA 2 -->
         <button class="btn-start" onclick="abrirCamadaCriarConta()">
-            🚀 COMEÇAR AGORA
+            🚀 COMECAR AGORA
         </button>
     </div>
 
@@ -840,6 +902,13 @@
                 Para acessar os sinais em tempo real,<br>
                 crie sua conta na <strong style="color:#ffd700;">Placard</strong> agora mesmo!
             </p>
+
+            <!-- NOVO: BOT AVIATOR GRÁTIS (ONDE VOCÊ RABISCOU) -->
+            <div class="bot-aviator-gratis">
+                <div class="icone-aviator">✈️</div>
+                <div class="titulo-aviator">🎁 OFERTA EXCLUSIVA</div>
+                <div class="subtitulo-aviator">BOT AVIATOR GRÁTIS</div>
+            </div>
 
             <div class="vantagens-modal">
                 <div class="vantagem-item">Sinais com 92% de precisão</div>
@@ -1001,7 +1070,6 @@
                 try {
                     const config = JSON.parse(configSalva);
                     
-                    // Verifica se precisa resetar visitas do dia
                     if (config.dataHoje !== new Date().toDateString()) {
                         config.visitasHoje = 0;
                         config.dataHoje = new Date().toDateString();
@@ -1040,7 +1108,6 @@
 
         function fecharCamadaCriarConta() {
             document.getElementById('overlay-criar-conta').classList.remove('active');
-            // Vai para a home screen
             document.getElementById('start-screen').style.display = 'none';
             document.getElementById('home-screen').style.display = 'block';
             initBot();
@@ -1153,13 +1220,11 @@
         }
 
         function abrirAdmin() {
-            // Usa a senha salva ou a padrão "BOTPLACARD"
             const senhaSalva = CONFIG.senhaAdmin || CONFIG_PADRAO.senhaAdmin;
             const senha = prompt('🔑 Digite a senha do painel administrador:');
             
             if (!senha) return;
             
-            // Verifica a senha (case sensitive)
             if (senha === senhaSalva || senha === 'BOTPLACARD') {
                 document.getElementById('admin-overlay').classList.add('active');
                 document.getElementById('admin-link-plataforma').value = CONFIG.linkPlataforma;
@@ -1356,8 +1421,6 @@
         atualizarContadoresAdmin();
         
         console.log('Bot EarPlane inicializado!');
-        console.log('Senha do admin: BOTPLACARD');
-        console.log('Toque 5x no título EARPLANE para acessar o painel admin');
     </script>
 </body>
 </html>
