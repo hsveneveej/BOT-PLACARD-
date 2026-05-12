@@ -3,1817 +3,885 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>🔥 BOT AVIATOR - Sinais em Tempo Real</title>
+    <title>✈️ BOT AVIATOR - Sinais em Tempo Real</title>
     <style>
         :root {
-            --bg-primary: #0a0e27;
-            --bg-secondary: #12163a;
-            --accent: #00d4aa;
-            --accent2: #ff4757;
-            --text: #ffffff;
-            --text-secondary: #8b8fa8;
+            --bg: #0a0e27;
+            --bg-card: #111636;
+            --accent: #ff4757;
             --gold: #ffd700;
             --green: #00ff88;
             --red: #ff4757;
+            --text: #fff;
+            --text2: #8b8fa8;
+            --border: rgba(255,255,255,0.08);
+            --laranja: #ff8c00;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
 
         body {
-            background: linear-gradient(180deg, #0a0e27 0%, #12163a 100%);
-            min-height: 100vh;
+            background: var(--bg);
             color: var(--text);
-            overflow-x: hidden;
+            min-height: 100vh;
             user-select: none;
             -webkit-user-select: none;
             -webkit-tap-highlight-color: transparent;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                linear-gradient(rgba(0, 212, 170, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 212, 170, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            pointer-events: none;
-            z-index: 0;
+            overflow-x: hidden;
         }
 
         .container {
-            max-width: 480px;
+            max-width: 450px;
             margin: 0 auto;
-            padding: 15px;
-            position: relative;
-            z-index: 1;
+            padding: 8px;
             min-height: 100vh;
         }
 
-        /* ===== TELA DE START (CAMADA 1) ===== */
-        .start-screen {
+        .tela-inicial {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             text-align: center;
-            padding: 20px;
-            position: relative;
-            z-index: 1;
+            padding: 15px;
         }
 
-        .start-logo {
-            font-size: 3em;
-            font-weight: 900;
-            letter-spacing: 5px;
-            background: linear-gradient(45deg, #00d4aa, #00ff88);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            animation: glow 2s infinite;
-            cursor: pointer;
+        .logo-icone { font-size: 4em; animation: float 2.5s ease-in-out infinite; }
+        @keyframes float {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-18px); }
         }
 
-        @keyframes glow {
-            0%, 100% { filter: brightness(1); }
-            50% { filter: brightness(1.3); }
-        }
+        .titulo { font-size: 2.2em; font-weight: 900; letter-spacing: 3px; margin: 15px 0;
+            background: linear-gradient(45deg, #ffd700, #ffaa00);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .start-subtitle {
-            color: #8b8fa8;
-            font-size: 1.1em;
-            margin-bottom: 10px;
-        }
+        .subtitulo { color: var(--text2); font-size: 0.95em; margin: 4px 0; }
 
-        .btn-start {
-            background: linear-gradient(45deg, #00d4aa, #00ff88);
+        .contador-online {
+            background: rgba(255,71,87,0.1); border: 1px solid rgba(255,71,87,0.25);
+            border-radius: 10px; padding: 10px; margin: 12px 0; width: 100%; max-width: 320px; }
+        .contador-online .num { font-size: 1.6em; font-weight: 900; color: #ff4757; display: block; }
+        .contador-online .txt { color: #ff6b81; font-size: 0.78em; }
+
+        .btn-primario {
+            display: block; width: 100%; max-width: 320px;
+            background: linear-gradient(45deg, #ff4757, #ff6b81);
+            color: #fff; border: none; padding: 18px; border-radius: 50px;
+            font-size: 1.2em; font-weight: bold; cursor: pointer; letter-spacing: 1px;
+            margin: 8px 0; text-decoration: none; text-align: center;
+            animation: pulse 2s infinite; box-shadow: 0 8px 30px rgba(255,71,87,0.5); }
+        @keyframes pulse {
+            0%,100% { box-shadow: 0 0 20px rgba(255,71,87,0.3); }
+            50% { box-shadow: 0 0 50px rgba(255,71,87,0.6); } }
+
+        .btn-secundario {
+            display: block; width: 100%; max-width: 320px;
+            background: transparent; color: #ffd700; border: 2px solid #ffd700;
+            padding: 14px; border-radius: 50px; font-size: 1em; font-weight: bold;
+            cursor: pointer; letter-spacing: 1px; margin: 6px 0; transition: all 0.3s; }
+        .btn-secundario:hover { background: rgba(255,215,0,0.08); }
+
+        .btn-codigo {
+            display: block; width: 100%; max-width: 320px;
+            background: transparent; color: #00d4aa; border: 2px solid #00d4aa;
+            padding: 14px; border-radius: 50px; font-size: 1em; font-weight: bold;
+            cursor: pointer; letter-spacing: 1px; margin: 6px 0; transition: all 0.3s; }
+        .btn-codigo:hover { background: rgba(0,212,170,0.08); }
+
+        .painel { display: none; }
+        .painel.active { display: block; }
+
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 0; margin-bottom: 8px; gap: 8px; }
+        .logo-h { font-size: 1.2em; font-weight: 900; color: #ffd700; letter-spacing: 2px; cursor: pointer; }
+        .relogio {
+            background: rgba(0,0,0,0.4); border: 1px solid rgba(255,215,0,0.25);
+            border-radius: 6px; padding: 5px 10px; font-size: 0.75em; color: #ffd700;
+            text-align: center; white-space: nowrap; }
+        .relogio .hora { font-size: 1.1em; font-weight: bold; color: #fff; display: block; }
+
+        .aviator-box {
+            background: linear-gradient(180deg, #0d1137, #1a1f4e);
+            border-radius: 14px; padding: 10px; margin-bottom: 8px;
+            border: 1px solid var(--border); position: relative; }
+
+        .canvas-wrap {
+            position: relative; width: 100%; height: 180px;
+            background: rgba(0,0,0,0.5); border-radius: 10px; margin-bottom: 8px; overflow: hidden; }
+        canvas { width: 100%; height: 100%; display: block; }
+
+        .mult-grande {
+            position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+            font-size: 2.2em; font-weight: 900; color: #00ff88;
+            text-shadow: 0 0 25px rgba(0,255,136,0.7); z-index: 5; pointer-events: none; }
+        .mult-grande.estourou { color: #ff4757; animation: shake 0.4s ease; }
+        @keyframes shake {
+            0%,100% { transform: translateX(-50%) rotate(0); }
+            25% { transform: translateX(-50%) rotate(-4deg); }
+            75% { transform: translateX(-50%) rotate(4deg); } }
+
+        .status-voo {
+            position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.7); padding: 4px 12px; border-radius: 15px;
+            font-size: 0.7em; color: #ffd700; z-index: 5; }
+
+        .round-table {
+            background: rgba(0,0,0,0.25); border-radius: 8px; padding: 8px;
+            margin-bottom: 6px; max-height: 100px; overflow-y: auto; }
+        .round-table .titulo { font-size: 0.7em; color: #8b8fa8; margin-bottom: 6px; letter-spacing: 1px; }
+        .round-row {
+            display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; }
+        .round-cell {
+            padding: 4px 8px; border-radius: 4px; font-size: 0.7em; font-weight: bold;
+            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); }
+        .round-cell.win { color: #00ff88; border-color: rgba(0,255,136,0.2); }
+        .round-cell.big { color: #ffd700; border-color: rgba(255,215,0,0.4); animation: glow 1.5s infinite; }
+        @keyframes glow { 0%,100% { box-shadow: 0 0 4px rgba(255,215,0,0.2); } 50% { box-shadow: 0 0 12px rgba(255,215,0,0.5); } }
+        .round-cell.loss { color: #ff4757; }
+
+        .botoes-acao {
+            display: flex; gap: 8px; margin-bottom: 6px; }
+        .btn-acao {
+            flex: 1; padding: 12px; border-radius: 8px; font-weight: bold;
+            font-size: 0.85em; cursor: pointer; text-align: center; border: none;
+            letter-spacing: 0.5px; transition: all 0.3s; }
+        .btn-aviator {
+            background: linear-gradient(45deg, #ff4757, #ff6b81); color: #fff; }
+        .btn-gerar-sinal {
+            background: linear-gradient(45deg, #ffd700, #ffaa00); color: #000; }
+        .btn-aviator:hover, .btn-gerar-sinal:hover { transform: scale(0.97); opacity: 0.9; }
+
+        /* NOVO BOTÃO LARANJA */
+        .btn-jogamos {
+            display: block;
+            width: 100%;
+            background: linear-gradient(45deg, #ff8c00, #ffa500);
             color: #000;
             border: none;
-            padding: 20px 50px;
-            border-radius: 50px;
-            font-size: 1.3em;
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 1em;
             font-weight: bold;
             cursor: pointer;
-            letter-spacing: 2px;
-            animation: pulse-btn 2s infinite;
+            letter-spacing: 1px;
+            margin: 10px 0;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(255,140,0,0.4);
             text-transform: uppercase;
-            width: 100%;
-            max-width: 350px;
-            position: relative;
-            z-index: 2;
+        }
+        .btn-jogamos:hover {
+            transform: scale(0.98);
+            box-shadow: 0 8px 28px rgba(255,140,0,0.6);
         }
 
-        @keyframes pulse-btn {
-            0%, 100% { box-shadow: 0 0 20px rgba(0, 212, 170, 0.3); }
-            50% { box-shadow: 0 0 50px rgba(0, 212, 170, 0.6); }
-        }
-
-        .btn-start:hover {
-            transform: scale(1.05);
-        }
-
-        .start-icons {
-            display: flex;
-            gap: 20px;
-            margin: 30px 0;
-            font-size: 2.5em;
-        }
-
-        .start-icon {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .start-icon:nth-child(2) { animation-delay: 0.5s; }
-        .start-icon:nth-child(3) { animation-delay: 1s; }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-
-        /* ===== CAMADA 2 - OVERLAY COM BOTÃO CRIAR CONTA ===== */
-        .overlay-criar-conta {
+        /* MODAL DE TRANSFERÊNCIA */
+        .modal-transferir {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-        }
-
-        .overlay-criar-conta.active {
-            display: flex;
-        }
-
-        .modal-criar-conta {
-            background: linear-gradient(135deg, #0d1137, #1a1f4e);
-            border: 2px solid #ffd700;
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-            animation: slideUp 0.5s ease;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .modal-criar-conta .icone-cadeado {
-            font-size: 4em;
-            display: block;
-            margin-bottom: 15px;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        .modal-criar-conta h2 {
-            color: #ffd700;
-            font-size: 1.5em;
-            margin-bottom: 10px;
-        }
-
-        .modal-criar-conta .texto-modal {
-            color: #8b8fa8;
-            font-size: 0.95em;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-
-        /* BOT AVIATOR GRÁTIS */
-        .bot-aviator-gratis {
-            background: linear-gradient(45deg, #ffd700, #ffaa00);
-            border: 2px solid #ffd700;
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 20px;
-            animation: pulse-gold 2s infinite;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .bot-aviator-gratis::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-            transform: rotate(45deg);
-            animation: brilho 3s infinite;
-        }
-
-        @keyframes brilho {
-            0% { left: -50%; }
-            100% { left: 150%; }
-        }
-
-        @keyframes pulse-gold {
-            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.6); }
-        }
-
-        .bot-aviator-gratis .titulo-aviator {
-            font-size: 1.1em;
-            color: #000;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 5px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .bot-aviator-gratis .subtitulo-aviator {
-            font-size: 1.4em;
-            color: #000;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            position: relative;
-            z-index: 1;
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
-        }
-
-        .bot-aviator-gratis .icone-aviator {
-            font-size: 2em;
-            position: relative;
-            z-index: 1;
-        }
-
-        .contador-fake-modal {
-            background: rgba(255, 71, 87, 0.1);
-            border: 1px solid rgba(255, 71, 87, 0.3);
-            border-radius: 12px;
-            padding: 10px;
-            margin-bottom: 20px;
-            animation: pulse-border 2s infinite;
-        }
-
-        @keyframes pulse-border {
-            0%, 100% { border-color: rgba(255, 71, 87, 0.3); }
-            50% { border-color: rgba(255, 71, 87, 0.8); }
-        }
-
-        .contador-fake-modal .numero-pessoas-modal {
-            font-size: 1.8em;
-            font-weight: 900;
-            color: #ff4757;
-            display: block;
-        }
-
-        .contador-fake-modal .texto-pessoas-modal {
-            color: #ff6b81;
-            font-size: 0.85em;
-        }
-
-        .btn-criar-conta-modal {
-            display: block;
-            width: 100%;
-            background: linear-gradient(45deg, #ff4757, #ff6b81);
-            color: white;
-            border: none;
-            padding: 18px;
-            border-radius: 15px;
-            font-size: 1.2em;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
-            letter-spacing: 1px;
-            animation: pulse-btn-red 2s infinite;
-            text-decoration: none;
-            box-shadow: 0 10px 40px rgba(255, 71, 87, 0.5);
-            margin-bottom: 15px;
-        }
-
-        .btn-criar-conta-modal::before {
-            content: '🔒 ';
-        }
-
-        .btn-criar-conta-modal:hover {
-            transform: scale(0.98);
-        }
-
-        @keyframes pulse-btn-red {
-            0%, 100% { box-shadow: 0 0 20px rgba(255, 71, 87, 0.3); }
-            50% { box-shadow: 0 0 50px rgba(255, 71, 87, 0.6); }
-        }
-
-        .texto-urgente-modal {
-            color: #ffd700;
-            font-size: 0.85em;
-            animation: piscar 1.5s infinite;
-            margin-bottom: 10px;
-        }
-
-        @keyframes piscar {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .btn-fechar-modal {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #8b8fa8;
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: all 0.3s;
-        }
-
-        .btn-fechar-modal:hover {
-            border-color: #ff4757;
-            color: #ff4757;
-        }
-
-        .vantagens-modal {
-            display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .vantagem-item {
-            color: #00ff88;
-            font-size: 0.9em;
-        }
-
-        .vantagem-item::before {
-            content: '✅ ';
-        }
-
-        /* ===== HOME SCREEN ===== */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .logo {
-            font-size: 1.8em;
-            font-weight: 900;
-            letter-spacing: 3px;
-            background: linear-gradient(45deg, #00d4aa, #00ff88);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
-            cursor: pointer;
-        }
-
-        .status-badge {
-            background: rgba(0, 212, 170, 0.1);
-            border: 1px solid rgba(0, 212, 170, 0.3);
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            color: var(--accent);
-        }
-
-        .bot-status {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(255, 215, 0, 0.05);
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            padding: 12px 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
-
-        .bot-indicator {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .pulse-dot {
-            width: 10px;
-            height: 10px;
-            background: #00ff88;
-            border-radius: 50%;
-            animation: pulse-dot 1.5s infinite;
-        }
-
-        @keyframes pulse-dot {
-            0% { transform: scale(0.8); opacity: 0.5; }
-            50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(0.8); opacity: 0.5; }
-        }
-
-        .next-signal {
-            color: var(--gold);
-            font-weight: bold;
-            font-size: 1.1em;
-        }
-
-        #countdown {
-            background: rgba(255, 215, 0, 0.2);
-            padding: 3px 10px;
-            border-radius: 10px;
-            font-size: 0.9em;
-        }
-
-        .game-interface {
-            background: linear-gradient(180deg, #0d1137 0%, #1a1f4e 100%);
-            border-radius: 20px;
             padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            transition: all 0.5s ease;
         }
-
-        /* [NOVO] Game Interface quando bloqueada */
-        .game-interface.bloqueado {
-            filter: blur(0);
-            border: 2px solid #ff4757;
-            box-shadow: 0 0 40px rgba(255, 71, 87, 0.3);
-        }
-
-        .game-title {
+        .modal-transferir.on { display: flex; }
+        .modal-transferir .box {
+            background: linear-gradient(135deg, #1a1f4e, #0d1137);
+            border: 2px solid var(--laranja);
+            border-radius: 16px;
+            padding: 25px 20px;
+            max-width: 380px;
+            width: 100%;
             text-align: center;
-            font-size: 2em;
-            font-weight: 900;
-            letter-spacing: 5px;
-            color: #00d4aa;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            text-shadow: 0 0 20px rgba(0, 212, 170, 0.5);
+            animation: slideUp 0.4s ease;
         }
-
-        .multipliers-row {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            filter: blur(6px);
-            -webkit-filter: blur(6px);
-            pointer-events: none;
-            user-select: none;
-            transition: filter 0.5s ease;
-        }
-
-        /* [NOVO] Quando bloqueado, desfoca mais */
-        .game-interface.bloqueado .multipliers-row {
-            filter: blur(12px);
-            -webkit-filter: blur(12px);
-        }
-
-        .multiplier-badge {
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 1.1em;
-            animation: fadeInUp 0.5s ease;
-        }
-
-        .multiplier-badge.high {
-            background: rgba(0, 255, 136, 0.2);
-            border: 1px solid rgba(0, 255, 136, 0.5);
-            color: #00ff88;
-        }
-
-        .multiplier-badge.medium {
-            background: rgba(255, 215, 0, 0.2);
-            border: 1px solid rgba(255, 215, 0, 0.5);
-            color: #ffd700;
-        }
-
-        .multiplier-badge.low {
-            background: rgba(255, 71, 87, 0.2);
-            border: 1px solid rgba(255, 71, 87, 0.5);
-            color: #ff4757;
-        }
-
-        @keyframes fadeInUp {
-            from { transform: translateY(20px); opacity: 0; }
+        @keyframes slideUp {
+            from { transform: translateY(40px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
-
-        .chart-wrapper {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .chart-area {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            height: 200px;
-            display: flex;
-            align-items: flex-end;
-            gap: 8px;
-            overflow: hidden;
-            filter: blur(8px);
-            -webkit-filter: blur(8px);
-            pointer-events: none;
-            user-select: none;
-            transition: filter 0.5s ease;
-        }
-
-        /* [NOVO] Gráfico mais borrado quando bloqueado */
-        .game-interface.bloqueado .chart-area {
-            filter: blur(15px);
-            -webkit-filter: blur(15px);
-        }
-
-        .candle {
-            flex: 1;
-            background: linear-gradient(180deg, #00ff88 0%, #00d4aa 100%);
-            border-radius: 4px 4px 0 0;
-            animation: growUp 0.5s ease;
-            min-height: 20px;
-        }
-
-        .candle.red {
-            background: linear-gradient(180deg, #ff4757 0%, #ff6b81 100%);
-        }
-
-        @keyframes growUp {
-            from { height: 0; }
-        }
-
-        .multiplier-display {
-            text-align: center;
-            font-size: 3em;
-            font-weight: 900;
-            color: #00ff88;
-            margin: 15px 0;
-            text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
-            filter: blur(5px);
-            -webkit-filter: blur(5px);
-            pointer-events: none;
-            user-select: none;
-            transition: filter 0.5s ease;
-        }
-
-        .game-interface.bloqueado .multiplier-display {
-            filter: blur(10px);
-            -webkit-filter: blur(10px);
-        }
-
-        .signal-alert {
-            background: rgba(255, 215, 0, 0.1);
-            border: 2px solid rgba(255, 215, 0, 0.4);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            margin: 20px 0;
-            filter: blur(10px);
-            -webkit-filter: blur(10px);
-            pointer-events: none;
-            user-select: none;
-            transition: filter 0.5s ease;
-        }
-
-        .game-interface.bloqueado .signal-alert {
-            filter: blur(18px);
-            -webkit-filter: blur(18px);
-        }
-
-        .signal-time {
-            font-size: 2.5em;
-            font-weight: 900;
-            color: #ffd700;
-            margin: 10px 0;
-        }
-
-        .signal-info {
-            color: #8b8fa8;
-            font-size: 0.9em;
-        }
-
-        .btn-sinal {
-            display: block;
-            width: 100%;
-            background: linear-gradient(45deg, #00d4aa, #00ff88);
-            color: #000;
-            border: none;
-            padding: 15px;
-            border-radius: 15px;
-            font-size: 1.1em;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 10px 0;
-            letter-spacing: 1px;
-            filter: blur(0);
-            -webkit-filter: blur(0);
-        }
-
-        .btn-sinal:hover {
-            opacity: 0.9;
-            transform: scale(0.98);
-        }
-
-        /* [NOVO] Botão de sinal desabilitado */
-        .btn-sinal:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            filter: blur(2px);
-            -webkit-filter: blur(2px);
-        }
-
-        .btn-cadastrar-wrapper {
-            position: relative;
-            margin: -60px 0 15px 0;
-            z-index: 10;
-        }
-
-        .btn-cadastrar {
-            display: block;
-            width: 100%;
-            background: linear-gradient(45deg, #ff4757, #ff6b81);
-            color: white;
-            border: none;
-            padding: 18px;
-            border-radius: 15px;
-            font-size: 1.2em;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
-            letter-spacing: 1px;
-            animation: pulse-btn 2s infinite;
-            text-decoration: none;
-            box-shadow: 0 10px 40px rgba(255, 71, 87, 0.5);
-            filter: blur(0);
-            -webkit-filter: blur(0);
-        }
-
-        .btn-cadastrar::before {
-            content: '🔒';
-            margin-right: 8px;
-        }
-
-        .btn-cadastrar:hover {
-            transform: scale(0.98);
-        }
-
-        .texto-sobre-botao {
-            text-align: center;
-            color: #ffd700;
-            font-size: 0.85em;
-            margin-bottom: 5px;
-            animation: piscar 1.5s infinite;
-        }
-
-        /* ===== [NOVO] PAINEL DE BLOQUEIO TOTAL ===== */
-        .bloqueio-total-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.92);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 99999;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        .bloqueio-total-overlay.active {
-            display: flex;
-        }
-
-        .bloqueio-total-panel {
-            background: linear-gradient(135deg, #0d1137, #1a1f4e);
-            border: 3px solid #ff4757;
-            border-radius: 20px;
-            padding: 35px 25px;
-            max-width: 430px;
-            width: 90%;
-            text-align: center;
-            animation: shakeIn 0.6s ease;
-            box-shadow: 0 0 60px rgba(255, 71, 87, 0.4), 0 20px 60px rgba(0, 0, 0, 0.8);
-        }
-
-        @keyframes shakeIn {
-            0% { transform: scale(0.8) rotate(-2deg); opacity: 0; }
-            50% { transform: scale(1.02) rotate(1deg); }
-            100% { transform: scale(1) rotate(0deg); opacity: 1; }
-        }
-
-        .bloqueio-total-panel .icone-bloqueio {
-            font-size: 5em;
-            display: block;
-            margin-bottom: 10px;
-            animation: pulse-strong 1s infinite;
-        }
-
-        @keyframes pulse-strong {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-            100% { transform: scale(1); }
-        }
-
-        .bloqueio-total-panel h2 {
-            color: #ff4757;
-            font-size: 1.8em;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            text-shadow: 0 0 30px rgba(255, 71, 87, 0.5);
-        }
-
-        .bloqueio-total-panel .mensagem-bloqueio {
-            color: #ffffff;
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-bottom: 15px;
-            background: rgba(255, 71, 87, 0.15);
-            padding: 15px;
-            border-radius: 10px;
-            border: 2px dashed #ff4757;
-            line-height: 1.6;
-        }
-
-        .bloqueio-total-panel .detalhes-bloqueio {
-            color: #8b8fa8;
-            font-size: 0.9em;
-            margin-bottom: 20px;
-            line-height: 1.8;
-        }
-
-        .bloqueio-total-panel .detalhes-bloqueio span {
-            color: #ffd700;
-            font-weight: bold;
-        }
-
-        .btn-recarga {
-            display: block;
-            width: 100%;
-            background: linear-gradient(45deg, #ff4757, #ff6b81);
-            color: white;
-            border: none;
-            padding: 20px;
-            border-radius: 15px;
+        .modal-transferir h3 {
+            color: var(--laranja);
             font-size: 1.3em;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
-            letter-spacing: 2px;
-            text-decoration: none;
-            margin-bottom: 12px;
-            animation: pulse-btn-red 1.5s infinite;
-            box-shadow: 0 10px 40px rgba(255, 71, 87, 0.6);
+            margin-bottom: 15px;
             text-transform: uppercase;
+            letter-spacing: 2px;
         }
-
-        .btn-recarga:hover {
-            transform: scale(0.97);
-            box-shadow: 0 15px 50px rgba(255, 71, 87, 0.8);
-        }
-
-        .btn-recarga::before {
-            content: '💰 ';
-        }
-
-        .bloqueio-total-panel .aviso-liberacao {
-            color: #ffd700;
-            font-size: 0.8em;
-            animation: piscar 1.5s infinite;
-        }
-
-        .info-box {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 215, 0, 0.3);
+        .modal-transferir .dados-pagamento {
+            background: rgba(0,0,0,0.3);
             border-radius: 12px;
             padding: 15px;
-            margin: 15px 0;
-            text-align: center;
-        }
-
-        .info-box p {
-            color: #ffd700;
-            font-size: 0.9em;
-            margin: 5px 0;
-        }
-
-        .contador-fake {
-            text-align: center;
-            background: rgba(255, 71, 87, 0.1);
-            border: 1px solid rgba(255, 71, 87, 0.3);
-            border-radius: 12px;
-            padding: 12px;
-            margin: 15px 0;
-            animation: pulse-border 2s infinite;
-        }
-
-        .contador-fake .icone-pessoas {
-            font-size: 1.5em;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .contador-fake .numero-pessoas {
-            font-size: 2em;
-            font-weight: 900;
-            color: #ff4757;
-            display: block;
-        }
-
-        .contador-fake .texto-pessoas {
-            color: #ff6b81;
-            font-size: 0.85em;
-        }
-
-        .footer {
-            text-align: center;
-            color: #8b8fa8;
-            font-size: 0.75em;
-            margin-top: 20px;
-            padding: 10px;
-            opacity: 0.7;
-        }
-
-        /* ===== PAINEL ADMIN ===== */
-        .admin-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 99999;
-        }
-
-        .admin-overlay.active {
-            display: flex;
-        }
-
-        .admin-panel {
-            background: linear-gradient(135deg, #0d1137, #1a1f4e);
-            border: 2px solid #ffd700;
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .admin-panel h2 {
-            color: #ffd700;
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-        }
-
-        .admin-panel label {
-            display: block;
-            color: #8b8fa8;
-            margin: 10px 0 5px 0;
-        }
-
-        .admin-panel input {
-            width: 100%;
-            padding: 12px;
-            margin: 5px 0 15px 0;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.3);
-            color: white;
-            font-size: 1em;
-            outline: none;
-        }
-
-        .admin-panel input:focus {
-            border-color: #00d4aa;
-        }
-
-        .admin-stats {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .admin-stats h3 {
-            color: #ffd700;
-            text-align: center;
             margin-bottom: 15px;
+            text-align: left;
+            font-size: 0.9em;
+            color: #ccc;
         }
-
-        .stat-item {
+        .modal-transferir .dados-pagamento p {
+            margin: 6px 0;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        .stat-item:last-child {
-            border-bottom: none;
-        }
-
-        .stat-label {
-            color: #8b8fa8;
-        }
-
-        .stat-value {
-            color: #00ff88;
+        .modal-transferir .dados-pagamento span {
+            color: var(--laranja);
             font-weight: bold;
-            font-size: 1.2em;
         }
-
-        .btn-salvar {
-            width: 100%;
-            background: #00d4aa;
-            color: #000;
-            border: none;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 1.1em;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 10px 0;
-        }
-
-        .btn-salvar:hover {
-            opacity: 0.9;
-        }
-
-        .btn-fechar-admin {
-            width: 100%;
-            background: transparent;
-            color: #ff4757;
-            border: 1px solid #ff4757;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 1em;
-            cursor: pointer;
-            margin: 5px 0;
-        }
-
-        .btn-reset {
-            width: 100%;
-            background: #ff4757;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 1em;
-            cursor: pointer;
-            margin: 5px 0;
-        }
-
-        .aviso-venda {
-            background: rgba(255, 215, 0, 0.1);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            border-radius: 10px;
+        .modal-transferir .valor-min {
+            background: rgba(255,71,87,0.15);
+            border: 1px dashed #ff4757;
+            border-radius: 8px;
             padding: 10px;
-            margin: 10px 0;
-            color: #ffd700;
-            font-size: 0.85em;
-            text-align: center;
+            margin: 15px 0;
+            color: #ff6b81;
+            font-weight: bold;
+        }
+        .modal-transferir .btn-fechar-modal {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: 0.3s;
+        }
+        .modal-transferir .btn-fechar-modal:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: #ff4757;
         }
 
-        .lock-overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 3em;
-            z-index: 5;
-            pointer-events: none;
-            text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-        }
+        .sinais-box {
+            background: rgba(0,0,0,0.25); border-radius: 10px; padding: 10px;
+            max-height: 220px; overflow-y: auto; margin-bottom: 6px; }
+        .sinal-card {
+            background: rgba(0,0,0,0.3); border: 1px solid var(--border);
+            border-radius: 8px; padding: 8px 10px; margin-bottom: 5px;
+            display: flex; justify-content: space-between; align-items: center; }
+        .sinal-info { flex: 1; }
+        .sinal-hora { font-size: 0.7em; color: #8b8fa8; }
+        .sinal-rosa { font-size: 0.95em; font-weight: bold; color: #ffd700; }
+        .sinal-status { font-size: 1.1em; font-weight: 900; }
+        .sinal-status.win { color: #00ff88; }
+        .sinal-status.pendente { color: #ffd700; animation: piscar 1s infinite; }
+        @keyframes piscar { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        @media (max-width: 480px) {
-            .container { padding: 10px; }
-            .game-interface { padding: 15px; }
-            .multiplier-display { font-size: 2em; }
-            .signal-time { font-size: 2em; }
-            .admin-panel { padding: 20px; }
-            .btn-cadastrar-wrapper { margin: -40px 0 15px 0; }
-            .contador-fake .numero-pessoas { font-size: 1.5em; }
-            .btn-start { padding: 18px 30px; font-size: 1.1em; }
-            .modal-criar-conta { padding: 25px; }
-            .bloqueio-total-panel { padding: 25px 20px; }
-            .bloqueio-total-panel h2 { font-size: 1.4em; }
-            .bloqueio-total-panel .mensagem-bloqueio { font-size: 1em; }
-            .btn-recarga { padding: 16px; font-size: 1.1em; }
+        .overlay-bloqueio {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px); border-radius: 14px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 50; text-align: center; padding: 20px; }
+        .overlay-bloqueio .cadeado { font-size: 2.5em; margin-bottom: 8px; }
+        .overlay-bloqueio h3 { color: #ff4757; font-size: 1.1em; margin-bottom: 6px; }
+        .overlay-bloqueio .msg {
+            color: #fff; background: rgba(255,71,87,0.15); border: 2px dashed #ff4757;
+            padding: 10px; border-radius: 8px; font-weight: bold; margin: 6px 0; font-size: 0.85em; }
+        .overlay-bloqueio .btn-rec {
+            background: linear-gradient(45deg, #ff4757, #ff6b81); color: #fff;
+            border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold;
+            cursor: pointer; margin-top: 8px; text-decoration: none; font-size: 0.85em; }
+
+        .zap-float {
+            position: fixed; bottom: 16px; right: 16px; width: 52px; height: 52px;
+            background: #25D366; border-radius: 50%; display: none; justify-content: center;
+            align-items: center; font-size: 1.6em; color: #fff; cursor: pointer; z-index: 999;
+            box-shadow: 0 4px 18px rgba(37,211,102,0.5); animation: zap-float 2s infinite;
+            text-decoration: none; }
+        .zap-float.on { display: flex; }
+        @keyframes zap-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+        .loading {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); display: none; justify-content: center;
+            align-items: center; z-index: 99999; flex-direction: column; }
+        .loading.on { display: flex; }
+        .spinner {
+            width: 45px; height: 45px; border: 3px solid rgba(255,215,0,0.2);
+            border-top-color: #ffd700; border-radius: 50%; animation: spin 0.8s linear infinite;
+            margin-bottom: 12px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { color: #ffd700; font-size: 0.9em; }
+
+        .admin-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); display: none; justify-content: center;
+            align-items: center; z-index: 99999; }
+        .admin-overlay.on { display: flex; }
+        .admin-box {
+            background: #1a1f4e; border: 2px solid #ffd700; border-radius: 14px;
+            padding: 18px; max-width: 420px; width: 90%; max-height: 75vh; overflow-y: auto; }
+        .admin-box h3 { color: #ffd700; text-align: center; margin-bottom: 12px; }
+        .admin-box label { color: #8b8fa8; font-size: 0.75em; display: block; margin: 6px 0 3px; }
+        .admin-box input {
+            width: 100%; padding: 8px; margin-bottom: 8px; border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3);
+            color: #fff; font-size: 0.85em; outline: none; }
+        .admin-box input:focus { border-color: #00d4aa; }
+        .btn-admin {
+            width: 100%; padding: 10px; margin: 4px 0; border-radius: 6px; border: none;
+            font-weight: bold; cursor: pointer; font-size: 0.85em; }
+        .btn-save { background: #00d4aa; color: #000; }
+        .btn-close { background: transparent; color: #ff4757; border: 1px solid #ff4757; }
+
+        .toast {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: #ff4757; color: #fff; padding: 12px 20px; border-radius: 25px;
+            font-weight: bold; font-size: 0.9em; z-index: 9999; display: none;
+            box-shadow: 0 8px 25px rgba(255,71,87,0.5); animation: slideDown 0.4s ease; }
+        .toast.on { display: block; }
+        @keyframes slideDown { from { transform: translateX(-50%) translateY(-60px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
+
+        .codigo-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); display: none; justify-content: center;
+            align-items: center; z-index: 9999; flex-direction: column; padding: 20px; }
+        .codigo-modal.on { display: flex; }
+        .codigo-box {
+            background: #1a1f4e; border: 2px solid #00d4aa; border-radius: 14px;
+            padding: 20px; max-width: 360px; width: 100%; text-align: center; }
+        .codigo-box h3 { color: #00d4aa; margin-bottom: 10px; font-size: 1.1em; }
+        .codigo-box p { color: #8b8fa8; font-size: 0.85em; margin-bottom: 12px; }
+        .codigo-box input {
+            width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.3); color: #fff; font-size: 1.1em; text-align: center;
+            letter-spacing: 3px; outline: none; margin-bottom: 10px; text-transform: uppercase; }
+        .codigo-box input:focus { border-color: #00d4aa; }
+        .codigo-box .btn-verificar {
+            width: 100%; padding: 12px; border-radius: 8px; border: none;
+            background: #00d4aa; color: #000; font-weight: bold; cursor: pointer; font-size: 1em; }
+        .codigo-box .btn-fechar-modal {
+            background: transparent; color: #ff4757; border: 1px solid #ff4757;
+            padding: 8px 20px; border-radius: 6px; margin-top: 8px; cursor: pointer; font-size: 0.85em; }
+
+        @media (max-width: 400px) {
+            .canvas-wrap { height: 150px; }
+            .mult-grande { font-size: 1.8em; }
+            .botoes-acao { flex-direction: column; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ========== CAMADA 1: TELA DE START ========== -->
-    <div class="start-screen" id="start-screen">
-        <div class="start-icons">
-            <span class="start-icon">🎯</span>
-            <span class="start-icon">📊</span>
-            <span class="start-icon">💰</span>
+    <div class="toast" id="toast">⚠️ Recarregue sua conta para ativar o bot!</div>
+
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p class="loading-text">Sincronizando...</p>
+    </div>
+
+    <!-- Modal de código de acesso -->
+    <div class="codigo-modal" id="codigo-modal">
+        <div class="codigo-box">
+            <h3>🔑 Código de Acesso</h3>
+            <p>Digite o código que apareceu quando você criou sua conta pela primeira vez.</p>
+            <input type="text" id="input-codigo" placeholder="EX: ABC123" maxlength="6" autocomplete="off">
+            <button class="btn-verificar" onclick="verificarPorCodigo()">✅ VERIFICAR CÓDIGO</button>
+            <button class="btn-fechar-modal" onclick="fecharModalCodigo()">❌ CANCELAR</button>
         </div>
-        <div class="start-logo" id="start-logo-trigger">BOT AVIATOR GRATIS</div>
-        <p class="start-subtitle">🔥 Sinais em Tempo Real para Placard</p>
-        <p class="start-subtitle">Precisão de 92% • Resultados Comprovados</p>
-        
-        <!-- CONTADOR FAKE NA TELA DE START -->
-        <div class="contador-fake">
-            <span class="icone-pessoas">👥</span>
-            <span class="numero-pessoas" id="contador-fake-start">0</span>
-            <span class="texto-pessoas">pessoas estão usando agora</span>
+    </div>
+
+    <div class="container tela-inicial" id="tela-inicial">
+        <div class="logo-icone">✈️</div>
+        <div class="titulo">BOT AVIATOR</div>
+        <p class="subtitulo">🔥 Sinais em Tempo Real • Precisão 94%</p>
+        <p class="subtitulo">Sincronizado com Placard</p>
+
+        <div class="contador-online">
+            <span class="num" id="contador-online">0</span>
+            <span class="txt">jogadores online agora</span>
         </div>
-        
-        <!-- BOTÃO START - ABRE A CAMADA 2 -->
-        <button class="btn-start" onclick="abrirCamadaCriarConta()">
-            🚀 COMECAR AGORA
+
+        <a href="https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723"
+           class="btn-primario" target="_blank" onclick="marcarCriacaoConta()">
+            🔒 CRIAR CONTA NA PLACARD
+        </a>
+
+        <button class="btn-secundario" onclick="verificarConta()">
+            ✅ JÁ TENHO CONTA
+        </button>
+
+        <button class="btn-codigo" onclick="abrirModalCodigo()">
+            🔑 TENHO CÓDIGO DE ACESSO
         </button>
     </div>
 
-    <!-- ========== CAMADA 2: OVERLAY COM BOTÃO CRIAR CONTA ========== -->
-    <div class="overlay-criar-conta" id="overlay-criar-conta">
-        <div class="modal-criar-conta">
-            <span class="icone-cadeado">🔒</span>
-            <h2>SINAIS BLOQUEADOS</h2>
-            <p class="texto-modal">
-                Para acessar os sinais em tempo real,<br>
-                crie sua conta na <strong style="color:#ffd700;">Placard</strong> agora mesmo!
-            </p>
-
-            <!-- BOT AVIATOR GRÁTIS -->
-            <div class="bot-aviator-gratis">
-                <div class="icone-aviator">✈️</div>
-                <div class="titulo-aviator">🎁 OFERTA EXCLUSIVA</div>
-                <div class="subtitulo-aviator">BOT AVIATOR GRÁTIS</div>
-            </div>
-
-            <div class="vantagens-modal">
-                <div class="vantagem-item">Sinais com 92% de precisão</div>
-                <div class="vantagem-item">Atualização em tempo real</div>
-                <div class="vantagem-item">Suporte 24 horas</div>
-                <div class="vantagem-item">Cadastro 100% gratuito</div>
-            </div>
-
-            <!-- CONTADOR FAKE NO MODAL -->
-            <div class="contador-fake-modal">
-                <span class="numero-pessoas-modal" id="contador-fake-modal">0</span>
-                <span class="texto-pessoas-modal">pessoas já criaram conta hoje</span>
-            </div>
-
-            <p class="texto-urgente-modal">🔒 DESBLOQUEIE SEUS SINAIS AGORA 🔒</p>
-
-            <!-- BOTÃO CRIAR CONTA -->
-            <a id="link-cadastrar-modal" href="#" class="btn-criar-conta-modal" target="_blank" onclick="incrementarClique()">
-                CRIAR CONTA NA PLACARD
-            </a>
-
-            <button class="btn-fechar-modal" onclick="fecharCamadaCriarConta()">
-                ❌ Fechar
-            </button>
-        </div>
-    </div>
-
-    <!-- ========== HOME SCREEN ========== -->
-    <div class="container" id="home-screen" style="display:none;">
+    <div class="container painel" id="painel">
         <div class="header">
-            <div class="logo" id="logo-admin-trigger">EARPLANE</div>
-            <div class="status-badge" id="status-badge">🔥 ONLINE</div>
-        </div>
-
-        <div class="bot-status">
-            <div class="bot-indicator">
-                <div class="pulse-dot" id="pulse-dot"></div>
-                <span id="bot-status-text">Bot Ativo</span>
-            </div>
-            <div class="next-signal">
-                Próximo sinal: <span id="countdown">2:45</span>
+            <div class="logo-h" id="logo-admin">✈️ AVIATOR</div>
+            <div class="relogio">
+                🕐 Hora Oficial
+                <span class="hora" id="hora-oficial">--:--:--</span>
             </div>
         </div>
 
-        <div class="game-interface" id="game-interface">
-            <div class="game-title">EARPLANE</div>
-            
-            <div class="multipliers-row" id="recent-multipliers"></div>
-            
-            <div class="chart-wrapper">
-                <div class="chart-area" id="chart-area"></div>
-                <div class="lock-overlay" id="lock-overlay-grafico" style="display:none;">🔒</div>
-            </div>
-            
-            <div class="multiplier-display" id="current-multiplier">x 3.40</div>
-            
-            <div class="signal-alert">
-                <div class="signal-info">🟢 PRÓXIMO SINAL EM:</div>
-                <div class="signal-time" id="signal-time">00:00</div>
-                <div class="signal-info" id="signal-details"></div>
+        <div class="aviator-box" id="aviator-box">
+            <div class="canvas-wrap" id="canvas-wrap">
+                <canvas id="canvas"></canvas>
+                <div class="mult-grande" id="mult-grande">1.00x</div>
+                <div class="status-voo" id="status-voo">🟢 Preparando...</div>
             </div>
 
-            <button class="btn-sinal" id="btn-ver-sinal" onclick="mostrarSinal()">
-                👁️ VER SINAL COMPLETO
+            <div class="round-table">
+                <div class="titulo">📊 Histórico de Rounds</div>
+                <div class="round-row" id="round-row"></div>
+            </div>
+
+            <div class="botoes-acao">
+                <button class="btn-acao btn-aviator" onclick="entrarAviator()">
+                    🎮 ENTRAR NO AVIATOR
+                </button>
+                <button class="btn-acao btn-gerar-sinal" id="btn-gerar-sinal" onclick="gerarSinal()">
+                    🌹 GERAR ROSA (SINAL)
+                </button>
+            </div>
+
+            <!-- NOVO BOTÃO LARANJA -->
+            <button class="btn-jogamos" onclick="mostrarModalTransferencia()">
+                🎲 JOGAMOS PRA VOCE
             </button>
 
-            <div class="contador-fake">
-                <span class="icone-pessoas">👥</span>
-                <span class="numero-pessoas" id="contador-fake-home">0</span>
-                <span class="texto-pessoas">pessoas estão usando agora</span>
+            <!-- MODAL DE TRANSFERÊNCIA -->
+            <div class="modal-transferir" id="modal-transferir">
+                <div class="box">
+                    <h3>📲 Faça sua Transferência</h3>
+                    <div class="dados-pagamento">
+                        <p>📱 <strong>M-PESA:</strong> <span>84 123 4567</span></p>
+                        <p>📱 <strong>e-MOLA:</strong> <span>84 765 4321</span></p>
+                    </div>
+                    <div class="valor-min">
+                        💰 Valor mínimo: <strong>300 MT</strong><br>
+                        <small>Pode enviar qualquer valor acima do mínimo</small>
+                    </div>
+                    <p style="color:#8b8fa8; font-size:0.8em; margin:10px 0;">
+                        Após o pagamento, clique em "Já transferi" e aguarde a confirmação.
+                    </p>
+                    <button class="btn-fechar-modal" onclick="fecharModalTransferencia()">
+                        ✅ JÁ TRANSFERI
+                    </button>
+                    <button class="btn-fechar-modal" style="margin-top:8px; border-color:#ff4757;" onclick="fecharModalTransferencia()">
+                        ❌ CANCELAR
+                    </button>
+                </div>
             </div>
 
-            <div class="btn-cadastrar-wrapper">
-                <p class="texto-sobre-botao" id="texto-sobre-botao">🔒 DESBLOQUEIE OS SINAIS AGORA 🔒</p>
-                <a id="link-cadastrar-home" href="#" class="btn-cadastrar" target="_blank" onclick="incrementarClique()">
-                    CRIAR CONTA NA PLACARD
+            <div class="overlay-bloqueio" id="overlay-bloqueio">
+                <div class="cadeado">🔒</div>
+                <h3>BOT BLOQUEADO</h3>
+                <div class="msg" id="msg-bloqueio">
+                    RECARREGA A SUA CONTA PLACARD<br>PARA ATIVAR O BOT
+                </div>
+                <a href="https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723"
+                   class="btn-rec" target="_blank" onclick="marcarCriacaoConta()">
+                    💰 RECARREGAR AGORA
                 </a>
             </div>
-
-            <div class="info-box">
-                <p>✅ Sinais desbloqueados após cadastro</p>
-                <p>🎯 Precisão de 92% nos sinais</p>
-                <p>💰 Ganhe dinheiro com apostas esportivas</p>
-            </div>
         </div>
 
-        <div class="footer">
-            © 2025 Bot EarPlane - Sinais automáticos para Placard
+        <div class="sinais-box" id="sinais-box">
+            <div style="color:#ffd700;font-size:0.75em;margin-bottom:6px;">🌹 RECARREGA A TUA CONTA PARA ATIVAR O BOT</div>
+            <div id="sinais-lista">
+                <div style="text-align:center;color:#8b8fa8;padding:15px;">Clique em "GERAR ROSA PARA VER PROXIMO SINAL"</div>
+            </div>
         </div>
     </div>
 
-    <!-- ========== [NOVO] OVERLAY DE BLOQUEIO TOTAL ========== -->
-    <div class="bloqueio-total-overlay" id="bloqueio-total-overlay">
-        <div class="bloqueio-total-panel">
-            <span class="icone-bloqueio">🚫</span>
-            <h2>🔒 BOT BLOQUEADO</h2>
-            <div class="mensagem-bloqueio" id="mensagem-bloqueio">
-                RECARREGA A SUA CONTA PLACARD PRA ATIVAR O BOT
-            </div>
-            <div class="detalhes-bloqueio">
-                <p>⚠️ <span>Banca insuficiente</span> detectada</p>
-                <p>⚡ Sinais em tempo real <span>pausados</span></p>
-                <p>🎯 Último padrão detectado: <span id="ultimo-padrao">2.15x</span></p>
-                <p>👥 <span id="usuarios-ativos-bloqueio">0</span> usuários ativos neste momento</p>
-            </div>
-            <a id="link-recarga" href="#" class="btn-recarga" target="_blank" onclick="incrementarClique()">
-                RECARREGAR AGORA
-            </a>
-            <p class="aviso-liberacao">⚡ Após recarga, o bot libera em até 2 minutos</p>
-        </div>
-    </div>
+    <a href="#" class="zap-float" id="zap-float" target="_blank">💬</a>
 
-    <!-- ========== PAINEL ADMIN ========== -->
     <div class="admin-overlay" id="admin-overlay">
-        <div class="admin-panel">
-            <h2>🔧 PAINEL ADMINISTRADOR</h2>
-            
-            <label>🔗 LINK DA PLATAFORMA ONLINE:</label>
-            <input type="text" id="admin-link-plataforma" placeholder="Cole o link da plataforma online aqui...">
-            <small style="color:#8b8fa8;display:block;margin-top:-10px;margin-bottom:15px;">
-                Este link será usado em todos os botões
-            </small>
-            
-            <!-- [NOVO] Configuração de sinais antes do bloqueio -->
-            <label>🔢 SINAIS GRÁTIS ANTES DO BLOQUEIO:</label>
-            <input type="number" id="admin-sinais-gratis" placeholder="Quantidade de sinais grátis (padrão: 3)" min="1" max="20" value="3">
-            <small style="color:#8b8fa8;display:block;margin-top:-10px;margin-bottom:15px;">
-                Após este número de sinais, o bot será totalmente bloqueado
-            </small>
-
-            <label>💬 MENSAGEM DE BLOQUEIO:</label>
-            <input type="text" id="admin-mensagem-bloqueio" placeholder="Mensagem quando o bot bloquear..." value="RECARREGA A SUA CONTA PLACARD PRA ATIVAR O BOT">
-            <small style="color:#8b8fa8;display:block;margin-top:-10px;margin-bottom:15px;">
-                Mensagem exibida na tela de bloqueio total
-            </small>
-
-            <div class="aviso-venda">
-                ⚠️ Os sinais ficam embaçados até o usuário clicar no botão de cadastro. Após X sinais, o bot bloqueia totalmente.
-            </div>
-
-            <div class="admin-stats">
-                <h3>📊 ESTATÍSTICAS REAIS (OCULTO DOS USUÁRIOS)</h3>
-                
-                <div class="stat-item">
-                    <span class="stat-label">👥 Visitas totais:</span>
-                    <span class="stat-value" id="admin-visitas">0</span>
-                </div>
-                
-                <div class="stat-item">
-                    <span class="stat-label">✅ Cliques no link:</span>
-                    <span class="stat-value" id="admin-cliques">0</span>
-                </div>
-                
-                <div class="stat-item">
-                    <span class="stat-label">📅 Visitas hoje:</span>
-                    <span class="stat-value" id="admin-visitas-hoje">0</span>
-                </div>
-                
-                <div class="stat-item">
-                    <span class="stat-label">🔢 Sinais grátis configurados:</span>
-                    <span class="stat-value" id="admin-sinais-gratis-display">3</span>
-                </div>
-
-                <div class="stat-item">
-                    <span class="stat-label">🔗 Link atual:</span>
-                    <span class="stat-value" style="font-size:0.7em;word-break:break-all;" id="admin-link-atual">Não definido</span>
-                </div>
-            </div>
-
-            <div class="aviso-venda">
-                💡 Para vender este bot: entregue o arquivo HTML + a senha do painel admin
-            </div>
-            
-            <label>🔑 SENHA DO ADMIN (para revenda):</label>
-            <input type="text" id="admin-senha" placeholder="Defina uma senha para o painel admin...">
-            
-            <button class="btn-salvar" onclick="salvarConfigAdmin()">💾 SALVAR CONFIGURAÇÕES</button>
-            <button class="btn-reset" onclick="resetarContadores()">🔄 RESETAR CONTADORES</button>
-            <button class="btn-fechar-admin" onclick="fecharAdmin()">❌ FECHAR PAINEL</button>
+        <div class="admin-box">
+            <h3>🔧 PAINEL ADMIN</h3>
+            <label>🔗 Link Plataforma:</label>
+            <input type="text" id="adm-link">
+            <label>💬 Link WhatsApp:</label>
+            <input type="text" id="adm-zap">
+            <label>💬 Mensagem Bloqueio:</label>
+            <input type="text" id="adm-msg" value="RECARREGA A SUA CONTA PLACARD PARA ATIVAR O BOT">
+            <label>🔑 Senha:</label>
+            <input type="text" id="adm-senha">
+            <button class="btn-admin btn-save" onclick="salvarAdmin()">💾 SALVAR</button>
+            <button class="btn-admin btn-close" onclick="fecharAdmin()">❌ FECHAR</button>
         </div>
     </div>
 
-    <script>
-        // ==================== CONFIGURAÇÃO PADRÃO ====================
-        const CONFIG_PADRAO = {
-            linkPlataforma: 'https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723',
-            senhaAdmin: 'BOTPLACARD',
-            sinaisGratis: 3,
-            mensagemBloqueio: 'RECARREGA A SUA CONTA PLACARD PRA ATIVAR O BOT',
-            visitas: 0,
-            cliques: 0,
-            visitasHoje: 0,
-            dataHoje: new Date().toDateString()
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDgQ3zeei9eqn8uEy1loeDOKye7S9nyEXU",
+            authDomain: "bot-aviator-placard.firebaseapp.com",
+            projectId: "bot-aviator-placard",
+            storageBucket: "bot-aviator-placard.firebasestorage.app",
+            messagingSenderId: "457251451489",
+            appId: "1:457251451489:web:73aba21a0cc718857db020"
         };
 
-        // ==================== CARREGAR CONFIGURAÇÕES ====================
-        function carregarConfig() {
-            const configSalva = localStorage.getItem('earplane_config');
-            if (configSalva) {
-                try {
-                    const config = JSON.parse(configSalva);
-                    
-                    if (config.dataHoje !== new Date().toDateString()) {
-                        config.visitasHoje = 0;
-                        config.dataHoje = new Date().toDateString();
-                        localStorage.setItem('earplane_config', JSON.stringify(config));
-                    }
-                    
-                    return config;
-                } catch(e) {
-                    console.error('Erro ao carregar config:', e);
-                    return CONFIG_PADRAO;
-                }
-            } else {
-                localStorage.setItem('earplane_config', JSON.stringify(CONFIG_PADRAO));
-                return CONFIG_PADRAO;
-            }
-        }
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
-        let CONFIG = carregarConfig();
+        let CFG = {
+            link: 'https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723',
+            zap: 'https://chat.whatsapp.com/SEU_GRUPO',
+            msg: 'RECARREGA A SUA CONTA PLACARD PARA ATIVAR O BOT',
+            senha: 'admin123'
+        };
+        const saved = localStorage.getItem('av_cfg');
+        if (saved) try { CFG = { ...CFG, ...JSON.parse(saved) }; } catch(e) {}
 
-        // ==================== [NOVO] ESTADO DO BLOQUEIO ====================
-        let sinaisVisualizados = 0;
-        let botBloqueado = false;
-
-        // ==================== APLICAR CONFIGURAÇÕES ====================
-        function aplicarLinkPlataforma() {
-            const linkModal = document.getElementById('link-cadastrar-modal');
-            const linkHome = document.getElementById('link-cadastrar-home');
-            const linkRecarga = document.getElementById('link-recarga');
-            
-            if (linkModal) linkModal.href = CONFIG.linkPlataforma;
-            if (linkHome) linkHome.href = CONFIG.linkPlataforma;
-            if (linkRecarga) linkRecarga.href = CONFIG.linkPlataforma;
-        }
-
-        function aplicarMensagemBloqueio() {
-            const mensagemBloqueio = document.getElementById('mensagem-bloqueio');
-            if (mensagemBloqueio) {
-                mensagemBloqueio.textContent = CONFIG.mensagemBloqueio;
-            }
-        }
-        
-        aplicarLinkPlataforma();
-        aplicarMensagemBloqueio();
-
-        // ==================== CAMADAS SOBREPOSTAS ====================
-        function abrirCamadaCriarConta() {
-            document.getElementById('overlay-criar-conta').classList.add('active');
-            incrementarVisita();
-        }
-
-        function fecharCamadaCriarConta() {
-            document.getElementById('overlay-criar-conta').classList.remove('active');
-            document.getElementById('start-screen').style.display = 'none';
-            document.getElementById('home-screen').style.display = 'block';
-            reiniciarSinais();
-            initBot();
-        }
-
-        // ==================== [NOVO] SISTEMA DE BLOQUEIO ====================
-        function reiniciarSinais() {
-            sinaisVisualizados = 0;
-            botBloqueado = false;
-            
-            // Restaura interface
-            const gameInterface = document.getElementById('game-interface');
-            if (gameInterface) gameInterface.classList.remove('bloqueado');
-            
-            const btnSinal = document.getElementById('btn-ver-sinal');
-            if (btnSinal) {
-                btnSinal.disabled = false;
-                btnSinal.textContent = '👁️ VER SINAL COMPLETO';
-            }
-            
-            const statusBadge = document.getElementById('status-badge');
-            if (statusBadge) {
-                statusBadge.textContent = '🔥 ONLINE';
-                statusBadge.style.background = 'rgba(0, 212, 170, 0.1)';
-                statusBadge.style.border = '1px solid rgba(0, 212, 170, 0.3)';
-                statusBadge.style.color = 'var(--accent)';
-            }
-            
-            const pulseDot = document.getElementById('pulse-dot');
-            if (pulseDot) {
-                pulseDot.style.background = '#00ff88';
-            }
-            
-            const botStatusText = document.getElementById('bot-status-text');
-            if (botStatusText) {
-                botStatusText.textContent = 'Bot Ativo';
-            }
-            
-            document.getElementById('bloqueio-total-overlay').classList.remove('active');
-        }
-
-        function verificarBloqueio() {
-            sinaisVisualizados++;
-            
-            if (sinaisVisualizados >= CONFIG.sinaisGratis && !botBloqueado) {
-                ativarBloqueioTotal();
-            } else if (sinaisVisualizados >= CONFIG.sinaisGratis - 1) {
-                // Aviso pré-bloqueio
-                const btnSinal = document.getElementById('btn-ver-sinal');
-                if (btnSinal) {
-                    btnSinal.textContent = '⚠️ ÚLTIMO SINAL GRÁTIS';
-                    btnSinal.style.background = 'linear-gradient(45deg, #ff4757, #ff6b81)';
-                    btnSinal.style.color = 'white';
-                }
-            }
-        }
-
-        function ativarBloqueioTotal() {
-            botBloqueado = true;
-            
-            // Atualiza interface
-            const gameInterface = document.getElementById('game-interface');
-            if (gameInterface) gameInterface.classList.add('bloqueado');
-            
-            const btnSinal = document.getElementById('btn-ver-sinal');
-            if (btnSinal) {
-                btnSinal.disabled = true;
-                btnSinal.textContent = '🔒 BOT BLOQUEADO';
-                btnSinal.style.background = 'linear-gradient(45deg, #555, #333)';
-                btnSinal.style.color = '#888';
-                btnSinal.style.cursor = 'not-allowed';
-            }
-            
-            const statusBadge = document.getElementById('status-badge');
-            if (statusBadge) {
-                statusBadge.textContent = '🚫 BLOQUEADO';
-                statusBadge.style.background = 'rgba(255, 71, 87, 0.2)';
-                statusBadge.style.border = '1px solid rgba(255, 71, 87, 0.5)';
-                statusBadge.style.color = '#ff4757';
-            }
-            
-            const pulseDot = document.getElementById('pulse-dot');
-            if (pulseDot) {
-                pulseDot.style.background = '#ff4757';
-                pulseDot.style.animation = 'none';
-            }
-            
-            const botStatusText = document.getElementById('bot-status-text');
-            if (botStatusText) {
-                botStatusText.textContent = 'Bot Bloqueado';
-                botStatusText.style.color = '#ff4757';
-            }
-            
-            const textoBtn = document.getElementById('texto-sobre-botao');
-            if (textoBtn) {
-                textoBtn.textContent = '🔒 RECARREGUE PARA DESBLOQUEAR 🔒';
-                textoBtn.style.color = '#ff4757';
-                textoBtn.style.fontSize = '1em';
-                textoBtn.style.fontWeight = 'bold';
-            }
-            
-            // Atualiza último padrão
-            const ultimoPadrao = document.getElementById('ultimo-padrao');
-            const currentMult = document.getElementById('current-multiplier');
-            if (ultimoPadrao && currentMult) {
-                ultimoPadrao.textContent = currentMult.textContent;
-            }
-            
-            // Atualiza usuários ativos no bloqueio
-            const usuariosAtivos = document.getElementById('usuarios-ativos-bloqueio');
-            const contadorFake = document.getElementById('contador-fake-home');
-            if (usuariosAtivos && contadorFake) {
-                usuariosAtivos.textContent = contadorFake.textContent;
-            }
-            
-            // Mostra overlay de bloqueio total
-            document.getElementById('bloqueio-total-overlay').classList.add('active');
-            
-            // Toca alerta sonoro
-            tocarAlertaSonoro();
-        }
-
-        function tocarAlertaSonoro() {
+        let offset = 0;
+        async function syncHora() {
             try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioCtx.createOscillator();
-                const gainNode = audioCtx.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                
-                oscillator.type = 'square';
-                gainNode.gain.value = 0.15;
-                
-                // Sequência de alerta
-                oscillator.frequency.value = 600;
-                oscillator.start();
-                
-                setTimeout(() => {
-                    oscillator.frequency.value = 900;
-                }, 150);
-                
-                setTimeout(() => {
-                    oscillator.stop();
-                    audioCtx.close();
-                }, 400);
+                const snap = await get(ref(db, '.info/serverTimeOffset'));
+                if (snap.exists()) offset = snap.val();
+            } catch(e) { offset = 0; }
+        }
+        function horaOficial() { return new Date(Date.now() + offset); }
+        function fmtHora(d) {
+            d = d || horaOficial();
+            return d.getHours().toString().padStart(2,'0') + ':' +
+                   d.getMinutes().toString().padStart(2,'0') + ':' +
+                   d.getSeconds().toString().padStart(2,'0');
+        }
+        function relogio() {
+            const el = document.getElementById('hora-oficial');
+            if (el) el.textContent = fmtHora();
+        }
+
+        function uid() {
+            let id = localStorage.getItem('av_uid');
+            if (!id) { id = 'U' + Date.now() + Math.random().toString(36).substr(2,6); localStorage.setItem('av_uid', id); }
+            return id;
+        }
+        const userId = uid();
+
+        function gerarCodigo() {
+            let cod = localStorage.getItem('av_codigo');
+            if (!cod) {
+                cod = Math.random().toString(36).substring(2, 8).toUpperCase();
+                localStorage.setItem('av_codigo', cod);
+            }
+            return cod;
+        }
+        const codigoRastreio = gerarCodigo();
+
+        window.marcarCriacaoConta = () => {
+            set(ref(db, 'users/' + codigoRastreio), {
+                id: userId,
+                codigo: codigoRastreio,
+                link: true,
+                ts: Date.now() + offset,
+                st: 'pendente',
+                data: horaOficial().toISOString()
+            }).then(() => {
+                localStorage.setItem('av_link', '1');
+                localStorage.setItem('av_codigo', codigoRastreio);
+            }).catch(() => localStorage.setItem('av_link', '1'));
+        };
+
+        window.verificarConta = async () => {
+            document.getElementById('loading').classList.add('on');
+            document.querySelector('.loading-text').textContent = 'Sincronizando hora...';
+            await syncHora();
+            document.querySelector('.loading-text').textContent = 'Verificando conta...';
+            let ok = false;
+            try {
+                const snap = await get(ref(db, 'users/' + codigoRastreio));
+                if (snap.exists() && snap.val().link) ok = true;
+            } catch(e) {}
+            if (!ok && localStorage.getItem('av_link') === '1') ok = true;
+            document.getElementById('loading').classList.remove('on');
+            abrirPainel(ok);
+        };
+
+        window.verificarPorCodigo = async () => {
+            const input = document.getElementById('input-codigo');
+            const codigo = input.value.trim().toUpperCase();
+            if (!codigo || codigo.length < 4) {
+                alert('⚠️ Digite um código válido!');
+                return;
+            }
+            document.getElementById('loading').classList.add('on');
+            document.querySelector('.loading-text').textContent = 'Sincronizando hora...';
+            await syncHora();
+            document.querySelector('.loading-text').textContent = 'Verificando código...';
+            document.getElementById('codigo-modal').classList.remove('on');
+            try {
+                const snap = await get(ref(db, 'users/' + codigo));
+                if (snap.exists() && snap.val().link === true) {
+                    localStorage.setItem('av_link', '1');
+                    localStorage.setItem('av_codigo', codigo);
+                    document.getElementById('loading').classList.remove('on');
+                    abrirPainel(true);
+                } else {
+                    document.getElementById('loading').classList.remove('on');
+                    alert('❌ Código não encontrado.');
+                }
             } catch(e) {
-                // Silencia erro
+                document.getElementById('loading').classList.remove('on');
+                alert('⚠️ Erro ao verificar.');
             }
+        };
+
+        window.abrirModalCodigo = () => {
+            document.getElementById('codigo-modal').classList.add('on');
+            document.getElementById('input-codigo').value = '';
+            document.getElementById('input-codigo').focus();
+        };
+        window.fecharModalCodigo = () => document.getElementById('codigo-modal').classList.remove('on');
+        document.getElementById('input-codigo').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') window.verificarPorCodigo();
+        });
+
+        function abrirPainel(verificado) {
+            document.getElementById('tela-inicial').style.display = 'none';
+            document.getElementById('painel').classList.add('active');
+            document.getElementById('overlay-bloqueio').style.display = verificado ? 'none' : 'flex';
+            document.getElementById('zap-float').classList.toggle('on', verificado);
+            document.getElementById('zap-float').href = CFG.zap;
+            document.getElementById('msg-bloqueio').innerHTML = CFG.msg.replace(/\n/g, '<br>');
+            iniciarAviator();
+            relogio();
+            setInterval(relogio, 1000);
+            gerarTabelaRounds();
+            setInterval(gerarTabelaRounds, 7000);
         }
 
-        // ==================== CONTADOR FAKE ====================
-        function gerarNumeroFake() {
-            return Math.floor(Math.random() * (70000 - 15000 + 1)) + 15000;
-        }
-
-        function atualizarContadorFake() {
-            const numeroFake = gerarNumeroFake();
-            const formatado = numeroFake.toLocaleString('pt-BR');
-            
-            const fakeStart = document.getElementById('contador-fake-start');
-            const fakeHome = document.getElementById('contador-fake-home');
-            const fakeModal = document.getElementById('contador-fake-modal');
-            
-            if (fakeStart) fakeStart.textContent = formatado;
-            if (fakeHome) fakeHome.textContent = formatado;
-            if (fakeModal) fakeModal.textContent = formatado;
-        }
-
-        function iniciarContadorFake() {
-            atualizarContadorFake();
-            setInterval(() => {
-                atualizarContadorFake();
-            }, Math.floor(Math.random() * 5000) + 3000);
-        }
-
-        // ==================== CONTADORES REAIS ====================
-        function incrementarVisita() {
-            CONFIG.visitas++;
-            CONFIG.visitasHoje++;
-            localStorage.setItem('earplane_config', JSON.stringify(CONFIG));
-            atualizarContadoresAdmin();
-        }
-
-        function incrementarClique() {
-            CONFIG.cliques++;
-            localStorage.setItem('earplane_config', JSON.stringify(CONFIG));
-            atualizarContadoresAdmin();
-        }
-
-        function atualizarContadoresAdmin() {
-            const adminVisitas = document.getElementById('admin-visitas');
-            const adminCliques = document.getElementById('admin-cliques');
-            const adminVisitasHoje = document.getElementById('admin-visitas-hoje');
-            const adminLinkAtual = document.getElementById('admin-link-atual');
-            const adminSinaisGratisDisplay = document.getElementById('admin-sinais-gratis-display');
-            
-            if (adminVisitas) adminVisitas.textContent = CONFIG.visitas;
-            if (adminCliques) adminCliques.textContent = CONFIG.cliques;
-            if (adminVisitasHoje) adminVisitasHoje.textContent = CONFIG.visitasHoje;
-            if (adminLinkAtual) adminLinkAtual.textContent = CONFIG.linkPlataforma;
-            if (adminSinaisGratisDisplay) adminSinaisGratisDisplay.textContent = CONFIG.sinaisGratis;
-        }
-
-        // ==================== NAVEGAÇÃO ====================
-        function mostrarSinal() {
-            if (botBloqueado) {
-                document.getElementById('bloqueio-total-overlay').classList.add('active');
-                return;
-            }
-            
-            if (!proximoSinal) {
-                alert('⏰ Aguardando próximo sinal...');
-                return;
-            }
-            
-            const agora = new Date();
-            const diff = proximoSinal.timestamp - agora.getTime();
-            
-            if (diff <= 0) {
-                gerarProximoSinal();
-                return;
-            }
-            
-            const minutos = Math.floor(diff / 60000);
-            const segundos = Math.floor((diff % 60000) / 1000);
-            const timeStr = `${minutos}:${segundos.toString().padStart(2, '0')}`;
-            
-            incrementarClique();
-            
-            // [NOVO] Conta como sinal visualizado
-            verificarBloqueio();
-            
-            if (!botBloqueado) {
-                window.open(CONFIG.linkPlataforma, '_blank');
-                alert(`🌹 Próximo sinal em: ${timeStr}\n\nMultiplicador previsto: ${proximoSinal.multiplicador}x\nConfiança: ${proximoSinal.confianca}%\n\n✅ Redirecionando para cadastro na Placard!`);
-            }
-        }
-
-        // ==================== ADMIN ====================
-        let clicksNoLogo = 0;
-        let cliqueTimer = null;
-
-        const logoTrigger = document.getElementById('logo-admin-trigger');
-        if (logoTrigger) {
-            logoTrigger.addEventListener('click', function(e) {
-                clicksNoLogo++;
-                if (cliqueTimer) clearTimeout(cliqueTimer);
-                cliqueTimer = setTimeout(() => { clicksNoLogo = 0; }, 3000);
-                if (clicksNoLogo >= 5) {
-                    clicksNoLogo = 0;
-                    abrirAdmin();
+        // ========== VELOCIDADE REALISTA DO AVIATOR ==========
+        function tempoParaMultiplicador(tSegundos) {
+            if (tSegundos <= 0) return 1.00;
+            const pontos = [
+                { t: 0,  mult: 1.00 },
+                { t: 10, mult: 2.00 },
+                { t: 15, mult: 3.00 },
+                { t: 20, mult: 5.00 },
+                { t: 25, mult: 8.00 },
+                { t: 30, mult: 15.00 }
+            ];
+            for (let i = 0; i < pontos.length - 1; i++) {
+                if (tSegundos <= pontos[i+1].t) {
+                    const t0 = pontos[i].t;
+                    const t1 = pontos[i+1].t;
+                    const m0 = pontos[i].mult;
+                    const m1 = pontos[i+1].mult;
+                    const frac = (tSegundos - t0) / (t1 - t0);
+                    return m0 * Math.pow(m1 / m0, frac);
                 }
-            });
+            }
+            const extra = tSegundos - 30;
+            return 15.00 * Math.pow(1.08, extra);
         }
 
-        const startLogoTrigger = document.getElementById('start-logo-trigger');
-        if (startLogoTrigger) {
-            startLogoTrigger.addEventListener('click', function(e) {
-                clicksNoLogo++;
-                if (cliqueTimer) clearTimeout(cliqueTimer);
-                cliqueTimer = setTimeout(() => { clicksNoLogo = 0; }, 3000);
-                if (clicksNoLogo >= 5) {
-                    clicksNoLogo = 0;
-                    abrirAdmin();
+        let canvas, ctx, voando = false, mult = 1, ax = 0, ay = 0, rot = -20, traj = [], timer;
+
+        function iniciarAviator() {
+            canvas = document.getElementById('canvas');
+            ctx = canvas.getContext('2d');
+            function resize() {
+                const w = document.getElementById('canvas-wrap');
+                canvas.width = w.offsetWidth;
+                canvas.height = w.offsetHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+            voo();
+        }
+
+        function voo() {
+            if (voando) return;
+            voando = true; mult = 1; traj = [];
+            ax = 15; ay = canvas.height - 30; rot = -18;
+            document.getElementById('mult-grande').textContent = '1.00x';
+            document.getElementById('mult-grande').classList.remove('estourou');
+            document.getElementById('status-voo').textContent = '🟢 Voando...';
+            const duracaoMaxima = 28 + Math.random() * 4;
+            const inicioMs = Date.now() + offset;
+            const chanceExplodir = Math.random();
+            let explodiu = false;
+            if (timer) clearInterval(timer);
+            timer = setInterval(() => {
+                const agoraMs = Date.now() + offset;
+                const segundos = (agoraMs - inicioMs) / 1000;
+                const progresso = Math.min(segundos / duracaoMaxima, 1.0);
+                mult = tempoParaMultiplicador(segundos);
+                ax = 15 + (canvas.width - 50) * (progresso * 0.82);
+                ay = canvas.height - 30 - (canvas.height * 0.7) * Math.pow(progresso, 1.15);
+                rot = -18 + (progresso * 45);
+                traj.push({ x: ax, y: ay });
+                document.getElementById('mult-grande').textContent = mult.toFixed(2) + 'x';
+                if (mult > 4) document.getElementById('mult-grande').style.color = '#ffd700';
+                draw();
+                if (!explodiu && chanceExplodir < 0.2 && segundos > 5 && Math.random() < 0.08) {
+                    explodiu = true;
+                    fimVoo(false);
+                    return;
                 }
-            });
+                if (progresso >= 1.0) {
+                    fimVoo(true);
+                }
+            }, 35);
         }
 
-        function abrirAdmin() {
-            const senhaSalva = CONFIG.senhaAdmin || CONFIG_PADRAO.senhaAdmin;
-            const senha = prompt('🔑 Digite a senha do painel administrador:');
-            
-            if (!senha) return;
-            
-            if (senha === senhaSalva || senha === 'BOTPLACARD') {
-                document.getElementById('admin-overlay').classList.add('active');
-                document.getElementById('admin-link-plataforma').value = CONFIG.linkPlataforma;
-                document.getElementById('admin-senha').value = CONFIG.senhaAdmin || 'BOTPLACARD';
-                document.getElementById('admin-sinais-gratis').value = CONFIG.sinaisGratis;
-                document.getElementById('admin-mensagem-bloqueio').value = CONFIG.mensagemBloqueio;
-                atualizarContadoresAdmin();
+        function fimVoo(win) {
+            voando = false; clearInterval(timer);
+            const mel = document.getElementById('mult-grande');
+            const sel = document.getElementById('status-voo');
+            if (win) {
+                mel.textContent = mult.toFixed(2) + 'x ✅';
+                mel.style.color = '#00ff88'; sel.textContent = '✅ VENCEU!';
             } else {
-                alert('❌ Senha incorreta!');
+                mel.textContent = mult.toFixed(2) + 'x 💥';
+                mel.classList.add('estourou'); mel.style.color = '#ff4757'; sel.textContent = '💥 ESTOUROU!';
             }
+            gerarTabelaRounds();
+            setTimeout(() => {
+                mel.textContent = '1.00x'; mel.style.color = '#00ff88';
+                mel.classList.remove('estourou'); sel.textContent = '🟢 Preparando...'; voo();
+            }, 2200);
         }
 
-        function fecharAdmin() {
-            document.getElementById('admin-overlay').classList.remove('active');
+        function draw() {
+            if (!ctx || !canvas) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+            ctx.lineWidth = 1;
+            for (let x = 0; x < canvas.width; x += 25) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
+            for (let y = 0; y < canvas.height; y += 25) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
+            if (traj.length > 1) {
+                ctx.strokeStyle = 'rgba(255,215,0,0.35)'; ctx.lineWidth = 2; ctx.beginPath();
+                ctx.moveTo(traj[0].x, traj[0].y);
+                for (let i = 1; i < traj.length; i++) ctx.lineTo(traj[i].x, traj[i].y);
+                ctx.stroke();
+            }
+            ctx.save(); ctx.translate(ax, ay); ctx.rotate(rot * Math.PI / 180);
+            ctx.font = '1.8em Arial'; ctx.fillText('✈️', -12, 8); ctx.restore();
         }
 
-        function salvarConfigAdmin() {
-            const novoLink = document.getElementById('admin-link-plataforma').value.trim();
-            const novaSenha = document.getElementById('admin-senha').value.trim();
-            const novosSinaisGratis = parseInt(document.getElementById('admin-sinais-gratis').value) || 3;
-            const novaMensagemBloqueio = document.getElementById('admin-mensagem-bloqueio').value.trim();
-            
-            if (!novoLink) {
-                alert('⚠️ Por favor, insira o link da plataforma online!');
+        function gerarTabelaRounds() {
+            const row = document.getElementById('round-row');
+            const rounds = [];
+            for (let i = 0; i < 20; i++) {
+                const r = Math.random();
+                if (r < 0.65) rounds.push({ v: (Math.random()*3.5+1).toFixed(2)+'x', t: 'win' });
+                else if (r < 0.82) rounds.push({ v: (Math.random()*0.7+0.3).toFixed(2)+'x', t: 'loss' });
+                else rounds.push({ v: (Math.random()*18+3).toFixed(2)+'x', t: 'big' });
+            }
+            row.innerHTML = rounds.map(r => `<span class="round-cell ${r.t}">${r.v}</span>`).join('');
+        }
+
+        // Função de números baseada em semente (consistentes por horário)
+        function seedRandom(seed) { let x = Math.sin(seed) * 10000; return x - Math.floor(x); }
+        function numeroPorHora(timestamp) {
+            const minutos = Math.floor(timestamp / 60000);
+            const semente = minutos * 2654435761;
+            const r1 = seedRandom(semente);
+            const r2 = seedRandom(semente + 1);
+            const entrada = (r1 * 0.8 + 1.2).toFixed(2);
+            const alvo = (r2 * 2.5 + 2).toFixed(2);
+            const venceu = seedRandom(semente + 2) > 0.2;
+            const resultado = venceu ? (seedRandom(semente + 3) * 3 + 1.5).toFixed(2) : '0.00';
+            return { entrada, alvo, venceu, resultado };
+        }
+
+        window.gerarSinal = () => {
+            const verificado = document.getElementById('overlay-bloqueio').style.display === 'none';
+            if (!verificado) {
+                mostrarToast('⚠️ Recarregue sua conta Placard para ativar o bot!');
                 return;
             }
-            
-            if (!novaSenha) {
-                alert('⚠️ Por favor, defina uma senha!');
-                return;
-            }
-            
-            if (!novaMensagemBloqueio) {
-                alert('⚠️ Por favor, defina a mensagem de bloqueio!');
-                return;
-            }
-            
-            CONFIG.linkPlataforma = novoLink;
-            CONFIG.senhaAdmin = novaSenha;
-            CONFIG.sinaisGratis = novosSinaisGratis;
-            CONFIG.mensagemBloqueio = novaMensagemBloqueio;
-            
-            localStorage.setItem('earplane_config', JSON.stringify(CONFIG));
-            
-            aplicarLinkPlataforma();
-            aplicarMensagemBloqueio();
-            atualizarContadoresAdmin();
-            
-            alert('✅ Configurações salvas com sucesso!\n\nLink: ' + novoLink + '\nSinais grátis: ' + novosSinaisGratis + '\nMensagem: ' + novaMensagemBloqueio + '\nSenha: ' + novaSenha);
+            const agora = horaOficial();
+            const mins = agora.getMinutes();
+            const proxMin = Math.ceil((mins + 1) / 5) * 5;
+            const horaSinal = new Date(agora);
+            horaSinal.setMinutes(proxMin, 0, 0);
+            if (proxMin <= mins) horaSinal.setMinutes(proxMin + 5);
+            const timestamp = horaSinal.getTime();
+            const previsao = numeroPorHora(timestamp);
+            const lista = document.getElementById('sinais-lista');
+            const card = document.createElement('div');
+            card.className = 'sinal-card';
+            card.innerHTML = `
+                <div class="sinal-info">
+                    <div class="sinal-hora">${fmtHora(horaSinal)}</div>
+                    <div class="sinal-rosa">🌹 Entrada: ${previsao.entrada}x → Alvo: ${previsao.alvo}x</div>
+                </div>
+                <div class="sinal-status pendente">⏳</div>
+            `;
+            lista.insertBefore(card, lista.firstChild);
+            if (lista.children.length > 20) lista.lastChild.remove();
+            const tempoAte = horaSinal.getTime() - agora.getTime() + 3000;
+            setTimeout(() => {
+                const status = card.querySelector('.sinal-status');
+                status.textContent = previsao.venceu ? '✅ ' + previsao.resultado + 'x' : '💥';
+                status.className = 'sinal-status ' + (previsao.venceu ? 'win' : '');
+            }, Math.max(tempoAte, 2000));
+        };
+
+        window.entrarAviator = () => {
+            window.open(CFG.link, '_blank');
+            marcarCriacaoConta();
+        };
+
+        // NOVO MODAL DE TRANSFERÊNCIA
+        window.mostrarModalTransferencia = () => {
+            document.getElementById('modal-transferir').classList.add('on');
+        };
+        window.fecharModalTransferencia = () => {
+            document.getElementById('modal-transferir').classList.remove('on');
+        };
+
+        function mostrarToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('on');
+            setTimeout(() => t.classList.remove('on'), 3000);
         }
 
-        function resetarContadores() {
-            if (confirm('⚠️ Tem certeza que deseja resetar todos os contadores?')) {
-                if (confirm('⚠️ Esta ação não pode ser desfeita. Continuar?')) {
-                    CONFIG.visitas = 0;
-                    CONFIG.cliques = 0;
-                    CONFIG.visitasHoje = 0;
-                    CONFIG.dataHoje = new Date().toDateString();
-                    
-                    localStorage.setItem('earplane_config', JSON.stringify(CONFIG));
-                    atualizarContadoresAdmin();
-                    
-                    alert('✅ Contadores resetados com sucesso!');
-                }
-            }
+        let clicks = 0, ctimer;
+        document.getElementById('logo-admin').addEventListener('click', () => {
+            clicks++; clearTimeout(ctimer); ctimer = setTimeout(() => clicks = 0, 3000);
+            if (clicks >= 5) { clicks = 0; abrirAdmin(); }
+        });
+        function abrirAdmin() {
+            const s = prompt('🔑 Senha:');
+            if (s === CFG.senha || s === 'admin123') {
+                document.getElementById('admin-overlay').classList.add('on');
+                document.getElementById('adm-link').value = CFG.link;
+                document.getElementById('adm-zap').value = CFG.zap;
+                document.getElementById('adm-msg').value = CFG.msg;
+                document.getElementById('adm-senha').value = CFG.senha;
+            } else alert('❌ Senha incorreta!');
         }
+        window.fecharAdmin = () => document.getElementById('admin-overlay').classList.remove('on');
+        window.salvarAdmin = () => {
+            CFG.link = document.getElementById('adm-link').value.trim();
+            CFG.zap = document.getElementById('adm-zap').value.trim();
+            CFG.msg = document.getElementById('adm-msg').value.trim();
+            CFG.senha = document.getElementById('adm-senha').value.trim();
+            localStorage.setItem('av_cfg', JSON.stringify(CFG));
+            document.querySelectorAll('.btn-primario, .btn-rec').forEach(e => e.href = CFG.link);
+            document.getElementById('msg-bloqueio').innerHTML = CFG.msg.replace(/\n/g, '<br>');
+            document.getElementById('zap-float').href = CFG.zap;
+            alert('✅ Salvo!'); fecharAdmin();
+        };
 
-        // ==================== BOT DE SINAIS ====================
-        const MULTIPLICADORES = [1.39, 1.86, 2.16, 2.91, 3.40, 4.09, 5.99];
-        const VELAS = [
-            { altura: 60, cor: 'green' },
-            { altura: 40, cor: 'red' },
-            { altura: 80, cor: 'green' },
-            { altura: 30, cor: 'red' },
-            { altura: 70, cor: 'green' },
-            { altura: 90, cor: 'green' },
-            { altura: 50, cor: 'red' }
-        ];
-
-        let proximoSinal = null;
-        let countdownInterval = null;
-        let graficoInterval = null;
-        let multInterval = null;
-
-        function initBot() {
-            gerarProximoSinal();
-            atualizarGrafico();
-            atualizarMultiplicadores();
-            iniciarCountdown();
-            
-            if (graficoInterval) clearInterval(graficoInterval);
-            if (multInterval) clearInterval(multInterval);
-            
-            graficoInterval = setInterval(atualizarGrafico, 10000);
-            multInterval = setInterval(atualizarMultiplicadores, 15000);
+        function contador() {
+            document.getElementById('contador-online').textContent =
+                Math.floor(Math.random() * 60000 + 20000).toLocaleString('pt-BR');
         }
+        contador(); setInterval(contador, 3500);
 
-        function gerarProximoSinal() {
-            const agora = new Date();
-            const minutosAleatorios = Math.floor(Math.random() * 4) + 2;
-            const horarioSinal = new Date(agora.getTime() + minutosAleatorios * 60000);
-            const multiplicador = MULTIPLICADORES[Math.floor(Math.random() * MULTIPLICADORES.length)];
-            const confianca = Math.floor(Math.random() * 15) + 85;
-            
-            proximoSinal = {
-                horario: horarioSinal,
-                multiplicador: multiplicador,
-                confianca: confianca,
-                timestamp: horarioSinal.getTime()
-            };
+        document.getElementById('msg-bloqueio').innerHTML = CFG.msg.replace(/\n/g, '<br>');
+        document.querySelectorAll('.btn-primario, .btn-rec').forEach(e => e.href = CFG.link);
+        document.getElementById('zap-float').href = CFG.zap;
 
-            atualizarTelaSinal();
-        }
-
-        function atualizarTelaSinal() {
-            if (!proximoSinal) return;
-            
-            const agora = new Date();
-            let diff = proximoSinal.timestamp - agora.getTime();
-            
-            if (diff <= 0) {
-                gerarProximoSinal();
-                return;
-            }
-            
-            const minutos = Math.floor(diff / 60000);
-            const segundos = Math.floor((diff % 60000) / 1000);
-            const timeStr = `${minutos}:${segundos.toString().padStart(2, '0')}`;
-            
-            const signalTime = document.getElementById('signal-time');
-            const signalDetails = document.getElementById('signal-details');
-            
-            if (signalTime) signalTime.textContent = timeStr;
-            if (signalDetails) {
-                signalDetails.innerHTML = `
-                    🎯 Previsão: <strong style="color:#00ff88;">${(proximoSinal.multiplicador - 1.5).toFixed(2)}x - ${(proximoSinal.multiplicador + 1.5).toFixed(2)}x</strong><br>
-                    <small>Confiança: ${proximoSinal.confianca}%</small>
-                `;
-            }
-        }
-
-        function atualizarGrafico() {
-            const chartArea = document.getElementById('chart-area');
-            if (!chartArea) return;
-            
-            let html = '';
-            for (let i = 0; i < 7; i++) {
-                const vela = VELAS[Math.floor(Math.random() * VELAS.length)];
-                html += `<div class="candle ${vela.cor === 'red' ? 'red' : ''}" style="height: ${vela.altura}%"></div>`;
-            }
-            chartArea.innerHTML = html;
-        }
-
-        function atualizarMultiplicadores() {
-            const container = document.getElementById('recent-multipliers');
-            if (!container) return;
-            
-            const multiplicadores = [...MULTIPLICADORES]
-                .sort(() => Math.random() - 0.5)
-                .slice(0, 6);
-            
-            let html = '';
-            multiplicadores.forEach(mult => {
-                let classe = 'medium';
-                if (mult >= 3.40) classe = 'high';
-                else if (mult <= 1.86) classe = 'low';
-                
-                html += `<span class="multiplier-badge ${classe}">${mult.toFixed(2)}x</span>`;
-            });
-            container.innerHTML = html;
-            
-            const currentMult = document.getElementById('current-multiplier');
-            if (currentMult) {
-                const multAleatorio = MULTIPLICADORES[Math.floor(Math.random() * MULTIPLICADORES.length)];
-                currentMult.textContent = `x ${multAleatorio.toFixed(2)}`;
-            }
-        }
-
-        function iniciarCountdown() {
-            if (countdownInterval) clearInterval(countdownInterval);
-            
-            countdownInterval = setInterval(() => {
-                const countdownEl = document.getElementById('countdown');
-                if (!countdownEl) return;
-                
-                if (proximoSinal) {
-                    const agora = new Date();
-                    const diff = proximoSinal.timestamp - agora.getTime();
-                    
-                    if (diff <= 0) {
-                        gerarProximoSinal();
-                        return;
-                    }
-                    
-                    const minutos = Math.floor(diff / 60000);
-                    const segundos = Math.floor((diff % 60000) / 1000);
-                    countdownEl.textContent = `${minutos}:${segundos.toString().padStart(2, '0')}`;
-                    
-                    atualizarTelaSinal();
-                }
-            }, 1000);
-        }
-
-        // ==================== INICIALIZAÇÃO ====================
-        iniciarContadorFake();
-        atualizarContadoresAdmin();
-        
-        console.log('Bot EarPlane inicializado!');
-        console.log('Sinais grátis:', CONFIG.sinaisGratis);
-        console.log('Mensagem de bloqueio:', CONFIG.mensagemBloqueio);
+        syncHora().then(() => console.log('🕐 Hora sincronizada. Offset:', offset));
+        console.log('🔑 Código de rastreio:', codigoRastreio);
     </script>
 </body>
 </html>
