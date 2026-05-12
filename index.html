@@ -204,7 +204,7 @@
             line-height: 1.5;
         }
 
-        /* NOVO: BOT AVIATOR GRÁTIS */
+        /* BOT AVIATOR GRÁTIS */
         .bot-aviator-gratis {
             background: linear-gradient(45deg, #ffd700, #ffaa00);
             border: 2px solid #ffd700;
@@ -451,6 +451,14 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
+            transition: all 0.5s ease;
+        }
+
+        /* [NOVO] Game Interface quando bloqueada */
+        .game-interface.bloqueado {
+            filter: blur(0);
+            border: 2px solid #ff4757;
+            box-shadow: 0 0 40px rgba(255, 71, 87, 0.3);
         }
 
         .game-title {
@@ -474,6 +482,13 @@
             -webkit-filter: blur(6px);
             pointer-events: none;
             user-select: none;
+            transition: filter 0.5s ease;
+        }
+
+        /* [NOVO] Quando bloqueado, desfoca mais */
+        .game-interface.bloqueado .multipliers-row {
+            filter: blur(12px);
+            -webkit-filter: blur(12px);
         }
 
         .multiplier-badge {
@@ -525,6 +540,13 @@
             -webkit-filter: blur(8px);
             pointer-events: none;
             user-select: none;
+            transition: filter 0.5s ease;
+        }
+
+        /* [NOVO] Gráfico mais borrado quando bloqueado */
+        .game-interface.bloqueado .chart-area {
+            filter: blur(15px);
+            -webkit-filter: blur(15px);
         }
 
         .candle {
@@ -554,6 +576,12 @@
             -webkit-filter: blur(5px);
             pointer-events: none;
             user-select: none;
+            transition: filter 0.5s ease;
+        }
+
+        .game-interface.bloqueado .multiplier-display {
+            filter: blur(10px);
+            -webkit-filter: blur(10px);
         }
 
         .signal-alert {
@@ -567,6 +595,12 @@
             -webkit-filter: blur(10px);
             pointer-events: none;
             user-select: none;
+            transition: filter 0.5s ease;
+        }
+
+        .game-interface.bloqueado .signal-alert {
+            filter: blur(18px);
+            -webkit-filter: blur(18px);
         }
 
         .signal-time {
@@ -601,6 +635,14 @@
         .btn-sinal:hover {
             opacity: 0.9;
             transform: scale(0.98);
+        }
+
+        /* [NOVO] Botão de sinal desabilitado */
+        .btn-sinal:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: blur(2px);
+            -webkit-filter: blur(2px);
         }
 
         .btn-cadastrar-wrapper {
@@ -643,6 +685,125 @@
             color: #ffd700;
             font-size: 0.85em;
             margin-bottom: 5px;
+            animation: piscar 1.5s infinite;
+        }
+
+        /* ===== [NOVO] PAINEL DE BLOQUEIO TOTAL ===== */
+        .bloqueio-total-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .bloqueio-total-overlay.active {
+            display: flex;
+        }
+
+        .bloqueio-total-panel {
+            background: linear-gradient(135deg, #0d1137, #1a1f4e);
+            border: 3px solid #ff4757;
+            border-radius: 20px;
+            padding: 35px 25px;
+            max-width: 430px;
+            width: 90%;
+            text-align: center;
+            animation: shakeIn 0.6s ease;
+            box-shadow: 0 0 60px rgba(255, 71, 87, 0.4), 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        @keyframes shakeIn {
+            0% { transform: scale(0.8) rotate(-2deg); opacity: 0; }
+            50% { transform: scale(1.02) rotate(1deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        .bloqueio-total-panel .icone-bloqueio {
+            font-size: 5em;
+            display: block;
+            margin-bottom: 10px;
+            animation: pulse-strong 1s infinite;
+        }
+
+        @keyframes pulse-strong {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        .bloqueio-total-panel h2 {
+            color: #ff4757;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 30px rgba(255, 71, 87, 0.5);
+        }
+
+        .bloqueio-total-panel .mensagem-bloqueio {
+            color: #ffffff;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            background: rgba(255, 71, 87, 0.15);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px dashed #ff4757;
+            line-height: 1.6;
+        }
+
+        .bloqueio-total-panel .detalhes-bloqueio {
+            color: #8b8fa8;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .bloqueio-total-panel .detalhes-bloqueio span {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .btn-recarga {
+            display: block;
+            width: 100%;
+            background: linear-gradient(45deg, #ff4757, #ff6b81);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            letter-spacing: 2px;
+            text-decoration: none;
+            margin-bottom: 12px;
+            animation: pulse-btn-red 1.5s infinite;
+            box-shadow: 0 10px 40px rgba(255, 71, 87, 0.6);
+            text-transform: uppercase;
+        }
+
+        .btn-recarga:hover {
+            transform: scale(0.97);
+            box-shadow: 0 15px 50px rgba(255, 71, 87, 0.8);
+        }
+
+        .btn-recarga::before {
+            content: '💰 ';
+        }
+
+        .bloqueio-total-panel .aviso-liberacao {
+            color: #ffd700;
+            font-size: 0.8em;
             animation: piscar 1.5s infinite;
         }
 
@@ -864,6 +1025,10 @@
             .contador-fake .numero-pessoas { font-size: 1.5em; }
             .btn-start { padding: 18px 30px; font-size: 1.1em; }
             .modal-criar-conta { padding: 25px; }
+            .bloqueio-total-panel { padding: 25px 20px; }
+            .bloqueio-total-panel h2 { font-size: 1.4em; }
+            .bloqueio-total-panel .mensagem-bloqueio { font-size: 1em; }
+            .btn-recarga { padding: 16px; font-size: 1.1em; }
         }
     </style>
 </head>
@@ -903,7 +1068,7 @@
                 crie sua conta na <strong style="color:#ffd700;">Placard</strong> agora mesmo!
             </p>
 
-            <!-- NOVO: BOT AVIATOR GRÁTIS (ONDE VOCÊ RABISCOU) -->
+            <!-- BOT AVIATOR GRÁTIS -->
             <div class="bot-aviator-gratis">
                 <div class="icone-aviator">✈️</div>
                 <div class="titulo-aviator">🎁 OFERTA EXCLUSIVA</div>
@@ -940,27 +1105,27 @@
     <div class="container" id="home-screen" style="display:none;">
         <div class="header">
             <div class="logo" id="logo-admin-trigger">EARPLANE</div>
-            <div class="status-badge">🔥 ONLINE</div>
+            <div class="status-badge" id="status-badge">🔥 ONLINE</div>
         </div>
 
         <div class="bot-status">
             <div class="bot-indicator">
-                <div class="pulse-dot"></div>
-                <span>Bot Ativo</span>
+                <div class="pulse-dot" id="pulse-dot"></div>
+                <span id="bot-status-text">Bot Ativo</span>
             </div>
             <div class="next-signal">
                 Próximo sinal: <span id="countdown">2:45</span>
             </div>
         </div>
 
-        <div class="game-interface">
+        <div class="game-interface" id="game-interface">
             <div class="game-title">EARPLANE</div>
             
             <div class="multipliers-row" id="recent-multipliers"></div>
             
             <div class="chart-wrapper">
                 <div class="chart-area" id="chart-area"></div>
-                <div class="lock-overlay">🔒</div>
+                <div class="lock-overlay" id="lock-overlay-grafico" style="display:none;">🔒</div>
             </div>
             
             <div class="multiplier-display" id="current-multiplier">x 3.40</div>
@@ -971,7 +1136,7 @@
                 <div class="signal-info" id="signal-details"></div>
             </div>
 
-            <button class="btn-sinal" onclick="mostrarSinal()">
+            <button class="btn-sinal" id="btn-ver-sinal" onclick="mostrarSinal()">
                 👁️ VER SINAL COMPLETO
             </button>
 
@@ -982,7 +1147,7 @@
             </div>
 
             <div class="btn-cadastrar-wrapper">
-                <p class="texto-sobre-botao">🔒 DESBLOQUEIE OS SINAIS AGORA 🔒</p>
+                <p class="texto-sobre-botao" id="texto-sobre-botao">🔒 DESBLOQUEIE OS SINAIS AGORA 🔒</p>
                 <a id="link-cadastrar-home" href="#" class="btn-cadastrar" target="_blank" onclick="incrementarClique()">
                     CRIAR CONTA NA PLACARD
                 </a>
@@ -1000,6 +1165,27 @@
         </div>
     </div>
 
+    <!-- ========== [NOVO] OVERLAY DE BLOQUEIO TOTAL ========== -->
+    <div class="bloqueio-total-overlay" id="bloqueio-total-overlay">
+        <div class="bloqueio-total-panel">
+            <span class="icone-bloqueio">🚫</span>
+            <h2>🔒 BOT BLOQUEADO</h2>
+            <div class="mensagem-bloqueio" id="mensagem-bloqueio">
+                RECARREGA A SUA CONTA PLACARD PRA ATIVAR O BOT
+            </div>
+            <div class="detalhes-bloqueio">
+                <p>⚠️ <span>Banca insuficiente</span> detectada</p>
+                <p>⚡ Sinais em tempo real <span>pausados</span></p>
+                <p>🎯 Último padrão detectado: <span id="ultimo-padrao">2.15x</span></p>
+                <p>👥 <span id="usuarios-ativos-bloqueio">0</span> usuários ativos neste momento</p>
+            </div>
+            <a id="link-recarga" href="#" class="btn-recarga" target="_blank" onclick="incrementarClique()">
+                RECARREGAR AGORA
+            </a>
+            <p class="aviso-liberacao">⚡ Após recarga, o bot libera em até 2 minutos</p>
+        </div>
+    </div>
+
     <!-- ========== PAINEL ADMIN ========== -->
     <div class="admin-overlay" id="admin-overlay">
         <div class="admin-panel">
@@ -1008,11 +1194,24 @@
             <label>🔗 LINK DA PLATAFORMA ONLINE:</label>
             <input type="text" id="admin-link-plataforma" placeholder="Cole o link da plataforma online aqui...">
             <small style="color:#8b8fa8;display:block;margin-top:-10px;margin-bottom:15px;">
-                Este link será usado em todos os botões "CRIAR CONTA NA PLACARD"
+                Este link será usado em todos os botões
             </small>
             
+            <!-- [NOVO] Configuração de sinais antes do bloqueio -->
+            <label>🔢 SINAIS GRÁTIS ANTES DO BLOQUEIO:</label>
+            <input type="number" id="admin-sinais-gratis" placeholder="Quantidade de sinais grátis (padrão: 3)" min="1" max="20" value="3">
+            <small style="color:#8b8fa8;display:block;margin-top:-10px;margin-bottom:15px;">
+                Após este número de sinais, o bot será totalmente bloqueado
+            </small>
+
+            <label>💬 MENSAGEM DE BLOQUEIO:</label>
+            <input type="text" id="admin-mensagem-bloqueio" placeholder="Mensagem quando o bot bloquear..." value="RECARREGA A SUA CONTA PLACARD PRA ATIVAR O BOT">
+            <small style="color:#8b8fa8;display:block;margin-top:-10px;margin-bottom:15px;">
+                Mensagem exibida na tela de bloqueio total
+            </small>
+
             <div class="aviso-venda">
-                ⚠️ Os sinais ficam embaçados até o usuário clicar no botão de cadastro
+                ⚠️ Os sinais ficam embaçados até o usuário clicar no botão de cadastro. Após X sinais, o bot bloqueia totalmente.
             </div>
 
             <div class="admin-stats">
@@ -1033,6 +1232,11 @@
                     <span class="stat-value" id="admin-visitas-hoje">0</span>
                 </div>
                 
+                <div class="stat-item">
+                    <span class="stat-label">🔢 Sinais grátis configurados:</span>
+                    <span class="stat-value" id="admin-sinais-gratis-display">3</span>
+                </div>
+
                 <div class="stat-item">
                     <span class="stat-label">🔗 Link atual:</span>
                     <span class="stat-value" style="font-size:0.7em;word-break:break-all;" id="admin-link-atual">Não definido</span>
@@ -1057,6 +1261,8 @@
         const CONFIG_PADRAO = {
             linkPlataforma: 'https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723',
             senhaAdmin: 'BOTPLACARD',
+            sinaisGratis: 3,
+            mensagemBloqueio: 'RECARREGA A SUA CONTA PLACARD PRA ATIVAR O BOT',
             visitas: 0,
             cliques: 0,
             visitasHoje: 0,
@@ -1089,16 +1295,30 @@
 
         let CONFIG = carregarConfig();
 
-        // ==================== APLICAR LINK DA PLATAFORMA ====================
+        // ==================== [NOVO] ESTADO DO BLOQUEIO ====================
+        let sinaisVisualizados = 0;
+        let botBloqueado = false;
+
+        // ==================== APLICAR CONFIGURAÇÕES ====================
         function aplicarLinkPlataforma() {
             const linkModal = document.getElementById('link-cadastrar-modal');
             const linkHome = document.getElementById('link-cadastrar-home');
+            const linkRecarga = document.getElementById('link-recarga');
             
             if (linkModal) linkModal.href = CONFIG.linkPlataforma;
             if (linkHome) linkHome.href = CONFIG.linkPlataforma;
+            if (linkRecarga) linkRecarga.href = CONFIG.linkPlataforma;
+        }
+
+        function aplicarMensagemBloqueio() {
+            const mensagemBloqueio = document.getElementById('mensagem-bloqueio');
+            if (mensagemBloqueio) {
+                mensagemBloqueio.textContent = CONFIG.mensagemBloqueio;
+            }
         }
         
         aplicarLinkPlataforma();
+        aplicarMensagemBloqueio();
 
         // ==================== CAMADAS SOBREPOSTAS ====================
         function abrirCamadaCriarConta() {
@@ -1110,7 +1330,154 @@
             document.getElementById('overlay-criar-conta').classList.remove('active');
             document.getElementById('start-screen').style.display = 'none';
             document.getElementById('home-screen').style.display = 'block';
+            reiniciarSinais();
             initBot();
+        }
+
+        // ==================== [NOVO] SISTEMA DE BLOQUEIO ====================
+        function reiniciarSinais() {
+            sinaisVisualizados = 0;
+            botBloqueado = false;
+            
+            // Restaura interface
+            const gameInterface = document.getElementById('game-interface');
+            if (gameInterface) gameInterface.classList.remove('bloqueado');
+            
+            const btnSinal = document.getElementById('btn-ver-sinal');
+            if (btnSinal) {
+                btnSinal.disabled = false;
+                btnSinal.textContent = '👁️ VER SINAL COMPLETO';
+            }
+            
+            const statusBadge = document.getElementById('status-badge');
+            if (statusBadge) {
+                statusBadge.textContent = '🔥 ONLINE';
+                statusBadge.style.background = 'rgba(0, 212, 170, 0.1)';
+                statusBadge.style.border = '1px solid rgba(0, 212, 170, 0.3)';
+                statusBadge.style.color = 'var(--accent)';
+            }
+            
+            const pulseDot = document.getElementById('pulse-dot');
+            if (pulseDot) {
+                pulseDot.style.background = '#00ff88';
+            }
+            
+            const botStatusText = document.getElementById('bot-status-text');
+            if (botStatusText) {
+                botStatusText.textContent = 'Bot Ativo';
+            }
+            
+            document.getElementById('bloqueio-total-overlay').classList.remove('active');
+        }
+
+        function verificarBloqueio() {
+            sinaisVisualizados++;
+            
+            if (sinaisVisualizados >= CONFIG.sinaisGratis && !botBloqueado) {
+                ativarBloqueioTotal();
+            } else if (sinaisVisualizados >= CONFIG.sinaisGratis - 1) {
+                // Aviso pré-bloqueio
+                const btnSinal = document.getElementById('btn-ver-sinal');
+                if (btnSinal) {
+                    btnSinal.textContent = '⚠️ ÚLTIMO SINAL GRÁTIS';
+                    btnSinal.style.background = 'linear-gradient(45deg, #ff4757, #ff6b81)';
+                    btnSinal.style.color = 'white';
+                }
+            }
+        }
+
+        function ativarBloqueioTotal() {
+            botBloqueado = true;
+            
+            // Atualiza interface
+            const gameInterface = document.getElementById('game-interface');
+            if (gameInterface) gameInterface.classList.add('bloqueado');
+            
+            const btnSinal = document.getElementById('btn-ver-sinal');
+            if (btnSinal) {
+                btnSinal.disabled = true;
+                btnSinal.textContent = '🔒 BOT BLOQUEADO';
+                btnSinal.style.background = 'linear-gradient(45deg, #555, #333)';
+                btnSinal.style.color = '#888';
+                btnSinal.style.cursor = 'not-allowed';
+            }
+            
+            const statusBadge = document.getElementById('status-badge');
+            if (statusBadge) {
+                statusBadge.textContent = '🚫 BLOQUEADO';
+                statusBadge.style.background = 'rgba(255, 71, 87, 0.2)';
+                statusBadge.style.border = '1px solid rgba(255, 71, 87, 0.5)';
+                statusBadge.style.color = '#ff4757';
+            }
+            
+            const pulseDot = document.getElementById('pulse-dot');
+            if (pulseDot) {
+                pulseDot.style.background = '#ff4757';
+                pulseDot.style.animation = 'none';
+            }
+            
+            const botStatusText = document.getElementById('bot-status-text');
+            if (botStatusText) {
+                botStatusText.textContent = 'Bot Bloqueado';
+                botStatusText.style.color = '#ff4757';
+            }
+            
+            const textoBtn = document.getElementById('texto-sobre-botao');
+            if (textoBtn) {
+                textoBtn.textContent = '🔒 RECARREGUE PARA DESBLOQUEAR 🔒';
+                textoBtn.style.color = '#ff4757';
+                textoBtn.style.fontSize = '1em';
+                textoBtn.style.fontWeight = 'bold';
+            }
+            
+            // Atualiza último padrão
+            const ultimoPadrao = document.getElementById('ultimo-padrao');
+            const currentMult = document.getElementById('current-multiplier');
+            if (ultimoPadrao && currentMult) {
+                ultimoPadrao.textContent = currentMult.textContent;
+            }
+            
+            // Atualiza usuários ativos no bloqueio
+            const usuariosAtivos = document.getElementById('usuarios-ativos-bloqueio');
+            const contadorFake = document.getElementById('contador-fake-home');
+            if (usuariosAtivos && contadorFake) {
+                usuariosAtivos.textContent = contadorFake.textContent;
+            }
+            
+            // Mostra overlay de bloqueio total
+            document.getElementById('bloqueio-total-overlay').classList.add('active');
+            
+            // Toca alerta sonoro
+            tocarAlertaSonoro();
+        }
+
+        function tocarAlertaSonoro() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                oscillator.type = 'square';
+                gainNode.gain.value = 0.15;
+                
+                // Sequência de alerta
+                oscillator.frequency.value = 600;
+                oscillator.start();
+                
+                setTimeout(() => {
+                    oscillator.frequency.value = 900;
+                }, 150);
+                
+                setTimeout(() => {
+                    oscillator.stop();
+                    audioCtx.close();
+                }, 400);
+            } catch(e) {
+                // Silencia erro
+            }
         }
 
         // ==================== CONTADOR FAKE ====================
@@ -1157,15 +1524,22 @@
             const adminCliques = document.getElementById('admin-cliques');
             const adminVisitasHoje = document.getElementById('admin-visitas-hoje');
             const adminLinkAtual = document.getElementById('admin-link-atual');
+            const adminSinaisGratisDisplay = document.getElementById('admin-sinais-gratis-display');
             
             if (adminVisitas) adminVisitas.textContent = CONFIG.visitas;
             if (adminCliques) adminCliques.textContent = CONFIG.cliques;
             if (adminVisitasHoje) adminVisitasHoje.textContent = CONFIG.visitasHoje;
             if (adminLinkAtual) adminLinkAtual.textContent = CONFIG.linkPlataforma;
+            if (adminSinaisGratisDisplay) adminSinaisGratisDisplay.textContent = CONFIG.sinaisGratis;
         }
 
         // ==================== NAVEGAÇÃO ====================
         function mostrarSinal() {
+            if (botBloqueado) {
+                document.getElementById('bloqueio-total-overlay').classList.add('active');
+                return;
+            }
+            
             if (!proximoSinal) {
                 alert('⏰ Aguardando próximo sinal...');
                 return;
@@ -1184,9 +1558,14 @@
             const timeStr = `${minutos}:${segundos.toString().padStart(2, '0')}`;
             
             incrementarClique();
-            window.open(CONFIG.linkPlataforma, '_blank');
             
-            alert(`🌹 Próximo sinal em: ${timeStr}\n\nMultiplicador previsto: ${proximoSinal.multiplicador}x\nConfiança: ${proximoSinal.confianca}%\n\n✅ Redirecionando para cadastro na Placard!`);
+            // [NOVO] Conta como sinal visualizado
+            verificarBloqueio();
+            
+            if (!botBloqueado) {
+                window.open(CONFIG.linkPlataforma, '_blank');
+                alert(`🌹 Próximo sinal em: ${timeStr}\n\nMultiplicador previsto: ${proximoSinal.multiplicador}x\nConfiança: ${proximoSinal.confianca}%\n\n✅ Redirecionando para cadastro na Placard!`);
+            }
         }
 
         // ==================== ADMIN ====================
@@ -1229,6 +1608,8 @@
                 document.getElementById('admin-overlay').classList.add('active');
                 document.getElementById('admin-link-plataforma').value = CONFIG.linkPlataforma;
                 document.getElementById('admin-senha').value = CONFIG.senhaAdmin || 'BOTPLACARD';
+                document.getElementById('admin-sinais-gratis').value = CONFIG.sinaisGratis;
+                document.getElementById('admin-mensagem-bloqueio').value = CONFIG.mensagemBloqueio;
                 atualizarContadoresAdmin();
             } else {
                 alert('❌ Senha incorreta!');
@@ -1242,6 +1623,8 @@
         function salvarConfigAdmin() {
             const novoLink = document.getElementById('admin-link-plataforma').value.trim();
             const novaSenha = document.getElementById('admin-senha').value.trim();
+            const novosSinaisGratis = parseInt(document.getElementById('admin-sinais-gratis').value) || 3;
+            const novaMensagemBloqueio = document.getElementById('admin-mensagem-bloqueio').value.trim();
             
             if (!novoLink) {
                 alert('⚠️ Por favor, insira o link da plataforma online!');
@@ -1253,15 +1636,23 @@
                 return;
             }
             
+            if (!novaMensagemBloqueio) {
+                alert('⚠️ Por favor, defina a mensagem de bloqueio!');
+                return;
+            }
+            
             CONFIG.linkPlataforma = novoLink;
             CONFIG.senhaAdmin = novaSenha;
+            CONFIG.sinaisGratis = novosSinaisGratis;
+            CONFIG.mensagemBloqueio = novaMensagemBloqueio;
             
             localStorage.setItem('earplane_config', JSON.stringify(CONFIG));
             
             aplicarLinkPlataforma();
+            aplicarMensagemBloqueio();
             atualizarContadoresAdmin();
             
-            alert('✅ Configurações salvas com sucesso!\n\nLink da plataforma atualizado em todos os botões!\nSenha: ' + novaSenha);
+            alert('✅ Configurações salvas com sucesso!\n\nLink: ' + novoLink + '\nSinais grátis: ' + novosSinaisGratis + '\nMensagem: ' + novaMensagemBloqueio + '\nSenha: ' + novaSenha);
         }
 
         function resetarContadores() {
@@ -1421,6 +1812,8 @@
         atualizarContadoresAdmin();
         
         console.log('Bot EarPlane inicializado!');
+        console.log('Sinais grátis:', CONFIG.sinaisGratis);
+        console.log('Mensagem de bloqueio:', CONFIG.mensagemBloqueio);
     </script>
 </body>
 </html>
