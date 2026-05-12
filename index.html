@@ -154,7 +154,6 @@
             background: linear-gradient(45deg, #ffd700, #ffaa00); color: #000; }
         .btn-aviator:hover, .btn-gerar-sinal:hover { transform: scale(0.97); opacity: 0.9; }
 
-        /* NOVO BOTÃO LARANJA */
         .btn-jogamos {
             display: block;
             width: 100%;
@@ -286,6 +285,9 @@
             background: linear-gradient(45deg, #ff4757, #ff6b81); color: #fff;
             border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold;
             cursor: pointer; margin-top: 8px; text-decoration: none; font-size: 0.85em; }
+        .overlay-bloqueio .btn-confirmar-recarga {
+            background: #ffd700; color: #000; border: none; padding: 10px 20px;
+            border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 8px; font-size: 0.85em; }
 
         .zap-float {
             position: fixed; bottom: 16px; right: 16px; width: 52px; height: 52px;
@@ -428,8 +430,10 @@
             </div>
 
             <div class="round-table">
-                <div class="titulo">📊 Histórico de Rounds</div>
-                <div class="round-row" id="round-row"></div>
+                <div class="titulo">📊 Histórico Oficial de Rounds</div>
+                <div class="round-row" id="round-row">
+                    <span style="color:#8b8fa8;font-size:0.7em;">Aguardando dados oficiais...</span>
+                </div>
             </div>
 
             <div class="botoes-acao">
@@ -441,7 +445,6 @@
                 </button>
             </div>
 
-            <!-- NOVO BOTÃO LARANJA -->
             <button class="btn-jogamos" onclick="mostrarModalTransferencia()">
                 🎲 JOGAMOS PRA VOCE
             </button>
@@ -474,19 +477,22 @@
                 <div class="cadeado">🔒</div>
                 <h3>BOT BLOQUEADO</h3>
                 <div class="msg" id="msg-bloqueio">
-                    RECARREGA A SUA CONTA PLACARD<br>PARA ATIVAR O BOT
+                    RECARREGUE SUA CONTA PLACARD<br>PARA ATIVAR O BOT
                 </div>
                 <a href="https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723"
-                   class="btn-rec" target="_blank" onclick="marcarCriacaoConta()">
+                   class="btn-rec" id="btn-rec" target="_blank" onclick="marcarCriacaoConta()">
                     💰 RECARREGAR AGORA
                 </a>
+                <button class="btn-confirmar-recarga" id="btn-confirmar-recarga" onclick="confirmarRecarga()">
+                    JÁ RECARREGUEI
+                </button>
             </div>
         </div>
 
         <div class="sinais-box" id="sinais-box">
-            <div style="color:#ffd700;font-size:0.75em;margin-bottom:6px;">🌹 RECARREGA A TUA CONTA PARA ATIVAR O BOT</div>
+            <div style="color:#ffd700;font-size:0.75em;margin-bottom:6px;" id="sinais-titulo">🌹 RECARREGUE PARA ATIVAR O BOT</div>
             <div id="sinais-lista">
-                <div style="text-align:center;color:#8b8fa8;padding:15px;">Clique em "GERAR ROSA PARA VER PROXIMO SINAL"</div>
+                <div style="text-align:center;color:#8b8fa8;padding:15px;">Clique em "GERAR ROSA" para ver o próximo sinal</div>
             </div>
         </div>
     </div>
@@ -501,7 +507,7 @@
             <label>💬 Link WhatsApp:</label>
             <input type="text" id="adm-zap">
             <label>💬 Mensagem Bloqueio:</label>
-            <input type="text" id="adm-msg" value="RECARREGA A SUA CONTA PLACARD PARA ATIVAR O BOT">
+            <input type="text" id="adm-msg" value="RECARREGUE SUA CONTA PLACARD PARA ATIVAR O BOT">
             <label>🔑 Senha:</label>
             <input type="text" id="adm-senha">
             <button class="btn-admin btn-save" onclick="salvarAdmin()">💾 SALVAR</button>
@@ -511,7 +517,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+        import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDgQ3zeei9eqn8uEy1loeDOKye7S9nyEXU",
@@ -528,7 +534,7 @@
         let CFG = {
             link: 'https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723',
             zap: 'https://chat.whatsapp.com/SEU_GRUPO',
-            msg: 'RECARREGA A SUA CONTA PLACARD PARA ATIVAR O BOT',
+            msg: 'RECARREGUE SUA CONTA PLACARD PARA ATIVAR O BOT',
             senha: 'admin123'
         };
         const saved = localStorage.getItem('av_cfg');
@@ -576,7 +582,7 @@
                 codigo: codigoRastreio,
                 link: true,
                 ts: Date.now() + offset,
-                st: 'pendente',
+                st: 'pendente', // pendente, recarregado
                 data: horaOficial().toISOString()
             }).then(() => {
                 localStorage.setItem('av_link', '1');
@@ -584,19 +590,37 @@
             }).catch(() => localStorage.setItem('av_link', '1'));
         };
 
+        // Função rigorosa de verificação: exige st === 'recarregado'
+        async function verificarStatusRecarga(codigo) {
+            try {
+                const snap = await get(ref(db, 'users/' + codigo));
+                if (snap.exists()) {
+                    const data = snap.val();
+                    return data.st === 'recarregado';
+                }
+                return false;
+            } catch(e) {
+                return false;
+            }
+        }
+
         window.verificarConta = async () => {
             document.getElementById('loading').classList.add('on');
             document.querySelector('.loading-text').textContent = 'Sincronizando hora...';
             await syncHora();
             document.querySelector('.loading-text').textContent = 'Verificando conta...';
             let ok = false;
+            let recarregado = false;
             try {
                 const snap = await get(ref(db, 'users/' + codigoRastreio));
-                if (snap.exists() && snap.val().link) ok = true;
+                if (snap.exists() && snap.val().link) {
+                    ok = true;
+                    recarregado = snap.val().st === 'recarregado';
+                }
             } catch(e) {}
             if (!ok && localStorage.getItem('av_link') === '1') ok = true;
             document.getElementById('loading').classList.remove('on');
-            abrirPainel(ok);
+            abrirPainel(ok ? (recarregado ? 'liberado' : 'pendente') : 'bloqueado');
         };
 
         window.verificarPorCodigo = async () => {
@@ -616,8 +640,9 @@
                 if (snap.exists() && snap.val().link === true) {
                     localStorage.setItem('av_link', '1');
                     localStorage.setItem('av_codigo', codigo);
+                    const recarregado = snap.val().st === 'recarregado';
                     document.getElementById('loading').classList.remove('on');
-                    abrirPainel(true);
+                    abrirPainel(recarregado ? 'liberado' : 'pendente');
                 } else {
                     document.getElementById('loading').classList.remove('on');
                     alert('❌ Código não encontrado.');
@@ -638,21 +663,59 @@
             if (e.key === 'Enter') window.verificarPorCodigo();
         });
 
-        function abrirPainel(verificado) {
+        function abrirPainel(status) {
             document.getElementById('tela-inicial').style.display = 'none';
             document.getElementById('painel').classList.add('active');
-            document.getElementById('overlay-bloqueio').style.display = verificado ? 'none' : 'flex';
-            document.getElementById('zap-float').classList.toggle('on', verificado);
-            document.getElementById('zap-float').href = CFG.zap;
-            document.getElementById('msg-bloqueio').innerHTML = CFG.msg.replace(/\n/g, '<br>');
+            const overlay = document.getElementById('overlay-bloqueio');
+            const zapFloat = document.getElementById('zap-float');
+            const msgBloqueio = document.getElementById('msg-bloqueio');
+            const btnConfirmar = document.getElementById('btn-confirmar-recarga');
+            const sinaisTitulo = document.getElementById('sinais-titulo');
+
+            if (status === 'liberado') {
+                overlay.style.display = 'none';
+                zapFloat.classList.add('on');
+                zapFloat.href = CFG.zap;
+                sinaisTitulo.textContent = '🌹 SINAIS GERADOS (RECARGA CONFIRMADA)';
+            } else {
+                overlay.style.display = 'flex';
+                zapFloat.classList.remove('on');
+                if (status === 'pendente') {
+                    msgBloqueio.innerHTML = 'RECARREGUE SUA CONTA PLACARD<br>PARA ATIVAR O BOT<br><small style="color:#ffd700;">Use o link abaixo e depois clique em "JÁ RECARREGUEI"</small>';
+                    btnConfirmar.style.display = 'block';
+                    sinaisTitulo.textContent = '🔒 RECARREGUE PARA ATIVAR O BOT';
+                } else {
+                    msgBloqueio.innerHTML = CFG.msg.replace(/\n/g, '<br>') + '<br><small>Clique em "RECARREGAR AGORA"</small>';
+                    btnConfirmar.style.display = 'none';
+                    sinaisTitulo.textContent = '🔒 CRIE CONTA E RECARREGUE';
+                }
+            }
+
+            document.getElementById('btn-rec').href = CFG.link;
             iniciarAviator();
             relogio();
             setInterval(relogio, 1000);
-            gerarTabelaRounds();
-            setInterval(gerarTabelaRounds, 7000);
+            iniciarHistoricoReal(); // Substitui a geração aleatória
         }
 
-        // ========== VELOCIDADE REALISTA DO AVIATOR ==========
+        // Confirmação rigorosa: só libera se no Firebase st === 'recarregado'
+        window.confirmarRecarga = async () => {
+            const btn = document.getElementById('btn-confirmar-recarga');
+            btn.disabled = true;
+            btn.textContent = 'VERIFICANDO...';
+            const codigo = localStorage.getItem('av_codigo') || codigoRastreio;
+            const recarregado = await verificarStatusRecarga(codigo);
+            if (recarregado) {
+                // Atualiza local e recarrega painel liberado
+                abrirPainel('liberado');
+            } else {
+                mostrarToast('❌ Recarga não confirmada. Use o link correto e tente novamente.');
+                btn.disabled = false;
+                btn.textContent = 'JÁ RECARREGUEI';
+            }
+        };
+
+        // ========== VELOCIDADE REALISTA DO AVIATOR (animação decorativa) ==========
         function tempoParaMultiplicador(tSegundos) {
             if (tSegundos <= 0) return 1.00;
             const pontos = [
@@ -738,7 +801,6 @@
                 mel.textContent = mult.toFixed(2) + 'x 💥';
                 mel.classList.add('estourou'); mel.style.color = '#ff4757'; sel.textContent = '💥 ESTOUROU!';
             }
-            gerarTabelaRounds();
             setTimeout(() => {
                 mel.textContent = '1.00x'; mel.style.color = '#00ff88';
                 mel.classList.remove('estourou'); sel.textContent = '🟢 Preparando...'; voo();
@@ -762,16 +824,36 @@
             ctx.font = '1.8em Arial'; ctx.fillText('✈️', -12, 8); ctx.restore();
         }
 
-        function gerarTabelaRounds() {
+        // ========== HISTÓRICO 100% REAL VIA FIREBASE ==========
+        function iniciarHistoricoReal() {
             const row = document.getElementById('round-row');
-            const rounds = [];
-            for (let i = 0; i < 20; i++) {
-                const r = Math.random();
-                if (r < 0.65) rounds.push({ v: (Math.random()*3.5+1).toFixed(2)+'x', t: 'win' });
-                else if (r < 0.82) rounds.push({ v: (Math.random()*0.7+0.3).toFixed(2)+'x', t: 'loss' });
-                else rounds.push({ v: (Math.random()*18+3).toFixed(2)+'x', t: 'big' });
-            }
-            row.innerHTML = rounds.map(r => `<span class="round-cell ${r.t}">${r.v}</span>`).join('');
+            const historicoRef = ref(db, 'historico_aviator');
+            // Escuta em tempo real o histórico oficial
+            onValue(historicoRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    // Converte para array e ordena por timestamp (chave) decrescente
+                    const rounds = Object.entries(data)
+                        .map(([timestamp, obj]) => ({ ts: Number(timestamp), crash: obj.crash }))
+                        .sort((a, b) => b.ts - a.ts)
+                        .slice(0, 20);
+                    if (rounds.length > 0) {
+                        row.innerHTML = rounds.map(r => {
+                            let classe = 'win';
+                            if (r.crash < 2) classe = 'loss';
+                            else if (r.crash > 8) classe = 'big';
+                            return `<span class="round-cell ${classe}">${r.crash.toFixed(2)}x</span>`;
+                        }).join('');
+                    } else {
+                        row.innerHTML = '<span style="color:#8b8fa8;font-size:0.7em;">Aguardando dados oficiais...</span>';
+                    }
+                } else {
+                    row.innerHTML = '<span style="color:#8b8fa8;font-size:0.7em;">Nenhum dado oficial ainda.</span>';
+                }
+            }, (error) => {
+                console.error('Erro ao carregar histórico:', error);
+                row.innerHTML = '<span style="color:#ff4757;font-size:0.7em;">Erro ao carregar dados oficiais.</span>';
+            });
         }
 
         // Função de números baseada em semente (consistentes por horário)
@@ -789,7 +871,8 @@
         }
 
         window.gerarSinal = () => {
-            const verificado = document.getElementById('overlay-bloqueio').style.display === 'none';
+            const overlay = document.getElementById('overlay-bloqueio');
+            const verificado = overlay.style.display === 'none';
             if (!verificado) {
                 mostrarToast('⚠️ Recarregue sua conta Placard para ativar o bot!');
                 return;
@@ -827,7 +910,6 @@
             marcarCriacaoConta();
         };
 
-        // NOVO MODAL DE TRANSFERÊNCIA
         window.mostrarModalTransferencia = () => {
             document.getElementById('modal-transferir').classList.add('on');
         };
