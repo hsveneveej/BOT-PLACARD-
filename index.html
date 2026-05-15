@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>✈️ BOT AVIATOR - Sinais em Tempo Real</title>
+    <title>✈️ BOT AVIATOR PLACARD</title>
     <style>
         :root {
             --bg: #0a0e27;
@@ -16,6 +16,8 @@
             --text2: #8b8fa8;
             --border: rgba(255,255,255,0.08);
             --laranja: #ff8c00;
+            --roxo: #9b59b6;
+            --telegram: #0088cc;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
@@ -30,940 +32,830 @@
             overflow-x: hidden;
         }
 
-        .container {
-            max-width: 450px;
-            margin: 0 auto;
-            padding: 8px;
-            min-height: 100vh;
+        .tela-login-admin {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0a0e27 0%, #111636 100%);
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            align-items: center; justify-content: center;
+            font-family: 'Arial', sans-serif; color: white; padding: 20px;
         }
+        .tela-login-admin.on { display: flex; }
+        .tela-login-admin .login-box {
+            background: #1a1f4e; padding: 30px; border-radius: 15px;
+            box-shadow: 0 0 30px rgba(255,71,87,0.3); text-align: center;
+            width: 100%; max-width: 350px; border: 2px solid rgba(255,71,87,0.3);
+        }
+        .tela-login-admin h2 { color: #ff4757; margin-bottom: 8px; font-size: 1.5em; letter-spacing: 2px; }
+        .tela-login-admin .subtitulo-login { font-size: 13px; color: #8b8fa8; margin-bottom: 20px; }
+        .tela-login-admin input {
+            width: 100%; padding: 14px; margin: 15px 0; border-radius: 10px;
+            border: 2px solid rgba(255,215,0,0.2); background: rgba(0,0,0,0.4);
+            color: white; outline: none; font-size: 1.1em; text-align: center; letter-spacing: 2px;
+        }
+        .tela-login-admin input:focus { border-color: #ffd700; box-shadow: 0 0 15px rgba(255,215,0,0.2); }
+        .tela-login-admin button {
+            width: 100%; padding: 14px; border-radius: 10px; border: none;
+            background: linear-gradient(45deg, #ff4757, #ff6b81); color: white;
+            font-weight: bold; font-size: 1.1em; cursor: pointer; letter-spacing: 1px; transition: all 0.3s;
+        }
+        .tela-login-admin button:active { transform: scale(0.96); }
+        .tela-login-admin button:disabled { background: #444; color: #888; cursor: not-allowed; }
+        .tela-login-admin .erro-login { color: #ff4757; font-size: 0.8em; margin-top: 10px; display: none; }
+        .tela-login-admin .erro-login.on { display: block; }
+
+        .container { max-width: 450px; margin: 0 auto; padding: 8px; min-height: 100vh; }
 
         .tela-inicial {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            text-align: center;
-            padding: 15px;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; min-height: 100vh; text-align: center; padding: 15px;
         }
+        .tela-verificacao {
+            display: none; flex-direction: column; align-items: center;
+            justify-content: center; min-height: 100vh; text-align: center; padding: 15px;
+        }
+        .tela-verificacao.active { display: flex; }
+        .tela-inicial.hidden { display: none; }
 
         .logo-icone { font-size: 4em; animation: float 2.5s ease-in-out infinite; }
-        @keyframes float {
-            0%,100% { transform: translateY(0); }
-            50% { transform: translateY(-18px); }
-        }
-
-        .titulo { font-size: 2.2em; font-weight: 900; letter-spacing: 3px; margin: 15px 0;
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-18px); } }
+        .titulo {
+            font-size: 2.2em; font-weight: 900; letter-spacing: 3px; margin: 15px 0;
             background: linear-gradient(45deg, #ffd700, #ffaa00);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
         .subtitulo { color: var(--text2); font-size: 0.95em; margin: 4px 0; }
 
         .contador-online {
             background: rgba(255,71,87,0.1); border: 1px solid rgba(255,71,87,0.25);
-            border-radius: 10px; padding: 10px; margin: 12px 0; width: 100%; max-width: 320px; }
+            border-radius: 10px; padding: 10px; margin: 12px 0; width: 100%; max-width: 320px;
+        }
         .contador-online .num { font-size: 1.6em; font-weight: 900; color: #ff4757; display: block; }
         .contador-online .txt { color: #ff6b81; font-size: 0.78em; }
 
-        .btn-primario {
-            display: block; width: 100%; max-width: 320px;
-            background: linear-gradient(45deg, #ff4757, #ff6b81);
-            color: #fff; border: none; padding: 18px; border-radius: 50px;
-            font-size: 1.2em; font-weight: bold; cursor: pointer; letter-spacing: 1px;
-            margin: 8px 0; text-decoration: none; text-align: center;
-            animation: pulse 2s infinite; box-shadow: 0 8px 30px rgba(255,71,87,0.5); }
+        .btn {
+            display: block; width: 100%; max-width: 320px; padding: 16px;
+            border-radius: 50px; font-size: 1em; font-weight: bold; cursor: pointer;
+            letter-spacing: 1px; margin: 10px 0; border: none; text-align: center;
+            text-decoration: none; transition: all 0.3s;
+        }
+        .btn:active { transform: scale(0.96); }
+
+        .btn-criar {
+            background: linear-gradient(45deg, #ff4757, #ff6b81); color: #fff;
+            animation: pulse 2s infinite; box-shadow: 0 8px 30px rgba(255,71,87,0.5);
+        }
         @keyframes pulse {
             0%,100% { box-shadow: 0 0 20px rgba(255,71,87,0.3); }
-            50% { box-shadow: 0 0 50px rgba(255,71,87,0.6); } }
+            50% { box-shadow: 0 0 50px rgba(255,71,87,0.6); }
+        }
+        .btn-ja-tenho { background: transparent; color: #ffd700; border: 2px solid #ffd700; }
+        .btn-depositar { background: linear-gradient(45deg, #ff4757, #ff6b81); color: #fff; }
+        .btn-ja-depositei { background: #ffd700; color: #000; }
 
-        .btn-secundario {
-            display: block; width: 100%; max-width: 320px;
-            background: transparent; color: #ffd700; border: 2px solid #ffd700;
-            padding: 14px; border-radius: 50px; font-size: 1em; font-weight: bold;
-            cursor: pointer; letter-spacing: 1px; margin: 6px 0; transition: all 0.3s; }
-        .btn-secundario:hover { background: rgba(255,215,0,0.08); }
+        .verificacao-box {
+            background: var(--bg-card); border-radius: 14px; padding: 30px 20px;
+            border: 2px solid rgba(255,215,0,0.3); max-width: 350px; width: 100%;
+        }
+        .verificacao-box .status { font-size: 4em; margin-bottom: 15px; }
+        .verificacao-box h3 { color: #ffd700; margin-bottom: 10px; font-size: 1.3em; }
+        .verificacao-box .info { color: #8b8fa8; font-size: 0.9em; margin-bottom: 20px; line-height: 1.6; }
 
-        .btn-codigo {
-            display: block; width: 100%; max-width: 320px;
-            background: transparent; color: #00d4aa; border: 2px solid #00d4aa;
-            padding: 14px; border-radius: 50px; font-size: 1em; font-weight: bold;
-            cursor: pointer; letter-spacing: 1px; margin: 6px 0; transition: all 0.3s; }
-        .btn-codigo:hover { background: rgba(0,212,170,0.08); }
-
-        .painel { display: none; }
-        .painel.active { display: block; }
-
-        .header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 8px 0; margin-bottom: 8px; gap: 8px; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; margin-bottom: 8px; gap: 8px; }
         .logo-h { font-size: 1.2em; font-weight: 900; color: #ffd700; letter-spacing: 2px; cursor: pointer; }
         .relogio {
             background: rgba(0,0,0,0.4); border: 1px solid rgba(255,215,0,0.25);
             border-radius: 6px; padding: 5px 10px; font-size: 0.75em; color: #ffd700;
-            text-align: center; white-space: nowrap; }
+            text-align: center; white-space: nowrap;
+        }
         .relogio .hora { font-size: 1.1em; font-weight: bold; color: #fff; display: block; }
 
-        .aviator-box {
-            background: linear-gradient(180deg, #0d1137, #1a1f4e);
-            border-radius: 14px; padding: 10px; margin-bottom: 8px;
-            border: 1px solid var(--border); position: relative; }
+        .painel { display: none; }
+        .painel.active { display: block; }
 
-        .canvas-wrap {
-            position: relative; width: 100%; height: 180px;
-            background: rgba(0,0,0,0.5); border-radius: 10px; margin-bottom: 8px; overflow: hidden; }
-        canvas { width: 100%; height: 100%; display: block; }
+        .main-panel {
+            background: var(--bg-card); border-radius: 14px; padding: 16px;
+            margin-bottom: 10px; border: 1px solid var(--border);
+        }
+        .section-title { font-size: 0.75em; color: #8b8fa8; margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase; }
 
-        .mult-grande {
-            position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
-            font-size: 2.2em; font-weight: 900; color: #00ff88;
-            text-shadow: 0 0 25px rgba(0,255,136,0.7); z-index: 5; pointer-events: none; }
-        .mult-grande.estourou { color: #ff4757; animation: shake 0.4s ease; }
-        @keyframes shake {
-            0%,100% { transform: translateX(-50%) rotate(0); }
-            25% { transform: translateX(-50%) rotate(-4deg); }
-            75% { transform: translateX(-50%) rotate(4deg); } }
+        .badge-vip {
+            display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 0.6em;
+            font-weight: bold; letter-spacing: 1px; margin-left: 6px; vertical-align: middle;
+        }
+        .badge-vip.moderado { background: rgba(255,215,0,0.2); color: #ffd700; }
+        .badge-vip.agressivo { background: rgba(255,71,87,0.2); color: #ff4757; }
 
-        .status-voo {
-            position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
-            background: rgba(0,0,0,0.7); padding: 4px 12px; border-radius: 15px;
-            font-size: 0.7em; color: #ffd700; z-index: 5; }
+        .input-group-unico { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+        .input-crash {
+            width: 100%; padding: 16px; border-radius: 12px;
+            border: 2px solid rgba(255,215,0,0.3); background: rgba(0,0,0,0.3);
+            color: #fff; font-size: 1.4em; text-align: center; outline: none;
+            letter-spacing: 2px; font-weight: bold;
+        }
+        .input-crash:focus { border-color: #ffd700; box-shadow: 0 0 20px rgba(255,215,0,0.3); }
+        .input-crash::placeholder { color: rgba(255,255,255,0.25); font-size: 0.7em; font-weight: normal; }
 
-        .round-table {
-            background: rgba(0,0,0,0.25); border-radius: 8px; padding: 8px;
-            margin-bottom: 6px; max-height: 100px; overflow-y: auto; }
-        .round-table .titulo { font-size: 0.7em; color: #8b8fa8; margin-bottom: 6px; letter-spacing: 1px; }
-        .round-row {
-            display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; }
-        .round-cell {
-            padding: 4px 8px; border-radius: 4px; font-size: 0.7em; font-weight: bold;
-            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); }
-        .round-cell.win { color: #00ff88; border-color: rgba(0,255,136,0.2); }
-        .round-cell.big { color: #ffd700; border-color: rgba(255,215,0,0.4); animation: glow 1.5s infinite; }
-        @keyframes glow { 0%,100% { box-shadow: 0 0 4px rgba(255,215,0,0.2); } 50% { box-shadow: 0 0 12px rgba(255,215,0,0.5); } }
-        .round-cell.loss { color: #ff4757; }
+        .btn-registrar-gerar {
+            width: 100%; padding: 16px; border-radius: 12px; border: none;
+            background: linear-gradient(45deg, #ff4757, #ff6b81); color: #fff;
+            font-weight: bold; font-size: 1.1em; cursor: pointer; letter-spacing: 1px;
+            box-shadow: 0 6px 25px rgba(255,71,87,0.4); transition: all 0.2s;
+        }
+        .btn-registrar-gerar:active { transform: scale(0.96); }
 
-        .botoes-acao {
-            display: flex; gap: 8px; margin-bottom: 6px; }
-        .btn-acao {
-            flex: 1; padding: 12px; border-radius: 8px; font-weight: bold;
-            font-size: 0.85em; cursor: pointer; text-align: center; border: none;
-            letter-spacing: 0.5px; transition: all 0.3s; }
-        .btn-aviator {
-            background: linear-gradient(45deg, #ff4757, #ff6b81); color: #fff; }
-        .btn-gerar-sinal {
-            background: linear-gradient(45deg, #ffd700, #ffaa00); color: #000; }
-        .btn-aviator:hover, .btn-gerar-sinal:hover { transform: scale(0.97); opacity: 0.9; }
+        .sinal-box {
+            background: rgba(0,0,0,0.4); border-radius: 14px; padding: 20px;
+            text-align: center; margin-top: 12px; border: 2px solid rgba(255,215,0,0.3);
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .sinal-box .probabilidade { font-size: 3em; font-weight: 900; color: #ffd700; margin: 10px 0; }
+        .sinal-box .alvo-sugerido { font-size: 1.4em; color: #00ff88; margin: 8px 0; font-weight: bold; }
+        .sinal-box .alvo-maximo { font-size: 0.9em; color: #ff6b81; margin: 4px 0; }
+        .sinal-box .mensagem-curta { font-size: 0.85em; color: #8b8fa8; margin-top: 8px; }
 
-        .btn-jogamos {
-            display: block;
-            width: 100%;
-            background: linear-gradient(45deg, #ff8c00, #ffa500);
-            color: #000;
-            border: none;
-            padding: 14px 16px;
-            border-radius: 12px;
-            font-size: 1em;
-            font-weight: bold;
-            cursor: pointer;
-            letter-spacing: 1px;
-            margin: 10px 0;
-            transition: all 0.3s;
-            box-shadow: 0 6px 20px rgba(255,140,0,0.4);
-            text-transform: uppercase;
+        .historico-box {
+            background: rgba(0,0,0,0.25); border-radius: 8px; padding: 10px;
+            margin: 12px 0; max-height: 120px; overflow-y: auto;
         }
-        .btn-jogamos:hover {
-            transform: scale(0.98);
-            box-shadow: 0 8px 28px rgba(255,140,0,0.6);
-        }
+        .historico-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .btn-limpar { background: transparent; border: 1px solid rgba(255,71,87,0.5); color: #ff4757; padding: 4px 10px; border-radius: 4px; font-size: 0.7em; cursor: pointer; }
+        .historico-row { display: flex; flex-wrap: wrap; gap: 5px; }
+        .hist-cell { padding: 5px 10px; border-radius: 5px; font-size: 0.75em; font-weight: bold; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); }
+        .hist-cell.win { color: #00ff88; }
+        .hist-cell.big { color: #ffd700; }
+        .hist-cell.loss { color: #ff4757; }
 
-        /* MODAL DE TRANSFERÊNCIA */
-        .modal-transferir {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            flex-direction: column;
-            padding: 20px;
+        .perfil-group { display: flex; gap: 6px; margin-bottom: 12px; }
+        .btn-perfil {
+            flex: 1; padding: 12px 8px; border-radius: 8px;
+            border: 2px solid rgba(255,255,255,0.1); background: transparent;
+            color: #8b8fa8; font-weight: bold; font-size: 0.75em; cursor: pointer;
+            transition: all 0.3s; text-align: center; position: relative;
         }
-        .modal-transferir.on { display: flex; }
-        .modal-transferir .box {
-            background: linear-gradient(135deg, #1a1f4e, #0d1137);
-            border: 2px solid var(--laranja);
-            border-radius: 16px;
-            padding: 25px 20px;
-            max-width: 380px;
-            width: 100%;
-            text-align: center;
-            animation: slideUp 0.4s ease;
-        }
-        @keyframes slideUp {
-            from { transform: translateY(40px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .modal-transferir h3 {
-            color: var(--laranja);
-            font-size: 1.3em;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        .modal-transferir .dados-pagamento {
-            background: rgba(0,0,0,0.3);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            text-align: left;
-            font-size: 0.9em;
-            color: #ccc;
-        }
-        .modal-transferir .dados-pagamento p {
-            margin: 6px 0;
-            display: flex;
-            justify-content: space-between;
-        }
-        .modal-transferir .dados-pagamento span {
-            color: var(--laranja);
-            font-weight: bold;
-        }
-        .modal-transferir .valor-min {
-            background: rgba(255,71,87,0.15);
-            border: 1px dashed #ff4757;
-            border-radius: 8px;
-            padding: 10px;
-            margin: 15px 0;
-            color: #ff6b81;
-            font-weight: bold;
-        }
-        .modal-transferir .btn-fechar-modal {
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.2);
-            color: #fff;
-            padding: 10px 25px;
-            border-radius: 8px;
-            font-size: 0.9em;
-            cursor: pointer;
-            margin-top: 5px;
-            transition: 0.3s;
-        }
-        .modal-transferir .btn-fechar-modal:hover {
-            background: rgba(255,255,255,0.05);
-            border-color: #ff4757;
-        }
+        .btn-perfil.active { border-color: #ffd700; color: #ffd700; background: rgba(255,215,0,0.08); }
+        .btn-perfil.bloqueado { border-color: #ff4757; color: #ff4757; }
+        .btn-perfil .lock-icon { position: absolute; top: -8px; right: -8px; font-size: 1em; }
 
-        .sinais-box {
+        .sinais-gerados {
             background: rgba(0,0,0,0.25); border-radius: 10px; padding: 10px;
-            max-height: 220px; overflow-y: auto; margin-bottom: 6px; }
+            max-height: 200px; overflow-y: auto; margin-top: 8px;
+        }
         .sinal-card {
             background: rgba(0,0,0,0.3); border: 1px solid var(--border);
             border-radius: 8px; padding: 8px 10px; margin-bottom: 5px;
-            display: flex; justify-content: space-between; align-items: center; }
-        .sinal-info { flex: 1; }
-        .sinal-hora { font-size: 0.7em; color: #8b8fa8; }
-        .sinal-rosa { font-size: 0.95em; font-weight: bold; color: #ffd700; }
-        .sinal-status { font-size: 1.1em; font-weight: 900; }
-        .sinal-status.win { color: #00ff88; }
-        .sinal-status.pendente { color: #ffd700; animation: piscar 1s infinite; }
-        @keyframes piscar { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .sinal-card .info { flex: 1; }
+        .sinal-card .hora { font-size: 0.7em; color: #8b8fa8; }
+        .sinal-card .msg { font-size: 0.85em; font-weight: bold; }
 
-        .overlay-bloqueio {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px); border-radius: 14px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 50; text-align: center; padding: 20px; }
-        .overlay-bloqueio .cadeado { font-size: 2.5em; margin-bottom: 8px; }
-        .overlay-bloqueio h3 { color: #ff4757; font-size: 1.1em; margin-bottom: 6px; }
-        .overlay-bloqueio .msg {
-            color: #fff; background: rgba(255,71,87,0.15); border: 2px dashed #ff4757;
-            padding: 10px; border-radius: 8px; font-weight: bold; margin: 6px 0; font-size: 0.85em; }
-        .overlay-bloqueio .btn-rec {
-            background: linear-gradient(45deg, #ff4757, #ff6b81); color: #fff;
-            border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold;
-            cursor: pointer; margin-top: 8px; text-decoration: none; font-size: 0.85em; }
-        .overlay-bloqueio .btn-confirmar-recarga {
-            background: #ffd700; color: #000; border: none; padding: 10px 20px;
-            border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 8px; font-size: 0.85em; }
-
-        .zap-float {
-            position: fixed; bottom: 16px; right: 16px; width: 52px; height: 52px;
-            background: #25D366; border-radius: 50%; display: none; justify-content: center;
-            align-items: center; font-size: 1.6em; color: #fff; cursor: pointer; z-index: 999;
-            box-shadow: 0 4px 18px rgba(37,211,102,0.5); animation: zap-float 2s infinite;
-            text-decoration: none; }
-        .zap-float.on { display: flex; }
-        @keyframes zap-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-
-        .loading {
+        .modal-pagamento {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); display: none; justify-content: center;
-            align-items: center; z-index: 99999; flex-direction: column; }
-        .loading.on { display: flex; }
-        .spinner {
-            width: 45px; height: 45px; border: 3px solid rgba(255,215,0,0.2);
-            border-top-color: #ffd700; border-radius: 50%; animation: spin 0.8s linear infinite;
-            margin-bottom: 12px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .loading-text { color: #ffd700; font-size: 0.9em; }
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px); display: none; justify-content: center;
+            align-items: center; z-index: 999; padding: 20px;
+        }
+        .modal-pagamento.on { display: flex; }
+        .modal-box {
+            background: linear-gradient(135deg, #1a1f4e, #0d1137); border: 2px solid var(--laranja);
+            border-radius: 16px; padding: 25px 20px; max-width: 380px; width: 100%;
+            text-align: center; animation: slideUp 0.4s ease; max-height: 85vh; overflow-y: auto;
+        }
+        @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-box h3 { color: var(--laranja); font-size: 1.3em; margin-bottom: 15px; }
+        .modal-box .dados-pagamento { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 15px; margin-bottom: 15px; text-align: left; font-size: 0.9em; color: #ccc; }
+        .modal-box .dados-pagamento p { margin: 6px 0; display: flex; justify-content: space-between; }
+        .modal-box .dados-pagamento span { color: var(--laranja); font-weight: bold; }
+        .modal-box .valor-pagar { background: rgba(255,71,87,0.15); border: 1px dashed #ff4757; border-radius: 8px; padding: 10px; margin: 15px 0; color: #ff6b81; font-weight: bold; }
+        .modal-box input { width: 100%; padding: 10px; margin: 6px 0; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: #fff; font-size: 0.9em; outline: none; }
+        .modal-box input:focus { border-color: var(--laranja); }
+        .modal-box .btn-enviar { width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--laranja); color: #000; font-weight: bold; cursor: pointer; font-size: 1em; margin-top: 10px; }
+        .btn-fechar-modal { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 10px 25px; border-radius: 8px; font-size: 0.9em; cursor: pointer; margin-top: 8px; width: 100%; }
 
         .admin-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); display: none; justify-content: center;
-            align-items: center; z-index: 99999; }
+            align-items: center; z-index: 9999;
+        }
         .admin-overlay.on { display: flex; }
         .admin-box {
             background: #1a1f4e; border: 2px solid #ffd700; border-radius: 14px;
-            padding: 18px; max-width: 420px; width: 90%; max-height: 75vh; overflow-y: auto; }
+            padding: 18px; max-width: 420px; width: 90%; max-height: 85vh; overflow-y: auto;
+        }
         .admin-box h3 { color: #ffd700; text-align: center; margin-bottom: 12px; }
-        .admin-box label { color: #8b8fa8; font-size: 0.75em; display: block; margin: 6px 0 3px; }
-        .admin-box input {
-            width: 100%; padding: 8px; margin-bottom: 8px; border-radius: 6px;
-            border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3);
-            color: #fff; font-size: 0.85em; outline: none; }
-        .admin-box input:focus { border-color: #00d4aa; }
-        .btn-admin {
-            width: 100%; padding: 10px; margin: 4px 0; border-radius: 6px; border: none;
-            font-weight: bold; cursor: pointer; font-size: 0.85em; }
+        .admin-box label { color: #8b8fa8; font-size: 0.75em; display: block; margin: 8px 0 3px; }
+        .admin-box input { width: 100%; padding: 10px; margin-bottom: 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: #fff; font-size: 0.85em; outline: none; }
+        .admin-box input:focus { border-color: #ffd700; }
+        .admin-section { background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+        .admin-section h4 { color: var(--laranja); font-size: 0.85em; margin-bottom: 8px; }
+        .btn-admin { width: 100%; padding: 10px; margin: 4px 0; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; font-size: 0.85em; }
         .btn-save { background: #00d4aa; color: #000; }
         .btn-close { background: transparent; color: #ff4757; border: 1px solid #ff4757; }
+
+        .pedido-card { background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-bottom: 6px; }
+        .pedido-card p { font-size: 0.8em; margin: 3px 0; color: #ccc; }
+        .pedido-botoes { display: flex; gap: 6px; margin-top: 8px; }
+        .btn-aprovar { flex: 1; padding: 8px; border-radius: 6px; border: none; background: #00ff88; color: #000; font-weight: bold; cursor: pointer; font-size: 0.8em; }
+        .btn-recusar { flex: 1; padding: 8px; border-radius: 6px; border: none; background: #ff4757; color: #fff; font-weight: bold; cursor: pointer; font-size: 0.8em; }
+
+        .btn-placard {
+            width: 100%; padding: 14px; border-radius: 10px; border: 2px solid #00d4aa;
+            background: transparent; color: #00d4aa; font-weight: bold; font-size: 0.9em;
+            cursor: pointer; margin-bottom: 10px; letter-spacing: 1px;
+        }
+        .btn-telegram {
+            width: 100%; padding: 14px; border-radius: 10px;
+            border: 2px solid var(--telegram); background: rgba(0,136,204,0.1);
+            color: var(--telegram); font-weight: bold; font-size: 0.9em;
+            cursor: pointer; margin-bottom: 10px; letter-spacing: 1px;
+            text-decoration: none; display: none; text-align: center;
+        }
+        .btn-telegram.on { display: block; }
 
         .toast {
             position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
             background: #ff4757; color: #fff; padding: 12px 20px; border-radius: 25px;
             font-weight: bold; font-size: 0.9em; z-index: 9999; display: none;
-            box-shadow: 0 8px 25px rgba(255,71,87,0.5); animation: slideDown 0.4s ease; }
+            box-shadow: 0 8px 25px rgba(255,71,87,0.5); animation: slideDown 0.4s ease;
+        }
         .toast.on { display: block; }
         @keyframes slideDown { from { transform: translateX(-50%) translateY(-60px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
 
-        .codigo-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); display: none; justify-content: center;
-            align-items: center; z-index: 9999; flex-direction: column; padding: 20px; }
-        .codigo-modal.on { display: flex; }
-        .codigo-box {
-            background: #1a1f4e; border: 2px solid #00d4aa; border-radius: 14px;
-            padding: 20px; max-width: 360px; width: 100%; text-align: center; }
-        .codigo-box h3 { color: #00d4aa; margin-bottom: 10px; font-size: 1.1em; }
-        .codigo-box p { color: #8b8fa8; font-size: 0.85em; margin-bottom: 12px; }
-        .codigo-box input {
-            width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);
-            background: rgba(0,0,0,0.3); color: #fff; font-size: 1.1em; text-align: center;
-            letter-spacing: 3px; outline: none; margin-bottom: 10px; text-transform: uppercase; }
-        .codigo-box input:focus { border-color: #00d4aa; }
-        .codigo-box .btn-verificar {
-            width: 100%; padding: 12px; border-radius: 8px; border: none;
-            background: #00d4aa; color: #000; font-weight: bold; cursor: pointer; font-size: 1em; }
-        .codigo-box .btn-fechar-modal {
-            background: transparent; color: #ff4757; border: 1px solid #ff4757;
-            padding: 8px 20px; border-radius: 6px; margin-top: 8px; cursor: pointer; font-size: 0.85em; }
-
-        @media (max-width: 400px) {
-            .canvas-wrap { height: 150px; }
-            .mult-grande { font-size: 1.8em; }
-            .botoes-acao { flex-direction: column; }
-        }
+        @media (max-width: 400px) { .btn-perfil { font-size: 0.6em; padding: 8px 3px; } }
     </style>
 </head>
 <body>
 
-    <div class="toast" id="toast">⚠️ Recarregue sua conta para ativar o bot!</div>
-
-    <div class="loading" id="loading">
-        <div class="spinner"></div>
-        <p class="loading-text">Sincronizando...</p>
-    </div>
-
-    <!-- Modal de código de acesso -->
-    <div class="codigo-modal" id="codigo-modal">
-        <div class="codigo-box">
-            <h3>🔑 Código de Acesso</h3>
-            <p>Digite o código que apareceu quando você criou sua conta pela primeira vez.</p>
-            <input type="text" id="input-codigo" placeholder="EX: ABC123" maxlength="6" autocomplete="off">
-            <button class="btn-verificar" onclick="verificarPorCodigo()">✅ VERIFICAR CÓDIGO</button>
-            <button class="btn-fechar-modal" onclick="fecharModalCodigo()">❌ CANCELAR</button>
+    <div class="tela-login-admin" id="tela-login-admin">
+        <div class="login-box">
+            <h2>🔐 ADMIN LOGIN</h2>
+            <p class="subtitulo-login">Acesso restrito ao BOTPLACARD</p>
+            <input type="password" id="input-senha-admin" placeholder="Digite a senha">
+            <button id="btn-entrar-admin" onclick="validarAcessoAdmin()">ENTRAR NO BOT</button>
+            <p class="erro-login" id="erro-login">Senha incorreta. Tente novamente.</p>
         </div>
     </div>
+
+    <div class="toast" id="toast">⚠️ Mensagem</div>
+    <input type="file" id="input-print" accept="image/*" style="display:none;" onchange="processarPrint(this)">
 
     <div class="container tela-inicial" id="tela-inicial">
         <div class="logo-icone">✈️</div>
         <div class="titulo">BOT AVIATOR</div>
-        <p class="subtitulo">🔥 Sinais em Tempo Real • Precisão 94%</p>
+        <p class="subtitulo">🔥 IA Avançada • Precisão Real</p>
         <p class="subtitulo">Sincronizado com Placard</p>
+        <div class="contador-online"><span class="num" id="contador-online">0</span><span class="txt">jogadores online agora</span></div>
+        <a class="btn btn-criar" id="btn-criar-conta" target="_blank">🔒 CRIAR CONTA NA PLACARD</a>
+        <button class="btn btn-ja-tenho" onclick="jaTenhoConta()">✅ JÁ TENHO CONTA</button>
+    </div>
 
-        <div class="contador-online">
-            <span class="num" id="contador-online">0</span>
-            <span class="txt">jogadores online agora</span>
+    <div class="container tela-verificacao" id="tela-verificacao">
+        <div class="verificacao-box">
+            <div class="status">💳</div>
+            <h3>ATIVE SEU BOT</h3>
+            <div class="info">Para ativar o bot, você precisa ter saldo na sua conta Placard.<br><br>Clique no botão abaixo para depositar, depois volte e clique em <strong>JÁ DEPOSITEI</strong>.</div>
+            <a class="btn btn-depositar" id="btn-link-deposito" target="_blank">💰 IR DEPOSITAR NA PLACARD</a>
+            <button class="btn btn-ja-depositei" onclick="confirmarDeposito()">✅ JÁ DEPOSITEI</button>
         </div>
-
-        <a href="https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723"
-           class="btn-primario" target="_blank" onclick="marcarCriacaoConta()">
-            🔒 CRIAR CONTA NA PLACARD
-        </a>
-
-        <button class="btn-secundario" onclick="verificarConta()">
-            ✅ JÁ TENHO CONTA
-        </button>
-
-        <button class="btn-codigo" onclick="abrirModalCodigo()">
-            🔑 TENHO CÓDIGO DE ACESSO
-        </button>
     </div>
 
     <div class="container painel" id="painel">
         <div class="header">
-            <div class="logo-h" id="logo-admin">✈️ AVIATOR</div>
-            <div class="relogio">
-                🕐 Hora Oficial
-                <span class="hora" id="hora-oficial">--:--:--</span>
+            <div class="logo-h" id="logo-admin">✈️ BOT AVIATOR <span id="badge-nivel"></span></div>
+            <div class="relogio">🕐 Hora Oficial<span class="hora" id="hora-oficial">--:--:--</span></div>
+        </div>
+        <button class="btn-placard" onclick="abrirPlacard()">🎮 ABRIR PLACARD</button>
+        <a class="btn-telegram" id="btn-telegram" target="_blank">💬 SUPORTE NO TELEGRAM</a>
+
+        <div class="main-panel">
+            <div class="section-title">📝 DIGITE O ÚLTIMO CRASH PARA GERAR O PRÓXIMO SINAL</div>
+            <div class="input-group-unico">
+                <input type="text" class="input-crash" id="input-crash" placeholder="Ex: 2.50" maxlength="6" inputmode="decimal">
+                <button class="btn-registrar-gerar" onclick="registrarEGerarSinal()">🌹 REGISTRAR E GERAR PRÓXIMO SINAL</button>
+            </div>
+            <div class="sinal-box" id="sinal-box"><span style="color:#8b8fa8;">Digite o crash atual e clique no botão acima</span></div>
+            <div class="historico-box">
+                <div class="historico-header"><span class="section-title" style="margin-bottom:0;">📊 Histórico</span><button class="btn-limpar" onclick="limparHistorico()">🗑 Limpar</button></div>
+                <div class="historico-row" id="historico-row"><span style="color:#8b8fa8;font-size:0.75em;">Registre crashes para começar</span></div>
+            </div>
+            <div class="section-title">🎯 Selecione o Perfil</div>
+            <div class="perfil-group" id="perfil-group">
+                <button class="btn-perfil active" data-perfil="conservador" onclick="selecionarPerfil('conservador')">🟢 GRÁTIS<br><small>Acerto variável</small></button>
+                <button class="btn-perfil bloqueado" data-perfil="moderado" onclick="clicarPerfilBloqueado('moderado')">🟡 MODERADO<br><small>70-80% acerto</small><span class="lock-icon">🔒</span></button>
+                <button class="btn-perfil bloqueado" data-perfil="agressivo" onclick="clicarPerfilBloqueado('agressivo')">🔴 AGRESSIVO<br><small>80-90% acerto</small><span class="lock-icon">🔒</span></button>
             </div>
         </div>
-
-        <div class="aviator-box" id="aviator-box">
-            <div class="canvas-wrap" id="canvas-wrap">
-                <canvas id="canvas"></canvas>
-                <div class="mult-grande" id="mult-grande">1.00x</div>
-                <div class="status-voo" id="status-voo">🟢 Preparando...</div>
-            </div>
-
-            <div class="round-table">
-                <div class="titulo">📊 Histórico Oficial de Rounds</div>
-                <div class="round-row" id="round-row">
-                    <span style="color:#8b8fa8;font-size:0.7em;">Aguardando dados oficiais...</span>
-                </div>
-            </div>
-
-            <div class="botoes-acao">
-                <button class="btn-acao btn-aviator" onclick="entrarAviator()">
-                    🎮 ENTRAR NO AVIATOR
-                </button>
-                <button class="btn-acao btn-gerar-sinal" id="btn-gerar-sinal" onclick="gerarSinal()">
-                    🌹 GERAR ROSA (SINAL)
-                </button>
-            </div>
-
-            <button class="btn-jogamos" onclick="mostrarModalTransferencia()">
-                🎲 JOGAMOS PRA VOCE
-            </button>
-
-            <!-- MODAL DE TRANSFERÊNCIA -->
-            <div class="modal-transferir" id="modal-transferir">
-                <div class="box">
-                    <h3>📲 Faça sua Transferência</h3>
-                    <div class="dados-pagamento">
-                        <p>📱 <strong>M-PESA:</strong> <span>84 123 4567</span></p>
-                        <p>📱 <strong>e-MOLA:</strong> <span>84 765 4321</span></p>
-                    </div>
-                    <div class="valor-min">
-                        💰 Valor mínimo: <strong>300 MT</strong><br>
-                        <small>Pode enviar qualquer valor acima do mínimo</small>
-                    </div>
-                    <p style="color:#8b8fa8; font-size:0.8em; margin:10px 0;">
-                        Após o pagamento, clique em "Já transferi" e aguarde a confirmação.
-                    </p>
-                    <button class="btn-fechar-modal" onclick="fecharModalTransferencia()">
-                        ✅ JÁ TRANSFERI
-                    </button>
-                    <button class="btn-fechar-modal" style="margin-top:8px; border-color:#ff4757;" onclick="fecharModalTransferencia()">
-                        ❌ CANCELAR
-                    </button>
-                </div>
-            </div>
-
-            <div class="overlay-bloqueio" id="overlay-bloqueio">
-                <div class="cadeado">🔒</div>
-                <h3>BOT BLOQUEADO</h3>
-                <div class="msg" id="msg-bloqueio">
-                    RECARREGUE SUA CONTA PLACARD<br>PARA ATIVAR O BOT
-                </div>
-                <a href="https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723"
-                   class="btn-rec" id="btn-rec" target="_blank" onclick="marcarCriacaoConta()">
-                    💰 RECARREGAR AGORA
-                </a>
-                <button class="btn-confirmar-recarga" id="btn-confirmar-recarga" onclick="confirmarRecarga()">
-                    JÁ RECARREGUEI
-                </button>
-            </div>
-        </div>
-
-        <div class="sinais-box" id="sinais-box">
-            <div style="color:#ffd700;font-size:0.75em;margin-bottom:6px;" id="sinais-titulo">🌹 RECARREGUE PARA ATIVAR O BOT</div>
-            <div id="sinais-lista">
-                <div style="text-align:center;color:#8b8fa8;padding:15px;">Clique em "GERAR ROSA" para ver o próximo sinal</div>
-            </div>
-        </div>
+        <div class="section-title">📋 Últimos Sinais</div>
+        <div class="sinais-gerados" id="sinais-gerados"><div style="text-align:center;color:#8b8fa8;padding:15px;">Nenhum sinal gerado ainda</div></div>
     </div>
 
-    <a href="#" class="zap-float" id="zap-float" target="_blank">💬</a>
+    <div class="modal-pagamento" id="modal-pagamento">
+        <div class="modal-box">
+            <h3>💳 Comprar Acesso VIP</h3>
+            <div id="modal-conteudo">
+                <p style="color:#8b8fa8;">Perfil: <strong id="modal-perfil-nome"></strong></p>
+                <input type="text" id="modal-nome" placeholder="Seu nome completo">
+                <input type="text" id="modal-numero" placeholder="Seu número (84...)" inputmode="numeric">
+                <div class="valor-pagar" id="modal-valor"></div>
+                <div class="dados-pagamento" id="modal-dados"></div>
+                <button class="btn-enviar" onclick="enviarPedido()">📤 ENVIAR PAGAMENTO</button>
+            </div>
+            <div id="modal-sucesso" style="display:none;"><p style="color:#00ff88;font-size:1.3em;">✅ Pedido Enviado!</p><p style="color:#8b8fa8;">Aguarde a aprovação.</p></div>
+            <button class="btn-fechar-modal" onclick="fecharModal()">❌ FECHAR</button>
+        </div>
+    </div>
 
     <div class="admin-overlay" id="admin-overlay">
         <div class="admin-box">
             <h3>🔧 PAINEL ADMIN</h3>
-            <label>🔗 Link Plataforma:</label>
-            <input type="text" id="adm-link">
-            <label>💬 Link WhatsApp:</label>
-            <input type="text" id="adm-zap">
-            <label>💬 Mensagem Bloqueio:</label>
-            <input type="text" id="adm-msg" value="RECARREGUE SUA CONTA PLACARD PARA ATIVAR O BOT">
-            <label>🔑 Senha:</label>
-            <input type="text" id="adm-senha">
+            <div class="admin-section"><h4>🔗 Link de Afiliado Placard</h4><input type="text" id="adm-link"></div>
+            <div class="admin-section"><h4>💬 Link Telegram Suporte</h4><input type="text" id="adm-link-telegram" placeholder="https://t.me/seucanal"></div>
+            <div class="admin-section"><h4>📱 M-PESA (Vodacom)</h4><input type="text" id="adm-mpesa"></div>
+            <div class="admin-section"><h4>📱 e-MOLA (Movitel)</h4><input type="text" id="adm-emola"></div>
+            <div class="admin-section"><h4>💰 Valores VIP</h4><label>Moderado (MT):</label><input type="number" id="adm-valor-moderado" placeholder="300"><label>Agressivo (MT):</label><input type="number" id="adm-valor-agressivo" placeholder="500"></div>
             <button class="btn-admin btn-save" onclick="salvarAdmin()">💾 SALVAR</button>
+            <div class="admin-section" style="margin-top:15px;"><h4>📋 Pedidos</h4><div id="admin-pedidos"><p style="color:#8b8fa8;">Carregando...</p></div></div>
             <button class="btn-admin btn-close" onclick="fecharAdmin()">❌ FECHAR</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+        import { getDatabase, ref, get, set, update, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDgQ3zeei9eqn8uEy1loeDOKye7S9nyEXU",
             authDomain: "bot-aviator-placard.firebaseapp.com",
+            databaseURL: "https://bot-aviator-placard-default-rtdb.firebaseio.com",
             projectId: "bot-aviator-placard",
             storageBucket: "bot-aviator-placard.firebasestorage.app",
             messagingSenderId: "457251451489",
-            appId: "1:457251451489:web:73aba21a0cc718857db020"
+            appId: "1:457251451489:web:73aba21a0cc718857db020",
+            measurementId: "G-B9K9YZ157G"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        const dbFirestore = getFirestore(app);
+        window.db = db;
 
-        let CFG = {
-            link: 'https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723',
-            zap: 'https://chat.whatsapp.com/SEU_GRUPO',
-            msg: 'RECARREGUE SUA CONTA PLACARD PARA ATIVAR O BOT',
-            senha: 'admin123'
-        };
-        const saved = localStorage.getItem('av_cfg');
-        if (saved) try { CFG = { ...CFG, ...JSON.parse(saved) }; } catch(e) {}
+        (function() {
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) || (e.ctrlKey && e.key === 'U')) {
+                    e.preventDefault(); return false;
+                }
+            });
+            console.clear();
+        })();
 
-        let offset = 0;
-        async function syncHora() {
+        window.validarAcessoAdmin = async function() {
+            const senhaDigitada = document.getElementById("input-senha-admin").value;
+            const btn = document.getElementById("btn-entrar-admin");
+            const erro = document.getElementById("erro-login");
+            if (!senhaDigitada) { erro.textContent = "Por favor, digite a senha."; erro.classList.add("on"); return; }
+            btn.innerText = "Verificando..."; btn.disabled = true; erro.classList.remove("on");
             try {
-                const snap = await get(ref(db, '.info/serverTimeOffset'));
-                if (snap.exists()) offset = snap.val();
-            } catch(e) { offset = 0; }
-        }
-        function horaOficial() { return new Date(Date.now() + offset); }
-        function fmtHora(d) {
-            d = d || horaOficial();
+                const docRef = doc(dbFirestore, "Config", "Acessar senha");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const senhaServidor = docSnap.data()["1BOTPLACARD1"];
+                    if (senhaDigitada === senhaServidor) {
+                        document.getElementById("tela-login-admin").classList.remove("on");
+                        document.getElementById("input-senha-admin").value = "";
+                        abrirAdmin(); mostrarToast("✅ Bem-vindo de volta!");
+                    } else {
+                        erro.textContent = "Senha incorreta. Tente novamente."; erro.classList.add("on");
+                        btn.innerText = "ENTRAR NO BOT"; btn.disabled = false;
+                    }
+                } else {
+                    erro.textContent = "Documento não encontrado no Firestore."; erro.classList.add("on");
+                    btn.disabled = false; btn.innerText = "ENTRAR NO BOT";
+                }
+            } catch (error) {
+                console.error("Erro:", error);
+                erro.textContent = "Erro de conexão com o servidor."; erro.classList.add("on");
+                btn.disabled = false; btn.innerText = "ENTRAR NO BOT";
+            }
+        };
+
+        document.getElementById("input-senha-admin").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") window.validarAcessoAdmin();
+        });
+
+        let usuarioId = null;
+        let usuarioDados = {};
+        let configBot = {
+            linkAfiliado: 'https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723',
+            linkTelegram: '', mpesa: '84 123 4567', emola: '84 765 4321',
+            valorModerado: 300, valorAgressivo: 500
+        };
+        let historico = [];
+        let sinaisGerados = [];
+        let perfilAtual = 'conservador';
+        let perfisLiberados = ['conservador'];
+
+        function horaAgora() {
+            const d = new Date();
             return d.getHours().toString().padStart(2,'0') + ':' +
                    d.getMinutes().toString().padStart(2,'0') + ':' +
                    d.getSeconds().toString().padStart(2,'0');
         }
-        function relogio() {
-            const el = document.getElementById('hora-oficial');
-            if (el) el.textContent = fmtHora();
-        }
-
-        function uid() {
-            let id = localStorage.getItem('av_uid');
-            if (!id) { id = 'U' + Date.now() + Math.random().toString(36).substr(2,6); localStorage.setItem('av_uid', id); }
-            return id;
-        }
-        const userId = uid();
-
-        function gerarCodigo() {
-            let cod = localStorage.getItem('av_codigo');
-            if (!cod) {
-                cod = Math.random().toString(36).substring(2, 8).toUpperCase();
-                localStorage.setItem('av_codigo', cod);
-            }
-            return cod;
-        }
-        const codigoRastreio = gerarCodigo();
-
-        window.marcarCriacaoConta = () => {
-            set(ref(db, 'users/' + codigoRastreio), {
-                id: userId,
-                codigo: codigoRastreio,
-                link: true,
-                ts: Date.now() + offset,
-                st: 'pendente', // pendente, recarregado
-                data: horaOficial().toISOString()
-            }).then(() => {
-                localStorage.setItem('av_link', '1');
-                localStorage.setItem('av_codigo', codigoRastreio);
-            }).catch(() => localStorage.setItem('av_link', '1'));
-        };
-
-        // Função rigorosa de verificação: exige st === 'recarregado'
-        async function verificarStatusRecarga(codigo) {
-            try {
-                const snap = await get(ref(db, 'users/' + codigo));
-                if (snap.exists()) {
-                    const data = snap.val();
-                    return data.st === 'recarregado';
-                }
-                return false;
-            } catch(e) {
-                return false;
-            }
-        }
-
-        window.verificarConta = async () => {
-            document.getElementById('loading').classList.add('on');
-            document.querySelector('.loading-text').textContent = 'Sincronizando hora...';
-            await syncHora();
-            document.querySelector('.loading-text').textContent = 'Verificando conta...';
-            let ok = false;
-            let recarregado = false;
-            try {
-                const snap = await get(ref(db, 'users/' + codigoRastreio));
-                if (snap.exists() && snap.val().link) {
-                    ok = true;
-                    recarregado = snap.val().st === 'recarregado';
-                }
-            } catch(e) {}
-            if (!ok && localStorage.getItem('av_link') === '1') ok = true;
-            document.getElementById('loading').classList.remove('on');
-            abrirPainel(ok ? (recarregado ? 'liberado' : 'pendente') : 'bloqueado');
-        };
-
-        window.verificarPorCodigo = async () => {
-            const input = document.getElementById('input-codigo');
-            const codigo = input.value.trim().toUpperCase();
-            if (!codigo || codigo.length < 4) {
-                alert('⚠️ Digite um código válido!');
-                return;
-            }
-            document.getElementById('loading').classList.add('on');
-            document.querySelector('.loading-text').textContent = 'Sincronizando hora...';
-            await syncHora();
-            document.querySelector('.loading-text').textContent = 'Verificando código...';
-            document.getElementById('codigo-modal').classList.remove('on');
-            try {
-                const snap = await get(ref(db, 'users/' + codigo));
-                if (snap.exists() && snap.val().link === true) {
-                    localStorage.setItem('av_link', '1');
-                    localStorage.setItem('av_codigo', codigo);
-                    const recarregado = snap.val().st === 'recarregado';
-                    document.getElementById('loading').classList.remove('on');
-                    abrirPainel(recarregado ? 'liberado' : 'pendente');
-                } else {
-                    document.getElementById('loading').classList.remove('on');
-                    alert('❌ Código não encontrado.');
-                }
-            } catch(e) {
-                document.getElementById('loading').classList.remove('on');
-                alert('⚠️ Erro ao verificar.');
-            }
-        };
-
-        window.abrirModalCodigo = () => {
-            document.getElementById('codigo-modal').classList.add('on');
-            document.getElementById('input-codigo').value = '';
-            document.getElementById('input-codigo').focus();
-        };
-        window.fecharModalCodigo = () => document.getElementById('codigo-modal').classList.remove('on');
-        document.getElementById('input-codigo').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') window.verificarPorCodigo();
-        });
-
-        function abrirPainel(status) {
-            document.getElementById('tela-inicial').style.display = 'none';
-            document.getElementById('painel').classList.add('active');
-            const overlay = document.getElementById('overlay-bloqueio');
-            const zapFloat = document.getElementById('zap-float');
-            const msgBloqueio = document.getElementById('msg-bloqueio');
-            const btnConfirmar = document.getElementById('btn-confirmar-recarga');
-            const sinaisTitulo = document.getElementById('sinais-titulo');
-
-            if (status === 'liberado') {
-                overlay.style.display = 'none';
-                zapFloat.classList.add('on');
-                zapFloat.href = CFG.zap;
-                sinaisTitulo.textContent = '🌹 SINAIS GERADOS (RECARGA CONFIRMADA)';
-            } else {
-                overlay.style.display = 'flex';
-                zapFloat.classList.remove('on');
-                if (status === 'pendente') {
-                    msgBloqueio.innerHTML = 'RECARREGUE SUA CONTA PLACARD<br>PARA ATIVAR O BOT<br><small style="color:#ffd700;">Use o link abaixo e depois clique em "JÁ RECARREGUEI"</small>';
-                    btnConfirmar.style.display = 'block';
-                    sinaisTitulo.textContent = '🔒 RECARREGUE PARA ATIVAR O BOT';
-                } else {
-                    msgBloqueio.innerHTML = CFG.msg.replace(/\n/g, '<br>') + '<br><small>Clique em "RECARREGAR AGORA"</small>';
-                    btnConfirmar.style.display = 'none';
-                    sinaisTitulo.textContent = '🔒 CRIE CONTA E RECARREGUE';
-                }
-            }
-
-            document.getElementById('btn-rec').href = CFG.link;
-            iniciarAviator();
-            relogio();
-            setInterval(relogio, 1000);
-            iniciarHistoricoReal(); // Substitui a geração aleatória
-        }
-
-        // Confirmação rigorosa: só libera se no Firebase st === 'recarregado'
-        window.confirmarRecarga = async () => {
-            const btn = document.getElementById('btn-confirmar-recarga');
-            btn.disabled = true;
-            btn.textContent = 'VERIFICANDO...';
-            const codigo = localStorage.getItem('av_codigo') || codigoRastreio;
-            const recarregado = await verificarStatusRecarga(codigo);
-            if (recarregado) {
-                // Atualiza local e recarrega painel liberado
-                abrirPainel('liberado');
-            } else {
-                mostrarToast('❌ Recarga não confirmada. Use o link correto e tente novamente.');
-                btn.disabled = false;
-                btn.textContent = 'JÁ RECARREGUEI';
-            }
-        };
-
-        // ========== VELOCIDADE REALISTA DO AVIATOR (animação decorativa) ==========
-        function tempoParaMultiplicador(tSegundos) {
-            if (tSegundos <= 0) return 1.00;
-            const pontos = [
-                { t: 0,  mult: 1.00 },
-                { t: 10, mult: 2.00 },
-                { t: 15, mult: 3.00 },
-                { t: 20, mult: 5.00 },
-                { t: 25, mult: 8.00 },
-                { t: 30, mult: 15.00 }
-            ];
-            for (let i = 0; i < pontos.length - 1; i++) {
-                if (tSegundos <= pontos[i+1].t) {
-                    const t0 = pontos[i].t;
-                    const t1 = pontos[i+1].t;
-                    const m0 = pontos[i].mult;
-                    const m1 = pontos[i+1].mult;
-                    const frac = (tSegundos - t0) / (t1 - t0);
-                    return m0 * Math.pow(m1 / m0, frac);
-                }
-            }
-            const extra = tSegundos - 30;
-            return 15.00 * Math.pow(1.08, extra);
-        }
-
-        let canvas, ctx, voando = false, mult = 1, ax = 0, ay = 0, rot = -20, traj = [], timer;
-
-        function iniciarAviator() {
-            canvas = document.getElementById('canvas');
-            ctx = canvas.getContext('2d');
-            function resize() {
-                const w = document.getElementById('canvas-wrap');
-                canvas.width = w.offsetWidth;
-                canvas.height = w.offsetHeight;
-            }
-            resize();
-            window.addEventListener('resize', resize);
-            voo();
-        }
-
-        function voo() {
-            if (voando) return;
-            voando = true; mult = 1; traj = [];
-            ax = 15; ay = canvas.height - 30; rot = -18;
-            document.getElementById('mult-grande').textContent = '1.00x';
-            document.getElementById('mult-grande').classList.remove('estourou');
-            document.getElementById('status-voo').textContent = '🟢 Voando...';
-            const duracaoMaxima = 28 + Math.random() * 4;
-            const inicioMs = Date.now() + offset;
-            const chanceExplodir = Math.random();
-            let explodiu = false;
-            if (timer) clearInterval(timer);
-            timer = setInterval(() => {
-                const agoraMs = Date.now() + offset;
-                const segundos = (agoraMs - inicioMs) / 1000;
-                const progresso = Math.min(segundos / duracaoMaxima, 1.0);
-                mult = tempoParaMultiplicador(segundos);
-                ax = 15 + (canvas.width - 50) * (progresso * 0.82);
-                ay = canvas.height - 30 - (canvas.height * 0.7) * Math.pow(progresso, 1.15);
-                rot = -18 + (progresso * 45);
-                traj.push({ x: ax, y: ay });
-                document.getElementById('mult-grande').textContent = mult.toFixed(2) + 'x';
-                if (mult > 4) document.getElementById('mult-grande').style.color = '#ffd700';
-                draw();
-                if (!explodiu && chanceExplodir < 0.2 && segundos > 5 && Math.random() < 0.08) {
-                    explodiu = true;
-                    fimVoo(false);
-                    return;
-                }
-                if (progresso >= 1.0) {
-                    fimVoo(true);
-                }
-            }, 35);
-        }
-
-        function fimVoo(win) {
-            voando = false; clearInterval(timer);
-            const mel = document.getElementById('mult-grande');
-            const sel = document.getElementById('status-voo');
-            if (win) {
-                mel.textContent = mult.toFixed(2) + 'x ✅';
-                mel.style.color = '#00ff88'; sel.textContent = '✅ VENCEU!';
-            } else {
-                mel.textContent = mult.toFixed(2) + 'x 💥';
-                mel.classList.add('estourou'); mel.style.color = '#ff4757'; sel.textContent = '💥 ESTOUROU!';
-            }
-            setTimeout(() => {
-                mel.textContent = '1.00x'; mel.style.color = '#00ff88';
-                mel.classList.remove('estourou'); sel.textContent = '🟢 Preparando...'; voo();
-            }, 2200);
-        }
-
-        function draw() {
-            if (!ctx || !canvas) return;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = 'rgba(255,255,255,0.04)';
-            ctx.lineWidth = 1;
-            for (let x = 0; x < canvas.width; x += 25) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
-            for (let y = 0; y < canvas.height; y += 25) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
-            if (traj.length > 1) {
-                ctx.strokeStyle = 'rgba(255,215,0,0.35)'; ctx.lineWidth = 2; ctx.beginPath();
-                ctx.moveTo(traj[0].x, traj[0].y);
-                for (let i = 1; i < traj.length; i++) ctx.lineTo(traj[i].x, traj[i].y);
-                ctx.stroke();
-            }
-            ctx.save(); ctx.translate(ax, ay); ctx.rotate(rot * Math.PI / 180);
-            ctx.font = '1.8em Arial'; ctx.fillText('✈️', -12, 8); ctx.restore();
-        }
-
-        // ========== HISTÓRICO 100% REAL VIA FIREBASE ==========
-        function iniciarHistoricoReal() {
-            const row = document.getElementById('round-row');
-            const historicoRef = ref(db, 'historico_aviator');
-            // Escuta em tempo real o histórico oficial
-            onValue(historicoRef, (snapshot) => {
-                if (snapshot.exists()) {
-                    const data = snapshot.val();
-                    // Converte para array e ordena por timestamp (chave) decrescente
-                    const rounds = Object.entries(data)
-                        .map(([timestamp, obj]) => ({ ts: Number(timestamp), crash: obj.crash }))
-                        .sort((a, b) => b.ts - a.ts)
-                        .slice(0, 20);
-                    if (rounds.length > 0) {
-                        row.innerHTML = rounds.map(r => {
-                            let classe = 'win';
-                            if (r.crash < 2) classe = 'loss';
-                            else if (r.crash > 8) classe = 'big';
-                            return `<span class="round-cell ${classe}">${r.crash.toFixed(2)}x</span>`;
-                        }).join('');
-                    } else {
-                        row.innerHTML = '<span style="color:#8b8fa8;font-size:0.7em;">Aguardando dados oficiais...</span>';
-                    }
-                } else {
-                    row.innerHTML = '<span style="color:#8b8fa8;font-size:0.7em;">Nenhum dado oficial ainda.</span>';
-                }
-            }, (error) => {
-                console.error('Erro ao carregar histórico:', error);
-                row.innerHTML = '<span style="color:#ff4757;font-size:0.7em;">Erro ao carregar dados oficiais.</span>';
-            });
-        }
-
-        // Função de números baseada em semente (consistentes por horário)
-        function seedRandom(seed) { let x = Math.sin(seed) * 10000; return x - Math.floor(x); }
-        function numeroPorHora(timestamp) {
-            const minutos = Math.floor(timestamp / 60000);
-            const semente = minutos * 2654435761;
-            const r1 = seedRandom(semente);
-            const r2 = seedRandom(semente + 1);
-            const entrada = (r1 * 0.8 + 1.2).toFixed(2);
-            const alvo = (r2 * 2.5 + 2).toFixed(2);
-            const venceu = seedRandom(semente + 2) > 0.2;
-            const resultado = venceu ? (seedRandom(semente + 3) * 3 + 1.5).toFixed(2) : '0.00';
-            return { entrada, alvo, venceu, resultado };
-        }
-
-        window.gerarSinal = () => {
-            const overlay = document.getElementById('overlay-bloqueio');
-            const verificado = overlay.style.display === 'none';
-            if (!verificado) {
-                mostrarToast('⚠️ Recarregue sua conta Placard para ativar o bot!');
-                return;
-            }
-            const agora = horaOficial();
-            const mins = agora.getMinutes();
-            const proxMin = Math.ceil((mins + 1) / 5) * 5;
-            const horaSinal = new Date(agora);
-            horaSinal.setMinutes(proxMin, 0, 0);
-            if (proxMin <= mins) horaSinal.setMinutes(proxMin + 5);
-            const timestamp = horaSinal.getTime();
-            const previsao = numeroPorHora(timestamp);
-            const lista = document.getElementById('sinais-lista');
-            const card = document.createElement('div');
-            card.className = 'sinal-card';
-            card.innerHTML = `
-                <div class="sinal-info">
-                    <div class="sinal-hora">${fmtHora(horaSinal)}</div>
-                    <div class="sinal-rosa">🌹 Entrada: ${previsao.entrada}x → Alvo: ${previsao.alvo}x</div>
-                </div>
-                <div class="sinal-status pendente">⏳</div>
-            `;
-            lista.insertBefore(card, lista.firstChild);
-            if (lista.children.length > 20) lista.lastChild.remove();
-            const tempoAte = horaSinal.getTime() - agora.getTime() + 3000;
-            setTimeout(() => {
-                const status = card.querySelector('.sinal-status');
-                status.textContent = previsao.venceu ? '✅ ' + previsao.resultado + 'x' : '💥';
-                status.className = 'sinal-status ' + (previsao.venceu ? 'win' : '');
-            }, Math.max(tempoAte, 2000));
-        };
-
-        window.entrarAviator = () => {
-            window.open(CFG.link, '_blank');
-            marcarCriacaoConta();
-        };
-
-        window.mostrarModalTransferencia = () => {
-            document.getElementById('modal-transferir').classList.add('on');
-        };
-        window.fecharModalTransferencia = () => {
-            document.getElementById('modal-transferir').classList.remove('on');
-        };
 
         function mostrarToast(msg) {
             const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.classList.add('on');
+            t.textContent = msg; t.classList.add('on');
             setTimeout(() => t.classList.remove('on'), 3000);
         }
 
-        let clicks = 0, ctimer;
-        document.getElementById('logo-admin').addEventListener('click', () => {
-            clicks++; clearTimeout(ctimer); ctimer = setTimeout(() => clicks = 0, 3000);
-            if (clicks >= 5) { clicks = 0; abrirAdmin(); }
-        });
-        function abrirAdmin() {
-            const s = prompt('🔑 Senha:');
-            if (s === CFG.senha || s === 'admin123') {
-                document.getElementById('admin-overlay').classList.add('on');
-                document.getElementById('adm-link').value = CFG.link;
-                document.getElementById('adm-zap').value = CFG.zap;
-                document.getElementById('adm-msg').value = CFG.msg;
-                document.getElementById('adm-senha').value = CFG.senha;
-            } else alert('❌ Senha incorreta!');
+        function gerarIdUnico() { return 'U' + Date.now().toString(36) + Math.random().toString(36).substr(2, 10); }
+
+        function atualizarLinkTelegram() {
+            const link = configBot.linkTelegram || '';
+            const btn = document.getElementById('btn-telegram');
+            if (link && btn) { btn.href = link; btn.classList.add('on'); }
+            else if (btn) { btn.classList.remove('on'); }
         }
-        window.fecharAdmin = () => document.getElementById('admin-overlay').classList.remove('on');
-        window.salvarAdmin = () => {
-            CFG.link = document.getElementById('adm-link').value.trim();
-            CFG.zap = document.getElementById('adm-zap').value.trim();
-            CFG.msg = document.getElementById('adm-msg').value.trim();
-            CFG.senha = document.getElementById('adm-senha').value.trim();
-            localStorage.setItem('av_cfg', JSON.stringify(CFG));
-            document.querySelectorAll('.btn-primario, .btn-rec').forEach(e => e.href = CFG.link);
-            document.getElementById('msg-bloqueio').innerHTML = CFG.msg.replace(/\n/g, '<br>');
-            document.getElementById('zap-float').href = CFG.zap;
-            alert('✅ Salvo!'); fecharAdmin();
+
+        async function carregarConfig() {
+            try {
+                const snap = await get(ref(db, 'config/bot_config'));
+                if (snap.exists()) { const fb = snap.val(); configBot = { ...configBot, ...fb }; }
+                else { await set(ref(db, 'config/bot_config'), configBot); }
+            } catch(e) {}
+            const linkAfiliado = configBot.linkAfiliado || 'https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723';
+            document.getElementById('btn-criar-conta').href = linkAfiliado;
+            document.getElementById('btn-link-deposito').href = linkAfiliado;
+            atualizarLinkTelegram();
+        }
+
+        async function carregarUsuario(id) {
+            try {
+                const snap = await get(ref(db, 'usuarios/' + id));
+                if (snap.exists()) {
+                    usuarioDados = snap.val(); usuarioId = id;
+                    perfilAtual = usuarioDados.perfilAtual || 'conservador';
+                    perfisLiberados = usuarioDados.perfisLiberados || ['conservador'];
+                    historico = usuarioDados.historico || [];
+                    sinaisGerados = usuarioDados.sinais || [];
+                    return true;
+                }
+                return false;
+            } catch(e) { return false; }
+        }
+
+        async function criarUsuario() {
+            usuarioId = gerarIdUnico();
+            usuarioDados = { id: usuarioId, criadoEm: new Date().toISOString(), depositou: false, botLiberado: false, perfilAtual: 'conservador', perfisLiberados: ['conservador'], historico: [], sinais: [] };
+            try { await set(ref(db, 'usuarios/' + usuarioId), usuarioDados); } catch(e) {}
+            return usuarioId;
+        }
+
+        async function salvarUsuario(campos) {
+            if (!usuarioId) return;
+            Object.assign(usuarioDados, campos);
+            try { await update(ref(db, 'usuarios/' + usuarioId), campos); } catch(e) {}
+        }
+
+        async function salvarHistoricoSinais() {
+            if (!usuarioId) return;
+            try { await update(ref(db, 'usuarios/' + usuarioId), { historico, sinais: sinaisGerados }); } catch(e) {}
+        }
+
+        window.jaTenhoConta = async function() {
+            if (!usuarioId) { await criarUsuario(); }
+            else { const existe = await carregarUsuario(usuarioId); if (!existe) await criarUsuario(); }
+            await carregarConfig();
+            if (usuarioDados.botLiberado) { abrirPainel(); }
+            else { document.getElementById('tela-inicial').classList.add('hidden'); document.getElementById('tela-verificacao').classList.add('active'); }
         };
 
-        function contador() {
-            document.getElementById('contador-online').textContent =
-                Math.floor(Math.random() * 60000 + 20000).toLocaleString('pt-BR');
+        window.confirmarDeposito = async function() {
+            await salvarUsuario({ depositou: true, botLiberado: true });
+            document.getElementById('tela-verificacao').classList.remove('active');
+            mostrarToast('✅ Bot liberado!'); abrirPainel();
+        };
+
+        function abrirPainel() {
+            document.getElementById('tela-inicial').classList.add('hidden');
+            document.getElementById('tela-verificacao').classList.remove('active');
+            document.getElementById('painel').classList.add('active');
+            atualizarPerfisUI(); atualizarHistoricoUI(); atualizarSinaisUI();
+            document.getElementById('input-crash').focus();
         }
-        contador(); setInterval(contador, 3500);
 
-        document.getElementById('msg-bloqueio').innerHTML = CFG.msg.replace(/\n/g, '<br>');
-        document.querySelectorAll('.btn-primario, .btn-rec').forEach(e => e.href = CFG.link);
-        document.getElementById('zap-float').href = CFG.zap;
+        function atualizarPerfisUI() {
+            document.querySelectorAll('.btn-perfil').forEach(btn => {
+                const p = btn.dataset.perfil;
+                if (perfisLiberados.includes(p)) { btn.classList.remove('bloqueado'); const l = btn.querySelector('.lock-icon'); if (l) l.style.display = 'none'; }
+                else { btn.classList.add('bloqueado'); const l = btn.querySelector('.lock-icon'); if (l) l.style.display = 'inline'; }
+                btn.classList.toggle('active', p === perfilAtual && perfisLiberados.includes(p));
+            });
+            const badge = document.getElementById('badge-nivel');
+            if (badge) {
+                if (perfisLiberados.includes('agressivo')) badge.innerHTML = '<span class="badge-vip agressivo">AGGRESSIVE VIP</span>';
+                else if (perfisLiberados.includes('moderado')) badge.innerHTML = '<span class="badge-vip moderado">MODERADO VIP</span>';
+                else badge.innerHTML = '<span class="badge-vip" style="background:rgba(0,255,136,0.15);color:#00ff88;">GRÁTIS</span>';
+            }
+        }
 
-        syncHora().then(() => console.log('🕐 Hora sincronizada. Offset:', offset));
-        console.log('🔑 Código de rastreio:', codigoRastreio);
+        window.selecionarPerfil = async function(p) {
+            if (!perfisLiberados.includes(p)) { clicarPerfilBloqueado(p); return; }
+            perfilAtual = p; await salvarUsuario({ perfilAtual: p }); atualizarPerfisUI();
+            mostrarToast('✅ Perfil ' + p.toUpperCase() + ' ativado!');
+        };
+
+        window.clicarPerfilBloqueado = function(p) {
+            if (perfisLiberados.includes(p)) { window.selecionarPerfil(p); return; }
+            const modal = document.getElementById('modal-pagamento');
+            document.getElementById('modal-conteudo').style.display = 'block';
+            document.getElementById('modal-sucesso').style.display = 'none';
+            document.getElementById('modal-perfil-nome').textContent = p.toUpperCase();
+            const valor = p === 'moderado' ? configBot.valorModerado : configBot.valorAgressivo;
+            document.getElementById('modal-valor').innerHTML = '💰 <strong>' + valor + ' MT</strong>';
+            document.getElementById('modal-dados').innerHTML = '<p>📱 Vodacom: <span>' + configBot.mpesa + '</span></p><p>📱 Movitel: <span>' + configBot.emola + '</span></p>';
+            modal.dataset.perfil = p; modal.classList.add('on');
+        };
+
+        window.fecharModal = function() { document.getElementById('modal-pagamento').classList.remove('on'); };
+
+        window.enviarPedido = async function() {
+            const nome = document.getElementById('modal-nome').value.trim();
+            const numero = document.getElementById('modal-numero').value.trim();
+            const perfil = document.getElementById('modal-pagamento').dataset.perfil;
+            if (!nome || !numero) { mostrarToast('⚠️ Preencha todos os campos!'); return; }
+            const valor = perfil === 'moderado' ? configBot.valorModerado : configBot.valorAgressivo;
+            const pedido = { id: Date.now(), usuarioId, nome, numero, perfil, valor, data: horaAgora(), status: 'pendente' };
+            try { await set(ref(db, 'pedidos/' + pedido.id), pedido); } catch(e) {}
+            document.getElementById('modal-conteudo').style.display = 'none';
+            document.getElementById('modal-sucesso').style.display = 'block';
+            mostrarToast('✅ Pedido enviado!');
+        };
+
+        window.registrarEGerarSinal = function() {
+            const input = document.getElementById('input-crash');
+            let valor = input.value.trim().replace(',', '.');
+            if (!valor) { mostrarToast('⚠️ Digite o valor!'); return; }
+            const num = parseFloat(valor);
+            if (isNaN(num) || num < 1) { mostrarToast('⚠️ Inválido!'); return; }
+
+            if (sinaisGerados.length > 0 && sinaisGerados[0].acerto === 'pendente' && sinaisGerados[0].alvo) {
+                const alvo = parseFloat(sinaisGerados[0].alvo);
+                sinaisGerados[0].acerto = num >= alvo ? 'sim' : 'nao';
+                sinaisGerados[0].resultadoReal = num;
+                salvarHistoricoSinais(); atualizarSinaisUI();
+                mostrarToast(sinaisGerados[0].acerto === 'sim' ? '✅ SINAL ACERTOU!' : '❌ Não bateu.');
+            }
+
+            historico.push({ multiplicador: num, hora: horaAgora(), origem: 'manual' });
+            if (historico.length > 100) historico.shift();
+            salvarHistoricoSinais(); input.value = ''; input.focus();
+
+            if (historico.length >= 3) {
+                const r = calcularProbabilidade(perfilAtual);
+                document.getElementById('sinal-box').innerHTML = `
+                    <div style="font-size:3em;">${r.icone}</div>
+                    <div class="probabilidade">${r.probabilidade}%</div>
+                    <div style="font-size:0.7em;color:#8b8fa8;">de chance de atingir</div>
+                    <div class="alvo-sugerido">🎯 ${r.alvo}x</div>
+                    <div class="alvo-maximo">📈 Máximo provável: ${r.maximo}x</div>
+                    <div class="mensagem-curta">${r.mensagem}</div>
+                `;
+                sinaisGerados.unshift({ hora: horaAgora(), perfil: perfilAtual, icone: r.icone, alvo: r.alvo, maximo: r.maximo, probabilidade: r.probabilidade, mensagem: r.mensagem, acerto: 'pendente', resultadoReal: null });
+                if (sinaisGerados.length > 50) sinaisGerados.pop();
+                salvarHistoricoSinais();
+            }
+            atualizarHistoricoUI(); atualizarSinaisUI();
+        };
+
+        // ============ NOVA FUNÇÃO calcularProbabilidade (JUSTA) ============
+        function calcularProbabilidade(perfil) {
+            const ultimos = historico.slice(-30).map(h => h.multiplicador);
+            const total = ultimos.length || 1;
+            const ultimo = ultimos[ultimos.length - 1];
+            
+            const ultimos10 = ultimos.slice(-10);
+            const acima3x = ultimos10.filter(x => x > 3).length;
+            const acima5x = ultimos10.filter(x => x > 5).length;
+            const acima10x = ultimos10.filter(x => x > 10).length;
+            const acima20x = ultimos10.filter(x => x > 20).length;
+            
+            const momentoQuente = (acima5x >= 2) || (acima10x >= 1);
+            const momentoMuitoQuente = (acima10x >= 2) || (acima20x >= 1);
+            const momentoExplosivo = (acima20x >= 2) || (ultimo > 30);
+            
+            let quedas = 0;
+            for (let i = ultimos.length - 1; i >= 0; i--) { if (ultimos[i] < 2) quedas++; else break; }
+            
+            const passaram120 = ultimos.filter(x => x >= 1.20).length;
+            const passaram150 = ultimos.filter(x => x >= 1.50).length;
+            const passaram300 = ultimos.filter(x => x >= 3.00).length;
+            const passaram500 = ultimos.filter(x => x >= 5.00).length;
+            
+            function alvo(min, max) { return (Math.random() * (max - min) + min).toFixed(2); }
+
+            if (perfil === 'conservador') {
+                if (momentoExplosivo) {
+                    const prob = Math.round(45 + Math.random() * 30);
+                    const a = alvo(4, 8); const m = alvo(8, 15);
+                    return { icone: '🔥', alvo: a, maximo: m, probabilidade: prob, mensagem: '🔥 ALTAS! Chance de ' + a + 'x a ' + m + 'x', momentoQuente: true };
+                } else if (momentoMuitoQuente) {
+                    const prob = Math.round(40 + Math.random() * 35);
+                    const a = alvo(3, 7); const m = alvo(7, 12);
+                    return { icone: '🟡', alvo: a, maximo: m, probabilidade: prob, mensagem: '🟡 Momento favorável! Possível ' + a + 'x a ' + m + 'x', momentoQuente: true };
+                } else if (momentoQuente) {
+                    const prob = Math.round(35 + Math.random() * 35);
+                    const a = alvo(2, 5); const m = alvo(5, 10);
+                    return { icone: '🟢', alvo: a, maximo: m, probabilidade: prob, mensagem: 'Possível ' + a + 'x a ' + m + 'x. Sem certeza!', momentoQuente: true };
+                } else if (quedas >= 3) {
+                    const prob = Math.round(50 + Math.random() * 30);
+                    const a = alvo(1.50, 3.00); const m = alvo(3, 6);
+                    return { icone: '🟢', alvo: a, maximo: m, probabilidade: prob, mensagem: quedas + ' quedas! Provável ' + a + 'x a ' + m + 'x', momentoQuente: false };
+                } else {
+                    const bom = Math.random() > 0.5;
+                    const prob = bom ? Math.round(45 + Math.random() * 30) : Math.round(20 + Math.random() * 30);
+                    const a = bom ? alvo(1.50, 4.00) : alvo(4, 8);
+                    const m = bom ? (parseFloat(a) + 2).toFixed(2) : (parseFloat(a) + 4).toFixed(2);
+                    return { icone: bom ? '🟢' : '🔴', alvo: a, maximo: m, probabilidade: prob, mensagem: bom ? 'Chance de ' + a + 'x a ' + m + 'x' : 'Arriscado! ' + a + 'x a ' + m + 'x', momentoQuente: false };
+                }
+            }
+
+            if (perfil === 'moderado') {
+                if (momentoExplosivo) {
+                    const prob = Math.round(65 + Math.random() * 25);
+                    const a = alvo(7, 12); const m = alvo(12, 25);
+                    return { icone: '💣', alvo: a, maximo: m, probabilidade: prob, mensagem: '💣 EXPLOSIVO! Alta probabilidade de ' + a + 'x a ' + m + 'x', momentoQuente: true };
+                } else if (momentoMuitoQuente) {
+                    const prob = Math.round(60 + Math.random() * 30);
+                    const a = alvo(5, 10); const m = alvo(10, 20);
+                    return { icone: '🔥', alvo: a, maximo: m, probabilidade: prob, mensagem: '🔥 MUITO QUENTE! ' + a + 'x a ' + m + 'x provável!', momentoQuente: true };
+                } else if (momentoQuente) {
+                    const prob = Math.round(55 + Math.random() * 30);
+                    const a = alvo(4, 8); const m = alvo(8, 15);
+                    return { icone: '🎯', alvo: a, maximo: m, probabilidade: prob, mensagem: '🎯 Alvo moderado: ' + a + 'x a ' + m + 'x', momentoQuente: true };
+                } else if (quedas >= 2) {
+                    const prob = Math.round(55 + Math.random() * 25);
+                    const a = alvo(3, 6); const m = alvo(6, 10);
+                    return { icone: '⏱️', alvo: a, maximo: m, probabilidade: prob, mensagem: quedas + ' quedas! Alvo: ' + a + 'x a ' + m + 'x', momentoQuente: false };
+                } else {
+                    const prob = Math.round(50 + Math.random() * 25);
+                    const a = alvo(2, 5); const m = alvo(5, 10);
+                    return { icone: '✅', alvo: a, maximo: m, probabilidade: prob, mensagem: 'Moderado: ' + a + 'x a ' + m + 'x', momentoQuente: false };
+                }
+            }
+
+            if (perfil === 'agressivo') {
+                if (momentoExplosivo) {
+                    const prob = Math.round(75 + Math.random() * 20);
+                    const a = alvo(5, 8); const m = alvo(8, 10);
+                    return { icone: '🚀', alvo: a, maximo: m, probabilidade: prob, mensagem: '🚀 ALTA PRECISÃO: ' + a + 'x a ' + m + 'x', momentoQuente: true };
+                } else if (momentoMuitoQuente) {
+                    const prob = Math.round(70 + Math.random() * 25);
+                    const a = alvo(4, 7); const m = alvo(7, 10);
+                    return { icone: '💎', alvo: a, maximo: m, probabilidade: prob, mensagem: '💎 Precisão: ' + a + 'x a ' + m + 'x', momentoQuente: true };
+                } else if (momentoQuente) {
+                    const prob = Math.round(65 + Math.random() * 25);
+                    const a = alvo(3, 6); const m = alvo(6, 9);
+                    return { icone: '🔥', alvo: a, maximo: m, probabilidade: prob, mensagem: '🔥 Agressivo: ' + a + 'x a ' + m + 'x', momentoQuente: true };
+                } else if (quedas >= 3) {
+                    const prob = Math.round(70 + Math.random() * 20);
+                    const a = alvo(2, 5); const m = alvo(5, 8);
+                    return { icone: '⚡', alvo: a, maximo: m, probabilidade: prob, mensagem: quedas + ' quedas! ' + a + 'x a ' + m + 'x', momentoQuente: false };
+                } else {
+                    const prob = Math.round(65 + Math.random() * 20);
+                    const a = alvo(1.50, 3.50); const m = alvo(3.50, 7);
+                    return { icone: '💎', alvo: a, maximo: m, probabilidade: prob, mensagem: 'Agressivo: ' + a + 'x a ' + m + 'x', momentoQuente: false };
+                }
+            }
+
+            return { icone: '❓', alvo: '1.50', maximo: '3.00', probabilidade: 50, mensagem: 'Análise padrão.', momentoQuente: false };
+        }
+
+        function atualizarHistoricoUI() {
+            const row = document.getElementById('historico-row');
+            if (historico.length === 0) { row.innerHTML = '<span style="color:#8b8fa8;">Registre crashes para começar</span>'; return; }
+            row.innerHTML = historico.slice(-20).reverse().map(h => {
+                let c = 'win'; if (h.multiplicador < 2) c = 'loss'; else if (h.multiplicador > 10) c = 'big';
+                return `<span class="hist-cell ${c}" title="${h.hora}">${h.multiplicador.toFixed(2)}x</span>`;
+            }).join('');
+        }
+
+        window.limparHistorico = async function() {
+            if (confirm('Limpar histórico?')) {
+                historico = []; sinaisGerados = [];
+                await salvarUsuario({ historico: [], sinais: [] });
+                atualizarHistoricoUI(); atualizarSinaisUI();
+                document.getElementById('sinal-box').innerHTML = '<span style="color:#8b8fa8;">Digite o crash atual e clique no botão acima</span>';
+                mostrarToast('🗑 Histórico limpo!');
+            }
+        };
+
+        function atualizarSinaisUI() {
+            const lista = document.getElementById('sinais-gerados');
+            if (sinaisGerados.length === 0) { lista.innerHTML = '<div style="text-align:center;color:#8b8fa8;">Nenhum sinal gerado ainda</div>'; return; }
+            lista.innerHTML = sinaisGerados.slice(0, 20).map(s => `
+                <div class="sinal-card">
+                    <div class="info">
+                        <div class="hora">${s.hora} • ${s.perfil.toUpperCase()}</div>
+                        <div class="msg">${s.icone} ${s.alvo}x (${s.probabilidade || '?'}%) | Máx: ${s.maximo || '?'}x</div>
+                        <span style="font-size:0.6em;color:${s.acerto==='sim'?'#00ff88':s.acerto==='nao'?'#ff4757':'#ffd700'}">${s.acerto==='sim'?'✅ Acertou':s.acerto==='nao'?'❌ Não bateu':'⏳ Pendente'}</span>
+                    </div>
+                </div>`).join('');
+        }
+
+        window.abrirPlacard = function() { window.open(configBot.linkAfiliado || 'https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723', '_blank'); };
+
+        let clicks = 0, ctimer;
+        document.getElementById('logo-admin').addEventListener('click', () => {
+            clicks++; clearTimeout(ctimer); ctimer = setTimeout(() => clicks = 0, 5000);
+            if (clicks >= 15) { clicks = 0; document.getElementById('tela-login-admin').classList.add('on'); document.getElementById('input-senha-admin').focus(); }
+        });
+
+        async function abrirAdmin() {
+            document.getElementById('admin-overlay').classList.add('on');
+            document.getElementById('adm-link').value = configBot.linkAfiliado || '';
+            document.getElementById('adm-link-telegram').value = configBot.linkTelegram || '';
+            document.getElementById('adm-mpesa').value = configBot.mpesa || '';
+            document.getElementById('adm-emola').value = configBot.emola || '';
+            document.getElementById('adm-valor-moderado').value = configBot.valorModerado || 300;
+            document.getElementById('adm-valor-agressivo').value = configBot.valorAgressivo || 500;
+            carregarPedidos();
+        }
+
+        async function carregarPedidos() {
+            const div = document.getElementById('admin-pedidos');
+            try {
+                const snap = await get(ref(db, 'pedidos'));
+                if (snap.exists()) {
+                    const p = Object.values(snap.val()).sort((a, b) => b.id - a.id);
+                    div.innerHTML = p.length ? p.map(p => `
+                        <div class="pedido-card">
+                            <p><strong>#${p.id}</strong> - ${p.data}</p>
+                            <p>👤 ${p.nome} | 📱 ${p.numero}</p>
+                            <p>🎯 ${p.perfil.toUpperCase()} | 💰 ${p.valor} MT</p>
+                            <p>📊 <span style="color:${p.status==='aprovado'?'#00ff88':p.status==='recusado'?'#ff4757':'#ffd700'}">${p.status.toUpperCase()}</span></p>
+                            ${p.status==='pendente'?`<div class="pedido-botoes"><button class="btn-aprovar" onclick="aprovar('${p.id}')">✅ APROVAR</button><button class="btn-recusar" onclick="recusar('${p.id}')">❌ RECUSAR</button></div>`:''}
+                        </div>`).join('') : '<p style="color:#8b8fa8;">Nenhum pedido.</p>';
+                } else { div.innerHTML = '<p style="color:#8b8fa8;">Nenhum pedido.</p>'; }
+            } catch(e) { div.innerHTML = '<p style="color:#ff4757;">Erro.</p>'; }
+        }
+
+        window.aprovar = async function(id) {
+            await update(ref(db, 'pedidos/' + id), { status: 'aprovado' });
+            const snap = await get(ref(db, 'pedidos/' + id));
+            if (snap.exists()) {
+                const p = snap.val();
+                const us = await get(ref(db, 'usuarios/' + p.usuarioId));
+                if (us.exists()) {
+                    const pf = us.val().perfisLiberados || ['conservador'];
+                    if (!pf.includes(p.perfil)) { pf.push(p.perfil); await update(ref(db, 'usuarios/' + p.usuarioId), { perfisLiberados: pf }); }
+                }
+            }
+            carregarPedidos(); mostrarToast('✅ Aprovado!');
+        };
+
+        window.recusar = async function(id) { await update(ref(db, 'pedidos/' + id), { status: 'recusado' }); carregarPedidos(); mostrarToast('❌ Recusado.'); };
+
+        window.salvarAdmin = async function() {
+            configBot.linkAfiliado = document.getElementById('adm-link').value.trim();
+            configBot.linkTelegram = document.getElementById('adm-link-telegram').value.trim();
+            configBot.mpesa = document.getElementById('adm-mpesa').value.trim();
+            configBot.emola = document.getElementById('adm-emola').value.trim();
+            configBot.valorModerado = parseInt(document.getElementById('adm-valor-moderado').value) || 300;
+            configBot.valorAgressivo = parseInt(document.getElementById('adm-valor-agressivo').value) || 500;
+            try { await set(ref(db, 'config/bot_config'), configBot); } catch(e) {}
+            document.getElementById('btn-criar-conta').href = configBot.linkAfiliado;
+            document.getElementById('btn-link-deposito').href = configBot.linkAfiliado;
+            atualizarLinkTelegram(); alert('✅ Salvo!'); fecharAdmin();
+        };
+
+        window.fecharAdmin = function() { document.getElementById('admin-overlay').classList.remove('on'); };
+
+        async function init() {
+            await carregarConfig();
+            const idTemp = gerarIdUnico(); usuarioId = idTemp;
+            const existe = await carregarUsuario(idTemp); if (!existe) await criarUsuario();
+            onValue(ref(db, 'usuarios/' + usuarioId), (snap) => {
+                if (snap.exists()) {
+                    const data = snap.val();
+                    perfisLiberados = data.perfisLiberados || ['conservador'];
+                    perfilAtual = data.perfilAtual || 'conservador';
+                    historico = data.historico || []; sinaisGerados = data.sinais || []; usuarioDados = data;
+                    if (document.getElementById('painel').classList.contains('active')) { atualizarPerfisUI(); atualizarHistoricoUI(); atualizarSinaisUI(); }
+                }
+            });
+            setInterval(() => { const el = document.getElementById('hora-oficial'); if (el) el.textContent = horaAgora(); }, 1000);
+            document.getElementById('hora-oficial').textContent = horaAgora();
+            setInterval(() => { const el = document.getElementById('contador-online'); if (el) el.textContent = Math.floor(Math.random()*60000+20000).toLocaleString('pt-BR'); }, 3500);
+            document.getElementById('contador-online').textContent = Math.floor(Math.random()*60000+20000).toLocaleString('pt-BR');
+            document.getElementById('input-crash')?.addEventListener('keydown', e => { if (e.key === 'Enter') window.registrarEGerarSinal(); });
+            if (usuarioDados && usuarioDados.botLiberado) abrirPainel();
+        }
+        init();
     </script>
 </body>
 </html>
