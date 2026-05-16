@@ -2,470 +2,390 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>✈️ BOT AVIATOR PLACARD | IA PENSATIVA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>✈️ BOT AVIATOR PLACARD</title>
     <style>
         :root {
-            --bg: #060918; --bg-card: #0d1137; --accent: #ff4757; --gold: #ffd700;
-            --green: #00ff88; --red: #ff4757; --text: #ffffff; --text2: #8b8fa8;
-            --border: rgba(255,255,255,0.06); --laranja: #ff8c00; --roxo: #9b59b6;
-            --telegram: #0088cc; --ultra: #c084fc; --whatsapp: #25d366;
-            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --bg: #0a0e27;
+            --bg-card: #111636;
+            --accent: #ff4757;
+            --gold: #ffd700;
+            --green: #00ff88;
+            --red: #ff4757;
+            --text: #fff;
+            --text2: #8b8fa8;
+            --border: rgba(255,255,255,0.08);
+            --laranja: #ff8c00;
+            --roxo: #9b59b6;
+            --telegram: #0088cc;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body {
-            width: 100%; height: 100%; height: 100dvh; overflow: hidden;
-            font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text);
-            user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-        }
-        ::-webkit-scrollbar { width: 3px; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.2); border-radius: 10px; }
 
-        .tela {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; height: 100dvh;
-            display: none; flex-direction: column; overflow-y: auto; overflow-x: hidden;
-            padding: 10px; padding-bottom: calc(10px + var(--safe-bottom));
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
         }
-        .tela.active { display: flex; }
 
         .tela-login-admin {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; height: 100dvh;
-            background: rgba(6,9,24,0.97); backdrop-filter: blur(10px); z-index: 10000;
-            display: none; align-items: center; justify-content: center; padding: 20px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0a0e27 0%, #111636 100%);
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            align-items: center; justify-content: center;
+            font-family: 'Arial', sans-serif; color: white; padding: 20px;
         }
         .tela-login-admin.on { display: flex; }
-        .login-box {
-            background: var(--bg-card); padding: 28px 18px; border-radius: 16px;
-            border: 2px solid rgba(255,71,87,0.3); text-align: center; width: 100%; max-width: 340px;
+        .tela-login-admin .login-box {
+            background: #1a1f4e; padding: 30px; border-radius: 15px;
+            box-shadow: 0 0 30px rgba(255,71,87,0.3); text-align: center;
+            width: 100%; max-width: 350px; border: 2px solid rgba(255,71,87,0.3);
         }
-        .login-box h2 { color: var(--accent); margin-bottom: 6px; font-size: 1.4em; }
-        .login-box .subtitulo-login { font-size: 12px; color: var(--text2); margin-bottom: 16px; }
-        .login-box input {
-            width: 100%; padding: 14px; margin: 8px 0; border-radius: 10px;
+        .tela-login-admin h2 { color: #ff4757; margin-bottom: 8px; font-size: 1.5em; letter-spacing: 2px; }
+        .tela-login-admin .subtitulo-login { font-size: 13px; color: #8b8fa8; margin-bottom: 20px; }
+        .tela-login-admin input {
+            width: 100%; padding: 14px; margin: 15px 0; border-radius: 10px;
             border: 2px solid rgba(255,215,0,0.2); background: rgba(0,0,0,0.4);
-            color: #fff; outline: none; font-size: 1em; text-align: center; letter-spacing: 3px;
+            color: white; outline: none; font-size: 1.1em; text-align: center; letter-spacing: 2px;
         }
-        .login-box input:focus { border-color: var(--gold); }
-        .login-box button {
+        .tela-login-admin input:focus { border-color: #ffd700; box-shadow: 0 0 15px rgba(255,215,0,0.2); }
+        .tela-login-admin button {
             width: 100%; padding: 14px; border-radius: 10px; border: none;
-            background: linear-gradient(135deg, #ff4757, #ff6b81); color: #fff;
-            font-weight: bold; font-size: 1em; cursor: pointer; margin-top: 8px;
+            background: linear-gradient(45deg, #ff4757, #ff6b81); color: white;
+            font-weight: bold; font-size: 1.1em; cursor: pointer; letter-spacing: 1px; transition: all 0.3s;
         }
-        .login-box button:disabled { background: #444; color: #888; }
-        .erro-login { color: #ff4757; font-size: 0.75em; margin-top: 8px; display: none; }
-        .erro-login.on { display: block; }
+        .tela-login-admin button:active { transform: scale(0.96); }
+        .tela-login-admin button:disabled { background: #444; color: #888; cursor: not-allowed; }
+        .tela-login-admin .erro-login { color: #ff4757; font-size: 0.8em; margin-top: 10px; display: none; }
+        .tela-login-admin .erro-login.on { display: block; }
 
-        .tela-inicial-content {
-            flex: 1; display: flex; flex-direction: column; align-items: center;
-            justify-content: center; text-align: center; gap: 8px;
+        .container { max-width: 450px; margin: 0 auto; padding: 8px; min-height: 100vh; }
+
+        .tela-inicial {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; min-height: 100vh; text-align: center; padding: 15px;
         }
-        .logo-icone { font-size: 3.5em; animation: float 2.5s ease-in-out infinite; }
-        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+        .tela-verificacao {
+            display: none; flex-direction: column; align-items: center;
+            justify-content: center; min-height: 100vh; text-align: center; padding: 15px;
+        }
+        .tela-verificacao.active { display: flex; }
+        .tela-inicial.hidden { display: none; }
+
+        .logo-icone { font-size: 4em; animation: float 2.5s ease-in-out infinite; }
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-18px); } }
         .titulo {
-            font-size: 2em; font-weight: 900; background: linear-gradient(45deg, #ffd700, #ffaa00);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            font-size: 2.2em; font-weight: 900; letter-spacing: 3px; margin: 15px 0;
+            background: linear-gradient(45deg, #ffd700, #ffaa00);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .subtitulo { color: var(--text2); font-size: 0.85em; }
+        .subtitulo { color: var(--text2); font-size: 0.95em; margin: 4px 0; }
+
         .contador-online {
-            background: rgba(255,71,87,0.08); border: 1px solid rgba(255,71,87,0.2);
-            border-radius: 10px; padding: 8px 14px; width: 100%; max-width: 300px;
+            background: rgba(255,71,87,0.1); border: 1px solid rgba(255,71,87,0.25);
+            border-radius: 10px; padding: 10px; margin: 12px 0; width: 100%; max-width: 320px;
         }
-        .contador-online .num { font-size: 1.5em; font-weight: 900; color: #ff4757; display: block; }
-        .contador-online .txt { color: #ff6b81; font-size: 0.7em; }
+        .contador-online .num { font-size: 1.6em; font-weight: 900; color: #ff4757; display: block; }
+        .contador-online .txt { color: #ff6b81; font-size: 0.78em; }
+
         .btn {
-            display: block; width: 100%; max-width: 300px; padding: 14px; border-radius: 50px;
-            font-size: 0.9em; font-weight: bold; cursor: pointer; border: none; text-align: center;
-            text-decoration: none; font-family: inherit; transition: all 0.2s;
+            display: block; width: 100%; max-width: 320px; padding: 16px;
+            border-radius: 50px; font-size: 1em; font-weight: bold; cursor: pointer;
+            letter-spacing: 1px; margin: 10px 0; border: none; text-align: center;
+            text-decoration: none; transition: all 0.3s;
         }
         .btn:active { transform: scale(0.96); }
+
         .btn-criar {
-            background: linear-gradient(135deg, #ff4757, #ff6b81); color: #fff;
-            animation: pulse 2s infinite; box-shadow: 0 8px 30px rgba(255,71,87,0.4);
+            background: linear-gradient(45deg, #ff4757, #ff6b81); color: #fff;
+            animation: pulse 2s infinite; box-shadow: 0 8px 30px rgba(255,71,87,0.5);
         }
-        @keyframes pulse { 0%,100% { box-shadow: 0 0 20px rgba(255,71,87,0.3); } 50% { box-shadow: 0 0 50px rgba(255,71,87,0.6); } }
+        @keyframes pulse {
+            0%,100% { box-shadow: 0 0 20px rgba(255,71,87,0.3); }
+            50% { box-shadow: 0 0 50px rgba(255,71,87,0.6); }
+        }
         .btn-ja-tenho { background: transparent; color: #ffd700; border: 2px solid #ffd700; }
-        .btn-depositar { background: linear-gradient(135deg, #ff4757, #ff6b81); color: #fff; }
-        .btn-ja-depositei { background: #ffd700; color: #000; font-weight: 900; }
+        .btn-depositar { background: linear-gradient(45deg, #ff4757, #ff6b81); color: #fff; }
+        .btn-ja-depositei { background: #ffd700; color: #000; }
 
-        .verificacao-content { flex: 1; display: flex; align-items: center; justify-content: center; }
         .verificacao-box {
-            background: var(--bg-card); border-radius: 14px; padding: 22px 18px;
-            border: 2px solid rgba(255,215,0,0.25); width: 100%; max-width: 340px; text-align: center;
+            background: var(--bg-card); border-radius: 14px; padding: 30px 20px;
+            border: 2px solid rgba(255,215,0,0.3); max-width: 350px; width: 100%;
         }
-        .verificacao-box .status { font-size: 3em; margin-bottom: 8px; }
-        .verificacao-box h3 { color: #ffd700; font-size: 1.1em; margin-bottom: 6px; }
-        .verificacao-box .info { color: #8b8fa8; font-size: 0.75em; margin-bottom: 14px; line-height: 1.4; }
-        .verificacao-box .btn { margin: 6px auto; }
+        .verificacao-box .status { font-size: 4em; margin-bottom: 15px; }
+        .verificacao-box h3 { color: #ffd700; margin-bottom: 10px; font-size: 1.3em; }
+        .verificacao-box .info { color: #8b8fa8; font-size: 0.9em; margin-bottom: 20px; line-height: 1.6; }
 
-        .painel-header {
-            display: flex; justify-content: space-between; align-items: center;
-            gap: 6px; flex-shrink: 0; padding: 2px 0;
-        }
-        .logo-h {
-            font-size: 0.9em; font-weight: 900; color: #ffd700; cursor: pointer;
-            display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
-        }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; margin-bottom: 8px; gap: 8px; }
+        .logo-h { font-size: 1.2em; font-weight: 900; color: #ffd700; letter-spacing: 2px; cursor: pointer; }
         .relogio {
-            background: rgba(0,0,0,0.4); border: 1px solid rgba(255,215,0,0.2);
-            border-radius: 6px; padding: 3px 7px; font-size: 0.6em; color: #ffd700;
-            text-align: center; white-space: nowrap; flex-shrink: 0;
+            background: rgba(0,0,0,0.4); border: 1px solid rgba(255,215,0,0.25);
+            border-radius: 6px; padding: 5px 10px; font-size: 0.75em; color: #ffd700;
+            text-align: center; white-space: nowrap;
         }
         .relogio .hora { font-size: 1.1em; font-weight: bold; color: #fff; display: block; }
-        .badge-vip {
-            display: inline-block; padding: 2px 6px; border-radius: 4px;
-            font-size: 0.5em; font-weight: bold; letter-spacing: 1px;
-        }
-        .badge-vip.gratis { background: rgba(0,255,136,0.12); color: #00ff88; }
-        .badge-vip.moderado { background: rgba(255,215,0,0.15); color: #ffd700; }
-        .badge-vip.agressivo { background: rgba(255,71,87,0.15); color: #ff4757; }
-        .badge-vip.ultra { background: rgba(192,132,252,0.15); color: #c084fc; }
 
-        .btn-placard, .btn-telegram, .btn-whatsapp {
-            width: 100%; padding: 10px; border-radius: 10px; font-weight: bold;
-            font-size: 0.8em; cursor: pointer; letter-spacing: 1px; flex-shrink: 0;
-            font-family: inherit; text-decoration: none; display: block; text-align: center;
-            transition: all 0.2s; margin-bottom: 4px;
-        }
-        .btn-placard { border: 2px solid #00d4aa; background: transparent; color: #00d4aa; }
-        .btn-telegram { border: 2px solid var(--telegram); background: rgba(0,136,204,0.08); color: var(--telegram); display: none; }
-        .btn-telegram.on { display: block; }
-        .btn-whatsapp { border: 2px solid var(--whatsapp); background: rgba(37,211,102,0.08); color: var(--whatsapp); display: none; }
-        .btn-whatsapp.on { display: block; }
-        .btn-placard:active { transform: scale(0.97); }
+        .painel { display: none; }
+        .painel.active { display: block; }
 
         .main-panel {
-            background: var(--bg-card); border-radius: 12px; padding: 12px;
-            border: 1px solid var(--border); flex-shrink: 0; display: flex; flex-direction: column; gap: 6px;
+            background: var(--bg-card); border-radius: 14px; padding: 16px;
+            margin-bottom: 10px; border: 1px solid var(--border);
         }
-        .section-title { font-size: 0.65em; color: #8b8fa8; letter-spacing: 1px; text-transform: uppercase; }
-        .input-group { display: flex; flex-direction: column; gap: 5px; }
+        .section-title { font-size: 0.75em; color: #8b8fa8; margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase; }
+
+        .badge-vip {
+            display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 0.6em;
+            font-weight: bold; letter-spacing: 1px; margin-left: 6px; vertical-align: middle;
+        }
+        .badge-vip.moderado { background: rgba(255,215,0,0.2); color: #ffd700; }
+        .badge-vip.agressivo { background: rgba(255,71,87,0.2); color: #ff4757; }
+
+        .input-group-unico { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
         .input-crash {
-            width: 100%; padding: 12px; border-radius: 10px;
-            border: 2px solid rgba(255,215,0,0.25); background: rgba(0,0,0,0.3);
-            color: #fff; font-size: 1.2em; text-align: center; outline: none;
-            letter-spacing: 2px; font-weight: bold; font-family: inherit;
+            width: 100%; padding: 16px; border-radius: 12px;
+            border: 2px solid rgba(255,215,0,0.3); background: rgba(0,0,0,0.3);
+            color: #fff; font-size: 1.4em; text-align: center; outline: none;
+            letter-spacing: 2px; font-weight: bold;
         }
-        .input-crash:focus { border-color: #ffd700; }
-        .input-crash::placeholder { color: rgba(255,255,255,0.2); font-size: 0.6em; font-weight: normal; }
-        .btn-gerar {
-            width: 100%; padding: 13px; border-radius: 10px; border: none;
-            background: linear-gradient(135deg, #ff4757, #ff6b81); color: #fff;
-            font-weight: bold; font-size: 0.95em; cursor: pointer; letter-spacing: 1px;
-            box-shadow: 0 4px 20px rgba(255,71,87,0.3); font-family: inherit;
+        .input-crash:focus { border-color: #ffd700; box-shadow: 0 0 20px rgba(255,215,0,0.3); }
+        .input-crash::placeholder { color: rgba(255,255,255,0.25); font-size: 0.7em; font-weight: normal; }
+
+        .btn-registrar-gerar {
+            width: 100%; padding: 16px; border-radius: 12px; border: none;
+            background: linear-gradient(45deg, #ff4757, #ff6b81); color: #fff;
+            font-weight: bold; font-size: 1.1em; cursor: pointer; letter-spacing: 1px;
+            box-shadow: 0 6px 25px rgba(255,71,87,0.4); transition: all 0.2s;
         }
-        .btn-gerar:active { transform: scale(0.96); }
+        .btn-registrar-gerar:active { transform: scale(0.96); }
 
         .sinal-box {
-            background: rgba(0,0,0,0.35); border-radius: 10px; padding: 12px; text-align: center;
-            border: 2px solid rgba(255,215,0,0.2); min-height: 50px;
-            display: flex; flex-direction: column; justify-content: center;
+            background: rgba(0,0,0,0.4); border-radius: 14px; padding: 20px;
+            text-align: center; margin-top: 12px; border: 2px solid rgba(255,215,0,0.3);
+            animation: fadeIn 0.5s ease;
         }
-        .sinal-box .ia-pensando { font-size: 0.65em; color: #c084fc; font-style: italic; margin-top: 4px; line-height: 1.3; }
-        .sinal-box .probabilidade { font-size: 2.2em; font-weight: 900; color: #ffd700; line-height: 1; }
-        .sinal-box .alvo-sugerido { font-size: 1.2em; color: #00ff88; font-weight: bold; }
-        .sinal-box .alvo-maximo { font-size: 0.75em; color: #ff6b81; }
-        .sinal-box .analise-detalhe { font-size: 0.6em; color: #8b8fa8; margin-top: 3px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .sinal-box .probabilidade { font-size: 3em; font-weight: 900; color: #ffd700; margin: 10px 0; }
+        .sinal-box .alvo-sugerido { font-size: 1.4em; color: #00ff88; margin: 8px 0; font-weight: bold; }
+        .sinal-box .alvo-maximo { font-size: 0.9em; color: #ff6b81; margin: 4px 0; }
+        .sinal-box .mensagem-curta { font-size: 0.85em; color: #8b8fa8; margin-top: 8px; }
 
         .historico-box {
-            background: rgba(0,0,0,0.2); border-radius: 8px; padding: 6px;
-            max-height: 70px; overflow-y: auto; flex-shrink: 0;
+            background: rgba(0,0,0,0.25); border-radius: 8px; padding: 10px;
+            margin: 12px 0; max-height: 120px; overflow-y: auto;
         }
-        .historico-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
-        .btn-limpar {
-            background: transparent; border: 1px solid rgba(255,71,87,0.4);
-            color: #ff4757; padding: 2px 6px; border-radius: 4px; font-size: 0.55em; cursor: pointer; font-family: inherit;
-        }
-        .historico-row { display: flex; flex-wrap: wrap; gap: 3px; }
-        .hist-cell {
-            padding: 2px 6px; border-radius: 4px; font-size: 0.6em; font-weight: bold;
-            background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.06);
-        }
-        .hist-cell.win { color: #00ff88; } .hist-cell.big { color: #ffd700; } .hist-cell.loss { color: #ff4757; }
+        .historico-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .btn-limpar { background: transparent; border: 1px solid rgba(255,71,87,0.5); color: #ff4757; padding: 4px 10px; border-radius: 4px; font-size: 0.7em; cursor: pointer; }
+        .historico-row { display: flex; flex-wrap: wrap; gap: 5px; }
+        .hist-cell { padding: 5px 10px; border-radius: 5px; font-size: 0.75em; font-weight: bold; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); }
+        .hist-cell.win { color: #00ff88; }
+        .hist-cell.big { color: #ffd700; }
+        .hist-cell.loss { color: #ff4757; }
 
-        .perfil-group { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+        .perfil-group { display: flex; gap: 6px; margin-bottom: 12px; }
         .btn-perfil {
-            padding: 8px 5px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.08);
-            background: transparent; color: #8b8fa8; font-weight: bold; font-size: 0.65em;
-            cursor: pointer; text-align: center; position: relative; font-family: inherit; line-height: 1.2;
+            flex: 1; padding: 12px 8px; border-radius: 8px;
+            border: 2px solid rgba(255,255,255,0.1); background: transparent;
+            color: #8b8fa8; font-weight: bold; font-size: 0.75em; cursor: pointer;
+            transition: all 0.3s; text-align: center; position: relative;
         }
-        .btn-perfil small { display: block; font-weight: normal; font-size: 0.7em; opacity: 0.7; }
-        .btn-perfil.active { border-color: #ffd700; color: #ffd700; background: rgba(255,215,0,0.06); }
-        .btn-perfil.bloqueado { border-color: #ff4757; color: #ff4757; opacity: 0.7; }
-        .lock-icon { position: absolute; top: -6px; right: -6px; font-size: 1em; }
+        .btn-perfil.active { border-color: #ffd700; color: #ffd700; background: rgba(255,215,0,0.08); }
+        .btn-perfil.bloqueado { border-color: #ff4757; color: #ff4757; }
+        .btn-perfil .lock-icon { position: absolute; top: -8px; right: -8px; font-size: 1em; }
 
         .sinais-gerados {
-            background: rgba(0,0,0,0.2); border-radius: 8px; padding: 6px;
-            flex: 1; overflow-y: auto; min-height: 50px; max-height: 130px;
+            background: rgba(0,0,0,0.25); border-radius: 10px; padding: 10px;
+            max-height: 200px; overflow-y: auto; margin-top: 8px;
         }
         .sinal-card {
-            background: rgba(0,0,0,0.25); border: 1px solid var(--border);
-            border-radius: 6px; padding: 5px 7px; margin-bottom: 3px; font-size: 0.65em;
-            display: flex; justify-content: space-between; align-items: center; gap: 4px;
+            background: rgba(0,0,0,0.3); border: 1px solid var(--border);
+            border-radius: 8px; padding: 8px 10px; margin-bottom: 5px;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .sinal-card .info { flex: 1; min-width: 0; }
-        .sinal-card .hora { font-size: 0.8em; color: #8b8fa8; }
-        .sinal-card .msg { font-weight: bold; font-size: 0.85em; }
+        .sinal-card .info { flex: 1; }
+        .sinal-card .hora { font-size: 0.7em; color: #8b8fa8; }
+        .sinal-card .msg { font-size: 0.85em; font-weight: bold; }
 
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; height: 100dvh;
-            background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); z-index: 999;
-            display: none; align-items: center; justify-content: center; padding: 16px;
+        .modal-pagamento {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px); display: none; justify-content: center;
+            align-items: center; z-index: 999; padding: 20px;
         }
-        .modal-overlay.on { display: flex; }
+        .modal-pagamento.on { display: flex; }
         .modal-box {
-            background: linear-gradient(160deg, #1a1f4e, #0d1137);
-            border: 2px solid var(--laranja); border-radius: 14px; padding: 18px 14px;
-            width: 100%; max-width: 340px; text-align: center; max-height: 80vh; overflow-y: auto;
+            background: linear-gradient(135deg, #1a1f4e, #0d1137); border: 2px solid var(--laranja);
+            border-radius: 16px; padding: 25px 20px; max-width: 380px; width: 100%;
+            text-align: center; animation: slideUp 0.4s ease; max-height: 85vh; overflow-y: auto;
         }
-        .modal-box h3 { color: var(--laranja); font-size: 1.1em; margin-bottom: 10px; }
-        .modal-box input {
-            width: 100%; padding: 9px; margin: 4px 0; border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.3);
-            color: #fff; font-size: 0.8em; outline: none; font-family: inherit;
-        }
-        .modal-box input:focus { border-color: var(--laranja); }
-        .modal-box .dados-pagamento {
-            background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px;
-            margin: 8px 0; text-align: left; font-size: 0.75em; color: #ccc;
-        }
-        .modal-box .dados-pagamento p { margin: 3px 0; display: flex; justify-content: space-between; }
+        @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-box h3 { color: var(--laranja); font-size: 1.3em; margin-bottom: 15px; }
+        .modal-box .dados-pagamento { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 15px; margin-bottom: 15px; text-align: left; font-size: 0.9em; color: #ccc; }
+        .modal-box .dados-pagamento p { margin: 6px 0; display: flex; justify-content: space-between; }
         .modal-box .dados-pagamento span { color: var(--laranja); font-weight: bold; }
-        .modal-box .valor-pagar {
-            background: rgba(255,71,87,0.1); border: 1px dashed #ff4757;
-            border-radius: 8px; padding: 8px; margin: 8px 0; color: #ff6b81; font-weight: bold; font-size: 1em;
-        }
-        .btn-enviar {
-            width: 100%; padding: 11px; border-radius: 8px; border: none;
-            background: var(--laranja); color: #000; font-weight: bold; cursor: pointer; font-size: 0.85em; font-family: inherit;
-        }
-        .btn-fechar-modal {
-            width: 100%; padding: 9px; border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.15); background: transparent;
-            color: #fff; font-size: 0.75em; cursor: pointer; margin-top: 6px; font-family: inherit;
-        }
+        .modal-box .valor-pagar { background: rgba(255,71,87,0.15); border: 1px dashed #ff4757; border-radius: 8px; padding: 10px; margin: 15px 0; color: #ff6b81; font-weight: bold; }
+        .modal-box input { width: 100%; padding: 10px; margin: 6px 0; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: #fff; font-size: 0.9em; outline: none; }
+        .modal-box input:focus { border-color: var(--laranja); }
+        .modal-box .btn-enviar { width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--laranja); color: #000; font-weight: bold; cursor: pointer; font-size: 1em; margin-top: 10px; }
+        .btn-fechar-modal { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 10px 25px; border-radius: 8px; font-size: 0.9em; cursor: pointer; margin-top: 8px; width: 100%; }
 
         .admin-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; height: 100dvh;
-            background: rgba(0,0,0,0.96); z-index: 9999;
-            display: none; align-items: center; justify-content: center; padding: 10px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); display: none; justify-content: center;
+            align-items: center; z-index: 9999;
         }
         .admin-overlay.on { display: flex; }
         .admin-box {
             background: #1a1f4e; border: 2px solid #ffd700; border-radius: 14px;
-            padding: 14px; width: 100%; max-width: 420px; max-height: 90vh; overflow-y: auto; font-size: 0.75em;
+            padding: 18px; max-width: 420px; width: 90%; max-height: 85vh; overflow-y: auto;
         }
-        .admin-box h3 { color: #ffd700; text-align: center; margin-bottom: 8px; font-size: 1.1em; }
-        .admin-section { background: rgba(0,0,0,0.3); border-radius: 8px; padding: 8px; margin-bottom: 6px; }
-        .admin-section h4 { color: var(--laranja); font-size: 0.8em; margin-bottom: 5px; }
-        .admin-box label { color: #8b8fa8; font-size: 0.65em; display: block; margin: 5px 0 2px; }
-        .admin-box input, .admin-box select {
-            width: 100%; padding: 7px; margin-bottom: 3px; border-radius: 6px;
-            border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.3);
-            color: #fff; font-size: 0.75em; outline: none; font-family: inherit;
-        }
+        .admin-box h3 { color: #ffd700; text-align: center; margin-bottom: 12px; }
+        .admin-box label { color: #8b8fa8; font-size: 0.75em; display: block; margin: 8px 0 3px; }
+        .admin-box input { width: 100%; padding: 10px; margin-bottom: 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: #fff; font-size: 0.85em; outline: none; }
         .admin-box input:focus { border-color: #ffd700; }
-        .btn-admin {
-            width: 100%; padding: 9px; margin: 2px 0; border-radius: 6px;
-            border: none; font-weight: bold; cursor: pointer; font-size: 0.75em; font-family: inherit;
-        }
+        .admin-section { background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+        .admin-section h4 { color: var(--laranja); font-size: 0.85em; margin-bottom: 8px; }
+        .btn-admin { width: 100%; padding: 10px; margin: 4px 0; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; font-size: 0.85em; }
         .btn-save { background: #00d4aa; color: #000; }
         .btn-close { background: transparent; color: #ff4757; border: 1px solid #ff4757; }
-        .btn-registrar-vip { background: #9b59b6; color: #fff; }
-        .pedido-card {
-            background: rgba(0,0,0,0.3); border: 1px solid var(--border);
-            border-radius: 6px; padding: 6px; margin-bottom: 3px; font-size: 0.7em;
+
+        .pedido-card { background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-bottom: 6px; }
+        .pedido-card p { font-size: 0.8em; margin: 3px 0; color: #ccc; }
+        .pedido-botoes { display: flex; gap: 6px; margin-top: 8px; }
+        .btn-aprovar { flex: 1; padding: 8px; border-radius: 6px; border: none; background: #00ff88; color: #000; font-weight: bold; cursor: pointer; font-size: 0.8em; }
+        .btn-recusar { flex: 1; padding: 8px; border-radius: 6px; border: none; background: #ff4757; color: #fff; font-weight: bold; cursor: pointer; font-size: 0.8em; }
+
+        .btn-placard {
+            width: 100%; padding: 14px; border-radius: 10px; border: 2px solid #00d4aa;
+            background: transparent; color: #00d4aa; font-weight: bold; font-size: 0.9em;
+            cursor: pointer; margin-bottom: 10px; letter-spacing: 1px;
         }
-        .pedido-card p { margin: 2px 0; color: #ccc; }
-        .pedido-botoes { display: flex; gap: 3px; margin-top: 5px; }
-        .btn-aprovar {
-            flex: 1; padding: 5px; border-radius: 4px; border: none;
-            background: #00ff88; color: #000; font-weight: bold; cursor: pointer; font-size: 0.7em; font-family: inherit;
+        .btn-telegram {
+            width: 100%; padding: 14px; border-radius: 10px;
+            border: 2px solid var(--telegram); background: rgba(0,136,204,0.1);
+            color: var(--telegram); font-weight: bold; font-size: 0.9em;
+            cursor: pointer; margin-bottom: 10px; letter-spacing: 1px;
+            text-decoration: none; display: none; text-align: center;
         }
-        .btn-recusar {
-            flex: 1; padding: 5px; border-radius: 4px; border: none;
-            background: #ff4757; color: #fff; font-weight: bold; cursor: pointer; font-size: 0.7em; font-family: inherit;
-        }
-        .btn-remover-vip {
-            flex: 1; padding: 4px; border-radius: 4px; border: none;
-            background: #ff6b81; color: #fff; font-weight: bold; cursor: pointer; font-size: 0.6em; font-family: inherit;
-        }
+        .btn-telegram.on { display: block; }
 
         .toast {
-            position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
-            background: #ff4757; color: #fff; padding: 10px 18px; border-radius: 25px;
-            font-weight: bold; font-size: 0.8em; z-index: 99999; display: none;
-            box-shadow: 0 8px 25px rgba(255,71,87,0.5); white-space: nowrap;
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: #ff4757; color: #fff; padding: 12px 20px; border-radius: 25px;
+            font-weight: bold; font-size: 0.9em; z-index: 9999; display: none;
+            box-shadow: 0 8px 25px rgba(255,71,87,0.5); animation: slideDown 0.4s ease;
         }
         .toast.on { display: block; }
+        @keyframes slideDown { from { transform: translateX(-50%) translateY(-60px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
 
-        .admin-tabs { display: flex; gap: 3px; margin-bottom: 6px; flex-wrap: wrap; }
-        .admin-tab {
-            flex: 1; min-width: 55px; padding: 7px 3px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);
-            background: transparent; color: #8b8fa8; font-size: 0.6em; cursor: pointer; font-family: inherit;
-            text-align: center;
-        }
-        .admin-tab.active { border-color: #ffd700; color: #ffd700; background: rgba(255,215,0,0.06); }
-        .admin-tab-content { display: none; }
-        .admin-tab-content.active { display: block; }
+        @media (max-width: 400px) { .btn-perfil { font-size: 0.6em; padding: 8px 3px; } }
     </style>
 </head>
 <body>
 
-    <div class="toast" id="toast">⚠️ Mensagem</div>
-
-    <!-- TELA LOGIN ADMIN -->
     <div class="tela-login-admin" id="tela-login-admin">
         <div class="login-box">
-            <h2>🔐 ADMIN</h2>
-            <p class="subtitulo-login">Acesso restrito ao painel</p>
-            <input type="password" id="input-senha-admin" placeholder="Senha" autocomplete="off">
-            <button id="btn-entrar-admin" onclick="validarAdmin()">ENTRAR</button>
-            <p class="erro-login" id="erro-login">Senha incorreta.</p>
+            <h2>🔐 ADMIN LOGIN</h2>
+            <p class="subtitulo-login">Acesso restrito ao BOTPLACARD</p>
+            <input type="password" id="input-senha-admin" placeholder="Digite a senha">
+            <button id="btn-entrar-admin" onclick="validarAcessoAdmin()">ENTRAR NO BOT</button>
+            <p class="erro-login" id="erro-login">Senha incorreta. Tente novamente.</p>
         </div>
     </div>
 
-    <!-- TELA INICIAL -->
-    <div class="tela active" id="tela-inicial">
-        <div class="tela-inicial-content">
-            <div class="logo-icone">✈️</div>
-            <div class="titulo">BOT AVIATOR</div>
-            <p class="subtitulo">🔥 IA Pensativa Avançada</p>
-            <p class="subtitulo">Análise real • Precisão comprovada</p>
-            <div class="contador-online">
-                <span class="num" id="contador-online">42.817</span>
-                <span class="txt">jogadores online agora</span>
-            </div>
-            <a class="btn btn-criar" id="btn-criar-conta" target="_blank">🔒 CRIAR CONTA NA PLACARD</a>
-            <button class="btn btn-ja-tenho" onclick="jaTenhoConta()">✅ JÁ TENHO CONTA</button>
+    <div class="toast" id="toast">⚠️ Mensagem</div>
+    <input type="file" id="input-print" accept="image/*" style="display:none;" onchange="processarPrint(this)">
+
+    <div class="container tela-inicial" id="tela-inicial">
+        <div class="logo-icone">✈️</div>
+        <div class="titulo">BOT AVIATOR</div>
+        <p class="subtitulo">🔥 IA Avançada • Precisão Real</p>
+        <p class="subtitulo">Sincronizado com Placard</p>
+        <div class="contador-online"><span class="num" id="contador-online">0</span><span class="txt">jogadores online agora</span></div>
+        <a class="btn btn-criar" id="btn-criar-conta" target="_blank">🔒 CRIAR CONTA NA PLACARD</a>
+        <button class="btn btn-ja-tenho" onclick="jaTenhoConta()">✅ JÁ TENHO CONTA</button>
+    </div>
+
+    <div class="container tela-verificacao" id="tela-verificacao">
+        <div class="verificacao-box">
+            <div class="status">💳</div>
+            <h3>ATIVE SEU BOT</h3>
+            <div class="info">Para ativar o bot, você precisa ter saldo na sua conta Placard.<br><br>Clique no botão abaixo para depositar, depois volte e clique em <strong>JÁ DEPOSITEI</strong>.</div>
+            <a class="btn btn-depositar" id="btn-link-deposito" target="_blank">💰 IR DEPOSITAR NA PLACARD</a>
+            <button class="btn btn-ja-depositei" onclick="confirmarDeposito()">✅ JÁ DEPOSITEI</button>
         </div>
     </div>
 
-    <!-- TELA VERIFICAÇÃO -->
-    <div class="tela" id="tela-verificacao">
-        <div class="verificacao-content">
-            <div class="verificacao-box">
-                <div class="status">💳</div>
-                <h3>ATIVE SEU BOT</h3>
-                <p class="info">Deposite na Placard, volte e clique em <strong>JÁ DEPOSITEI</strong>.</p>
-                <a class="btn btn-depositar" id="btn-link-deposito" target="_blank">💰 IR DEPOSITAR</a>
-                <button class="btn btn-ja-depositei" onclick="confirmarDeposito()">✅ JÁ DEPOSITEI</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- PAINEL PRINCIPAL -->
-    <div class="tela" id="painel">
-        <div class="painel-header">
-            <div class="logo-h" id="logo-admin">✈️ BOT <span id="badge-nivel"></span></div>
-            <div class="relogio">🕐 Hora<span class="hora" id="hora-oficial">--:--:--</span></div>
+    <div class="container painel" id="painel">
+        <div class="header">
+            <div class="logo-h" id="logo-admin">✈️ BOT AVIATOR <span id="badge-nivel"></span></div>
+            <div class="relogio">🕐 Hora Oficial<span class="hora" id="hora-oficial">--:--:--</span></div>
         </div>
         <button class="btn-placard" onclick="abrirPlacard()">🎮 ABRIR PLACARD</button>
-        <a class="btn-telegram" id="btn-telegram" target="_blank">💬 SUPORTE TELEGRAM</a>
-        <a class="btn-whatsapp" id="btn-whatsapp" target="_blank">💬 GRUPO WHATSAPP</a>
+        <a class="btn-telegram" id="btn-telegram" target="_blank">💬 SUPORTE NO TELEGRAM</a>
+
         <div class="main-panel">
-            <div class="section-title">📝 DIGITE O ÚLTIMO CRASH</div>
-            <div class="input-group">
-                <input type="text" class="input-crash" id="input-crash" placeholder="Ex: 2.50" maxlength="7" inputmode="decimal" autocomplete="off">
-                <button class="btn-gerar" onclick="registrarEGerar()">🌹 REGISTRAR E GERAR SINAL</button>
+            <div class="section-title">📝 DIGITE O ÚLTIMO CRASH PARA GERAR O PRÓXIMO SINAL</div>
+            <div class="input-group-unico">
+                <input type="text" class="input-crash" id="input-crash" placeholder="Ex: 2.50" maxlength="6" inputmode="decimal">
+                <button class="btn-registrar-gerar" onclick="registrarEGerarSinal()">🌹 REGISTRAR E GERAR PRÓXIMO SINAL</button>
             </div>
-            <div class="sinal-box" id="sinal-box"><span style="color:#8b8fa8;font-size:0.75em;">Digite o crash e clique no botão</span></div>
+            <div class="sinal-box" id="sinal-box"><span style="color:#8b8fa8;">Digite o crash atual e clique no botão acima</span></div>
             <div class="historico-box">
-                <div class="historico-header"><span class="section-title" style="margin-bottom:0;">📊 Histórico</span><button class="btn-limpar" onclick="limparHistorico()">🗑</button></div>
-                <div class="historico-row" id="historico-row"><span style="color:#8b8fa8;font-size:0.6em;">Registre crashes</span></div>
+                <div class="historico-header"><span class="section-title" style="margin-bottom:0;">📊 Histórico</span><button class="btn-limpar" onclick="limparHistorico()">🗑 Limpar</button></div>
+                <div class="historico-row" id="historico-row"><span style="color:#8b8fa8;font-size:0.75em;">Registre crashes para começar</span></div>
             </div>
-            <div class="section-title">🎯 PERFIL DE ASSERTIVIDADE</div>
+            <div class="section-title">🎯 Selecione o Perfil</div>
             <div class="perfil-group" id="perfil-group">
-                <button class="btn-perfil active" data-perfil="conservador" onclick="selecionarPerfil('conservador')">🟢 GRÁTIS<br><small>Variável</small></button>
-                <button class="btn-perfil bloqueado" data-perfil="moderado" onclick="clicarPerfil('moderado')">🟡 MODERADO<br><small>75-85%</small><span class="lock-icon">🔒</span></button>
-                <button class="btn-perfil bloqueado" data-perfil="agressivo" onclick="clicarPerfil('agressivo')">🔴 AGRESSIVO<br><small>85-92%</small><span class="lock-icon">🔒</span></button>
-                <button class="btn-perfil bloqueado" data-perfil="ultra" onclick="clicarPerfil('ultra')">💜 ULTRA VIP<br><small>92-97%</small><span class="lock-icon">🔒</span></button>
+                <button class="btn-perfil active" data-perfil="conservador" onclick="selecionarPerfil('conservador')">🟢 GRÁTIS<br><small>Acerto variável</small></button>
+                <button class="btn-perfil bloqueado" data-perfil="moderado" onclick="clicarPerfilBloqueado('moderado')">🟡 MODERADO<br><small>70-80% acerto</small><span class="lock-icon">🔒</span></button>
+                <button class="btn-perfil bloqueado" data-perfil="agressivo" onclick="clicarPerfilBloqueado('agressivo')">🔴 AGRESSIVO<br><small>80-90% acerto</small><span class="lock-icon">🔒</span></button>
             </div>
         </div>
-        <div class="section-title" style="margin-top:6px;">📋 ÚLTIMOS SINAIS</div>
-        <div class="sinais-gerados" id="sinais-gerados"><div style="text-align:center;color:#8b8fa8;padding:8px;font-size:0.7em;">Nenhum sinal gerado</div></div>
+        <div class="section-title">📋 Últimos Sinais</div>
+        <div class="sinais-gerados" id="sinais-gerados"><div style="text-align:center;color:#8b8fa8;padding:15px;">Nenhum sinal gerado ainda</div></div>
     </div>
 
-    <!-- MODAL PAGAMENTO -->
-    <div class="modal-overlay" id="modal-pagamento">
+    <div class="modal-pagamento" id="modal-pagamento">
         <div class="modal-box">
-            <h3>💳 COMPRAR ACESSO VIP</h3>
+            <h3>💳 Comprar Acesso VIP</h3>
             <div id="modal-conteudo">
-                <p style="color:#8b8fa8;font-size:0.8em;">Perfil: <strong id="modal-perfil-nome"></strong></p>
+                <p style="color:#8b8fa8;">Perfil: <strong id="modal-perfil-nome"></strong></p>
                 <input type="text" id="modal-nome" placeholder="Seu nome completo">
-                <input type="text" id="modal-numero" placeholder="Número (84...)" inputmode="numeric">
+                <input type="text" id="modal-numero" placeholder="Seu número (84...)" inputmode="numeric">
                 <div class="valor-pagar" id="modal-valor"></div>
                 <div class="dados-pagamento" id="modal-dados"></div>
-                <button class="btn-enviar" onclick="enviarPedido()">📤 ENVIAR</button>
+                <button class="btn-enviar" onclick="enviarPedido()">📤 ENVIAR PAGAMENTO</button>
             </div>
-            <div id="modal-sucesso" style="display:none;">
-                <p style="color:#00ff88;font-size:1.1em;">✅ Pedido Enviado!</p>
-                <p style="color:#8b8fa8;font-size:0.75em;">Aguardando aprovação.</p>
-            </div>
+            <div id="modal-sucesso" style="display:none;"><p style="color:#00ff88;font-size:1.3em;">✅ Pedido Enviado!</p><p style="color:#8b8fa8;">Aguarde a aprovação.</p></div>
             <button class="btn-fechar-modal" onclick="fecharModal()">❌ FECHAR</button>
         </div>
     </div>
 
-    <!-- ADMIN OVERLAY -->
     <div class="admin-overlay" id="admin-overlay">
         <div class="admin-box">
             <h3>🔧 PAINEL ADMIN</h3>
-            <div class="admin-tabs">
-                <button class="admin-tab active" onclick="trocarAbaAdmin('config')">⚙️ Config</button>
-                <button class="admin-tab" onclick="trocarAbaAdmin('pedidos')">📋 Pedidos</button>
-                <button class="admin-tab" onclick="trocarAbaAdmin('vips')">👑 VIPs</button>
-                <button class="admin-tab" onclick="trocarAbaAdmin('registrar')">📝 Registrar</button>
-            </div>
-            <div class="admin-tab-content active" id="aba-config">
-                <div class="admin-section"><h4>🔗 Link Afiliado Placard</h4><input type="text" id="adm-link"></div>
-                <div class="admin-section"><h4>💬 Link Telegram</h4><input type="text" id="adm-link-telegram" placeholder="https://t.me/..."></div>
-                <div class="admin-section"><h4>💬 Link WhatsApp</h4><input type="text" id="adm-link-whatsapp" placeholder="https://chat.whatsapp.com/..."></div>
-                <div class="admin-section"><h4>📱 M-PESA (Vodacom)</h4><input type="text" id="adm-mpesa"></div>
-                <div class="admin-section"><h4>📱 e-MOLA (Movitel)</h4><input type="text" id="adm-emola"></div>
-                <div class="admin-section">
-                    <h4>💰 Valores VIP (MT)</h4>
-                    <label>Moderado:</label><input type="number" id="adm-valor-moderado" placeholder="300">
-                    <label>Agressivo:</label><input type="number" id="adm-valor-agressivo" placeholder="500">
-                    <label>Ultra VIP:</label><input type="number" id="adm-valor-ultra" placeholder="1000">
-                </div>
-                <div class="admin-section">
-                    <h4>🔑 Alterar Senha Admin</h4>
-                    <label>Nova Senha:</label><input type="text" id="adm-nova-senha" placeholder="Nova senha">
-                    <button class="btn-admin btn-save" onclick="alterarSenhaAdmin()" style="margin-top:4px;">🔒 ALTERAR SENHA</button>
-                </div>
-                <button class="btn-admin btn-save" onclick="salvarAdmin()">💾 SALVAR CONFIGURAÇÕES</button>
-            </div>
-            <div class="admin-tab-content" id="aba-pedidos">
-                <div class="admin-section"><h4>📋 Pedidos</h4><div id="admin-pedidos"><p style="color:#8b8fa8;">Carregando...</p></div></div>
-            </div>
-            <div class="admin-tab-content" id="aba-vips">
-                <div class="admin-section"><h4>👑 VIPs Ativos</h4><div id="admin-vips"><p style="color:#8b8fa8;">Carregando...</p></div></div>
-                <div class="admin-section"><h4>📜 Histórico Compras</h4><div id="admin-historico-vip"><p style="color:#8b8fa8;">Carregando...</p></div></div>
-            </div>
-            <div class="admin-tab-content" id="aba-registrar">
-                <div class="admin-section">
-                    <h4>📝 Registrar VIP Manual</h4>
-                    <label>ID Usuário:</label><input type="text" id="adm-registrar-id" placeholder="ID do usuário">
-                    <label>Nome:</label><input type="text" id="adm-registrar-nome" placeholder="Nome do cliente">
-                    <label>Número:</label><input type="text" id="adm-registrar-numero" placeholder="84...">
-                    <label>Perfil:</label>
-                    <select id="adm-registrar-perfil">
-                        <option value="moderado">🟡 Moderado</option>
-                        <option value="agressivo">🔴 Agressivo</option>
-                        <option value="ultra">💜 Ultra VIP</option>
-                    </select>
-                    <label>Valor (MT):</label><input type="number" id="adm-registrar-valor" placeholder="Valor pago">
-                    <button class="btn-admin btn-registrar-vip" onclick="registrarVIPManual()" style="margin-top:6px;">📝 REGISTRAR VIP</button>
-                </div>
-            </div>
-            <button class="btn-admin btn-close" onclick="fecharAdmin()">❌ FECHAR PAINEL</button>
+            <div class="admin-section"><h4>🔗 Link de Afiliado Placard</h4><input type="text" id="adm-link"></div>
+            <div class="admin-section"><h4>💬 Link Telegram Suporte</h4><input type="text" id="adm-link-telegram" placeholder="https://t.me/seucanal"></div>
+            <div class="admin-section"><h4>📱 M-PESA (Vodacom)</h4><input type="text" id="adm-mpesa"></div>
+            <div class="admin-section"><h4>📱 e-MOLA (Movitel)</h4><input type="text" id="adm-emola"></div>
+            <div class="admin-section"><h4>💰 Valores VIP</h4><label>Moderado (MT):</label><input type="number" id="adm-valor-moderado" placeholder="300"><label>Agressivo (MT):</label><input type="number" id="adm-valor-agressivo" placeholder="500"></div>
+            <button class="btn-admin btn-save" onclick="salvarAdmin()">💾 SALVAR</button>
+            <div class="admin-section" style="margin-top:15px;"><h4>📋 Pedidos</h4><div id="admin-pedidos"><p style="color:#8b8fa8;">Carregando...</p></div></div>
+            <button class="btn-admin btn-close" onclick="fecharAdmin()">❌ FECHAR</button>
         </div>
     </div>
 
-    <!-- FIREBASE (APENAS REALTIME DATABASE) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getDatabase, ref, get, set, update, onValue, remove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+        import { getDatabase, ref, get, set, update, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDgQ3zeei9eqn8uEy1loeDOKye7S9nyEXU",
@@ -474,14 +394,15 @@
             projectId: "bot-aviator-placard",
             storageBucket: "bot-aviator-placard.firebasestorage.app",
             messagingSenderId: "457251451489",
-            appId: "1:457251451489:web:73aba21a0cc718857db020"
+            appId: "1:457251451489:web:73aba21a0cc718857db020",
+            measurementId: "G-B9K9YZ157G"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        console.log('✅ Firebase Realtime Database conectado!');
+        const dbFirestore = getFirestore(app);
+        window.db = db;
 
-        // ========== PROTEÇÃO ==========
         (function() {
             document.addEventListener('contextmenu', e => e.preventDefault());
             document.addEventListener('keydown', function(e) {
@@ -489,31 +410,60 @@
                     e.preventDefault(); return false;
                 }
             });
+            console.clear();
         })();
 
-        // ========== ESTADO GLOBAL ==========
+        window.validarAcessoAdmin = async function() {
+            const senhaDigitada = document.getElementById("input-senha-admin").value;
+            const btn = document.getElementById("btn-entrar-admin");
+            const erro = document.getElementById("erro-login");
+            if (!senhaDigitada) { erro.textContent = "Por favor, digite a senha."; erro.classList.add("on"); return; }
+            btn.innerText = "Verificando..."; btn.disabled = true; erro.classList.remove("on");
+            try {
+                const docRef = doc(dbFirestore, "Config", "Acessar senha");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const senhaServidor = docSnap.data()["1BOTPLACARD1"];
+                    if (senhaDigitada === senhaServidor) {
+                        document.getElementById("tela-login-admin").classList.remove("on");
+                        document.getElementById("input-senha-admin").value = "";
+                        abrirAdmin(); mostrarToast("✅ Bem-vindo de volta!");
+                    } else {
+                        erro.textContent = "Senha incorreta. Tente novamente."; erro.classList.add("on");
+                        btn.innerText = "ENTRAR NO BOT"; btn.disabled = false;
+                    }
+                } else {
+                    erro.textContent = "Documento não encontrado no Firestore."; erro.classList.add("on");
+                    btn.disabled = false; btn.innerText = "ENTRAR NO BOT";
+                }
+            } catch (error) {
+                console.error("Erro:", error);
+                erro.textContent = "Erro de conexão com o servidor."; erro.classList.add("on");
+                btn.disabled = false; btn.innerText = "ENTRAR NO BOT";
+            }
+        };
+
+        document.getElementById("input-senha-admin").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") window.validarAcessoAdmin();
+        });
+
         let usuarioId = null;
         let usuarioDados = {};
         let configBot = {
             linkAfiliado: 'https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723',
-            linkTelegram: '',
-            linkWhatsapp: '',
-            mpesa: '84 123 4567',
-            emola: '84 765 4321',
-            valorModerado: 300,
-            valorAgressivo: 500,
-            valorUltra: 1000,
-            senhaAdmin: '1BOTPLACARD1'
+            linkTelegram: '', mpesa: '84 123 4567', emola: '84 765 4321',
+            valorModerado: 300, valorAgressivo: 500
         };
         let historico = [];
         let sinaisGerados = [];
         let perfilAtual = 'conservador';
         let perfisLiberados = ['conservador'];
-        let abaAdminAtual = 'config';
 
         function horaAgora() {
             const d = new Date();
-            return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0') + ':' + d.getSeconds().toString().padStart(2,'0');
+            return d.getHours().toString().padStart(2,'0') + ':' +
+                   d.getMinutes().toString().padStart(2,'0') + ':' +
+                   d.getSeconds().toString().padStart(2,'0');
         }
 
         function mostrarToast(msg) {
@@ -522,49 +472,27 @@
             setTimeout(() => t.classList.remove('on'), 3000);
         }
 
-        function gerarIdUnico() {
-            return 'U' + Date.now().toString(36) + Math.random().toString(36).substr(2, 10);
-        }
-
-        function trocarTela(id) {
-            document.querySelectorAll('.tela').forEach(t => t.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
+        function gerarIdUnico() { return 'U' + Date.now().toString(36) + Math.random().toString(36).substr(2, 10); }
 
         function atualizarLinkTelegram() {
             const link = configBot.linkTelegram || '';
             const btn = document.getElementById('btn-telegram');
-            if (link && btn) { btn.href = link; btn.classList.add('on'); } else if (btn) { btn.classList.remove('on'); }
+            if (link && btn) { btn.href = link; btn.classList.add('on'); }
+            else if (btn) { btn.classList.remove('on'); }
         }
 
-        function atualizarLinkWhatsapp() {
-            const link = configBot.linkWhatsapp || '';
-            const btn = document.getElementById('btn-whatsapp');
-            if (link && btn) { btn.href = link; btn.classList.add('on'); } else if (btn) { btn.classList.remove('on'); }
-        }
-
-        // ========== CARREGAR CONFIG (REALTIME DATABASE) ==========
         async function carregarConfig() {
             try {
                 const snap = await get(ref(db, 'config/bot_config'));
-                if (snap.exists()) {
-                    configBot = { ...configBot, ...snap.val() };
-                    if (!configBot.senhaAdmin) configBot.senhaAdmin = '1BOTPLACARD1';
-                    console.log('✅ Config carregada:', configBot);
-                } else {
-                    await set(ref(db, 'config/bot_config'), configBot);
-                    console.log('✅ Config inicial salva');
-                }
-            } catch (e) {
-                console.error('❌ Erro ao carregar config:', e);
-            }
-            document.getElementById('btn-criar-conta').href = configBot.linkAfiliado || 'https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723';
-            document.getElementById('btn-link-deposito').href = configBot.linkAfiliado || 'https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723';
+                if (snap.exists()) { const fb = snap.val(); configBot = { ...configBot, ...fb }; }
+                else { await set(ref(db, 'config/bot_config'), configBot); }
+            } catch(e) {}
+            const linkAfiliado = configBot.linkAfiliado || 'https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723';
+            document.getElementById('btn-criar-conta').href = linkAfiliado;
+            document.getElementById('btn-link-deposito').href = linkAfiliado;
             atualizarLinkTelegram();
-            atualizarLinkWhatsapp();
         }
 
-        // ========== USUÁRIO ==========
         async function carregarUsuario(id) {
             try {
                 const snap = await get(ref(db, 'usuarios/' + id));
@@ -574,278 +502,101 @@
                     perfisLiberados = usuarioDados.perfisLiberados || ['conservador'];
                     historico = usuarioDados.historico || [];
                     sinaisGerados = usuarioDados.sinais || [];
-                    console.log('✅ Usuário carregado:', id);
                     return true;
                 }
-                console.log('⚠️ Usuário não encontrado:', id);
                 return false;
-            } catch (e) {
-                console.error('❌ Erro ao carregar usuário:', e);
-                return false;
-            }
+            } catch(e) { return false; }
         }
 
         async function criarUsuario() {
             usuarioId = gerarIdUnico();
-            usuarioDados = {
-                id: usuarioId,
-                criadoEm: new Date().toISOString(),
-                depositou: false,
-                botLiberado: false,
-                perfilAtual: 'conservador',
-                perfisLiberados: ['conservador'],
-                historico: [],
-                sinais: []
-            };
-            try {
-                await set(ref(db, 'usuarios/' + usuarioId), usuarioDados);
-                console.log('✅ Usuário criado:', usuarioId);
-            } catch (e) {
-                console.error('❌ Erro ao criar usuário:', e);
-            }
+            usuarioDados = { id: usuarioId, criadoEm: new Date().toISOString(), depositou: false, botLiberado: false, perfilAtual: 'conservador', perfisLiberados: ['conservador'], historico: [], sinais: [] };
+            try { await set(ref(db, 'usuarios/' + usuarioId), usuarioDados); } catch(e) {}
             return usuarioId;
         }
 
         async function salvarUsuario(campos) {
             if (!usuarioId) return;
             Object.assign(usuarioDados, campos);
-            try {
-                await update(ref(db, 'usuarios/' + usuarioId), campos);
-                console.log('✅ Usuário atualizado:', campos);
-            } catch (e) {
-                console.error('❌ Erro ao salvar usuário:', e);
-            }
+            try { await update(ref(db, 'usuarios/' + usuarioId), campos); } catch(e) {}
         }
 
-        async function salvarDadosSinais() {
+        async function salvarHistoricoSinais() {
             if (!usuarioId) return;
-            try {
-                await update(ref(db, 'usuarios/' + usuarioId), { historico, sinais: sinaisGerados });
-            } catch (e) {
-                console.error('❌ Erro ao salvar sinais:', e);
-            }
+            try { await update(ref(db, 'usuarios/' + usuarioId), { historico, sinais: sinaisGerados }); } catch(e) {}
         }
 
-        // ========== NAVEGAÇÃO ==========
         window.jaTenhoConta = async function() {
-            if (!usuarioId) {
-                await criarUsuario();
-            } else {
-                const existe = await carregarUsuario(usuarioId);
-                if (!existe) await criarUsuario();
-            }
+            if (!usuarioId) { await criarUsuario(); }
+            else { const existe = await carregarUsuario(usuarioId); if (!existe) await criarUsuario(); }
             await carregarConfig();
-            if (usuarioDados.botLiberado) {
-                abrirPainel();
-            } else {
-                trocarTela('tela-verificacao');
-            }
+            if (usuarioDados.botLiberado) { abrirPainel(); }
+            else { document.getElementById('tela-inicial').classList.add('hidden'); document.getElementById('tela-verificacao').classList.add('active'); }
         };
 
         window.confirmarDeposito = async function() {
             await salvarUsuario({ depositou: true, botLiberado: true });
-            mostrarToast('✅ Bot liberado!');
-            abrirPainel();
+            document.getElementById('tela-verificacao').classList.remove('active');
+            mostrarToast('✅ Bot liberado!'); abrirPainel();
         };
 
         function abrirPainel() {
-            trocarTela('painel');
-            atualizarPerfisUI();
-            atualizarHistoricoUI();
-            atualizarSinaisUI();
+            document.getElementById('tela-inicial').classList.add('hidden');
+            document.getElementById('tela-verificacao').classList.remove('active');
+            document.getElementById('painel').classList.add('active');
+            atualizarPerfisUI(); atualizarHistoricoUI(); atualizarSinaisUI();
             document.getElementById('input-crash').focus();
         }
 
-        window.abrirPlacard = function() {
-            window.open(configBot.linkAfiliado || 'https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723', '_blank');
-        };
-
-        // ========== UI PERFIS ==========
         function atualizarPerfisUI() {
             document.querySelectorAll('.btn-perfil').forEach(btn => {
                 const p = btn.dataset.perfil;
-                if (perfisLiberados.includes(p)) {
-                    btn.classList.remove('bloqueado');
-                    const l = btn.querySelector('.lock-icon');
-                    if (l) l.style.display = 'none';
-                } else {
-                    btn.classList.add('bloqueado');
-                    const l = btn.querySelector('.lock-icon');
-                    if (l) l.style.display = 'inline';
-                }
+                if (perfisLiberados.includes(p)) { btn.classList.remove('bloqueado'); const l = btn.querySelector('.lock-icon'); if (l) l.style.display = 'none'; }
+                else { btn.classList.add('bloqueado'); const l = btn.querySelector('.lock-icon'); if (l) l.style.display = 'inline'; }
                 btn.classList.toggle('active', p === perfilAtual && perfisLiberados.includes(p));
             });
             const badge = document.getElementById('badge-nivel');
             if (badge) {
-                if (perfisLiberados.includes('ultra')) badge.innerHTML = '<span class="badge-vip ultra">ULTRA VIP</span>';
-                else if (perfisLiberados.includes('agressivo')) badge.innerHTML = '<span class="badge-vip agressivo">AGGRESSIVE</span>';
-                else if (perfisLiberados.includes('moderado')) badge.innerHTML = '<span class="badge-vip moderado">MODERADO</span>';
-                else badge.innerHTML = '<span class="badge-vip gratis">GRÁTIS</span>';
+                if (perfisLiberados.includes('agressivo')) badge.innerHTML = '<span class="badge-vip agressivo">AGGRESSIVE VIP</span>';
+                else if (perfisLiberados.includes('moderado')) badge.innerHTML = '<span class="badge-vip moderado">MODERADO VIP</span>';
+                else badge.innerHTML = '<span class="badge-vip" style="background:rgba(0,255,136,0.15);color:#00ff88;">GRÁTIS</span>';
             }
         }
 
         window.selecionarPerfil = async function(p) {
-            if (!perfisLiberados.includes(p)) { clicarPerfil(p); return; }
-            perfilAtual = p;
-            await salvarUsuario({ perfilAtual: p });
-            atualizarPerfisUI();
+            if (!perfisLiberados.includes(p)) { clicarPerfilBloqueado(p); return; }
+            perfilAtual = p; await salvarUsuario({ perfilAtual: p }); atualizarPerfisUI();
             mostrarToast('✅ Perfil ' + p.toUpperCase() + ' ativado!');
         };
 
-        window.clicarPerfil = function(p) {
+        window.clicarPerfilBloqueado = function(p) {
             if (perfisLiberados.includes(p)) { window.selecionarPerfil(p); return; }
             const modal = document.getElementById('modal-pagamento');
             document.getElementById('modal-conteudo').style.display = 'block';
             document.getElementById('modal-sucesso').style.display = 'none';
             document.getElementById('modal-perfil-nome').textContent = p.toUpperCase();
-            let valor = 0;
-            if (p === 'moderado') valor = configBot.valorModerado || 300;
-            else if (p === 'agressivo') valor = configBot.valorAgressivo || 500;
-            else if (p === 'ultra') valor = configBot.valorUltra || 1000;
+            const valor = p === 'moderado' ? configBot.valorModerado : configBot.valorAgressivo;
             document.getElementById('modal-valor').innerHTML = '💰 <strong>' + valor + ' MT</strong>';
-            document.getElementById('modal-dados').innerHTML =
-                '<p>📱 Vodacom: <span>' + (configBot.mpesa || '') + '</span></p>' +
-                '<p>📱 Movitel: <span>' + (configBot.emola || '') + '</span></p>';
-            modal.dataset.perfil = p;
-            modal.classList.add('on');
+            document.getElementById('modal-dados').innerHTML = '<p>📱 Vodacom: <span>' + configBot.mpesa + '</span></p><p>📱 Movitel: <span>' + configBot.emola + '</span></p>';
+            modal.dataset.perfil = p; modal.classList.add('on');
         };
 
-        window.fecharModal = function() {
-            document.getElementById('modal-pagamento').classList.remove('on');
-        };
+        window.fecharModal = function() { document.getElementById('modal-pagamento').classList.remove('on'); };
 
         window.enviarPedido = async function() {
             const nome = document.getElementById('modal-nome').value.trim();
             const numero = document.getElementById('modal-numero').value.trim();
             const perfil = document.getElementById('modal-pagamento').dataset.perfil;
             if (!nome || !numero) { mostrarToast('⚠️ Preencha todos os campos!'); return; }
-            let valor = 0;
-            if (perfil === 'moderado') valor = configBot.valorModerado || 300;
-            else if (perfil === 'agressivo') valor = configBot.valorAgressivo || 500;
-            else if (perfil === 'ultra') valor = configBot.valorUltra || 1000;
-
-            const pedido = {
-                id: Date.now(),
-                usuarioId,
-                nome,
-                numero,
-                perfil,
-                valor,
-                data: horaAgora(),
-                dataCompleta: new Date().toISOString(),
-                status: 'pendente'
-            };
-
-            try {
-                await set(ref(db, 'pedidos/' + pedido.id), pedido);
-                console.log('✅ PEDIDO SALVO:', pedido);
-                document.getElementById('modal-conteudo').style.display = 'none';
-                document.getElementById('modal-sucesso').style.display = 'block';
-                mostrarToast('✅ Pedido enviado com sucesso!');
-            } catch (e) {
-                console.error('❌ ERRO ao salvar pedido:', e);
-                mostrarToast('❌ Erro ao enviar pedido!');
-            }
+            const valor = perfil === 'moderado' ? configBot.valorModerado : configBot.valorAgressivo;
+            const pedido = { id: Date.now(), usuarioId, nome, numero, perfil, valor, data: horaAgora(), status: 'pendente' };
+            try { await set(ref(db, 'pedidos/' + pedido.id), pedido); } catch(e) {}
+            document.getElementById('modal-conteudo').style.display = 'none';
+            document.getElementById('modal-sucesso').style.display = 'block';
+            mostrarToast('✅ Pedido enviado!');
         };
 
-        // ========== HISTÓRICO ==========
-        function atualizarHistoricoUI() {
-            const row = document.getElementById('historico-row');
-            if (historico.length === 0) {
-                row.innerHTML = '<span style="color:#8b8fa8;font-size:0.6em;">Registre crashes</span>';
-                return;
-            }
-            row.innerHTML = historico.slice(-20).reverse().map(h => {
-                let c = 'win';
-                if (h.multiplicador < 2) c = 'loss';
-                else if (h.multiplicador > 10) c = 'big';
-                return `<span class="hist-cell ${c}" title="${h.hora}">${h.multiplicador.toFixed(2)}x</span>`;
-            }).join('');
-        }
-
-        window.limparHistorico = async function() {
-            if (confirm('Limpar todo o histórico?')) {
-                historico = [];
-                sinaisGerados = [];
-                await salvarUsuario({ historico: [], sinais: [] });
-                atualizarHistoricoUI();
-                atualizarSinaisUI();
-                document.getElementById('sinal-box').innerHTML = '<span style="color:#8b8fa8;font-size:0.75em;">Digite o crash e clique no botão</span>';
-                mostrarToast('🗑 Histórico limpo!');
-            }
-        };
-
-        function atualizarSinaisUI() {
-            const lista = document.getElementById('sinais-gerados');
-            if (sinaisGerados.length === 0) {
-                lista.innerHTML = '<div style="text-align:center;color:#8b8fa8;padding:8px;font-size:0.7em;">Nenhum sinal gerado</div>';
-                return;
-            }
-            lista.innerHTML = sinaisGerados.slice(0, 30).map(s => `
-                <div class="sinal-card">
-                    <div class="info">
-                        <div class="hora">${s.hora} • ${s.perfil.toUpperCase()}</div>
-                        <div class="msg">${s.icone} ${s.alvo}x (${s.probabilidade}%) | Máx: ${s.maximo}x</div>
-                        <span style="font-size:0.6em;color:${s.acerto==='sim'?'#00ff88':s.acerto==='nao'?'#ff4757':'#ffd700'}">
-                            ${s.acerto==='sim'?'✅ Acertou':s.acerto==='nao'?'❌ Não bateu':'⏳ Pendente'}
-                        </span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // ========== IA PENSATIVA ==========
-        function mediaMovel(arr, n) { if (arr.length < n) return arr.reduce((a,b) => a+b, 0) / arr.length; return arr.slice(-n).reduce((a,b) => a+b, 0) / n; }
-        function mediaMovelExponencial(arr, alpha = 0.3) { if (arr.length === 0) return 1.5; let ema = arr[0]; for (let i = 1; i < arr.length; i++) { ema = alpha * arr[i] + (1 - alpha) * ema; } return ema; }
-        function desvioPadrao(arr) { if (arr.length < 2) return 0.5; const media = arr.reduce((a,b) => a+b, 0) / arr.length; return Math.sqrt(arr.reduce((a,b) => a + Math.pow(b-media,2), 0) / arr.length); }
-        function regressaoLinear(arr) { if (arr.length < 5) return { slope: 0, tendencia: 'neutra' }; const n = arr.length; const indices = Array.from({length:n},(_,i)=>i); const sumX = indices.reduce((a,b)=>a+b,0); const sumY = arr.reduce((a,b)=>a+b,0); const sumXY = indices.reduce((a,b,i)=>a+b*arr[i],0); const sumX2 = indices.reduce((a,b)=>a+b*b,0); const slope = (n*sumXY - sumX*sumY) / (n*sumX2 - sumX*sumX); return { slope, tendencia: slope > 0.05 ? 'subida' : slope < -0.05 ? 'descida' : 'neutra' }; }
-        function detectarCiclos(arr, tw = 3) { if (arr.length < tw*2) return {ciclico:false,forca:0}; const recente = arr.slice(-tw); let m = 0; for (let i = arr.length-tw*2; i <= arr.length-tw-1; i++) { const seg = arr.slice(i,i+tw); if (seg.reduce((a,v,j)=>a+Math.abs(v-recente[j]),0)/tw < 0.3) m++; } return {ciclico:m>=2,forca:m}; }
-        function analisarMomento(arr) { if (arr.length < 6) return {estado:'neutro',forca:0}; const r = arr.slice(-6); const a = (r[0]+r[1]+r[2])/3; const b = (r[3]+r[4]+r[5])/3; const acc = b-a; if (acc>2) return {estado:'explosivo',forca:acc}; if (acc>0.8) return {estado:'quente',forca:acc}; if (acc<-1) return {estado:'frio',forca:Math.abs(acc)}; return {estado:'neutro',forca:acc}; }
-
-        function calcularAlvoEstrategico(perfil, dados) {
-            let ab = dados.ema;
-            if (dados.tendencia.tendencia === 'subida') ab *= 1.15; else if (dados.tendencia.tendencia === 'descida') ab *= 0.85;
-            if (dados.momento.estado === 'explosivo') ab *= 1.3; else if (dados.momento.estado === 'quente') ab *= 1.1; else if (dados.momento.estado === 'frio') ab *= 0.8;
-            if (dados.ciclos.ciclico) ab *= 1.1;
-            if (dados.quedasSeguidas >= 4) ab *= 1.3; else if (dados.quedasSeguidas >= 2) ab *= 1.1;
-            if (dados.desvio > 5) ab *= 1.2; else if (dados.desvio < 1) ab *= 0.9;
-            let af, mf;
-            switch (perfil) {
-                case 'conservador': af = Math.max(1.20, Math.min(ab, 5.00)); mf = Math.max(af+1, Math.min(ab*1.5, 8.00)); break;
-                case 'moderado': af = Math.max(1.50, Math.min(ab*1.1, 8.00)); mf = Math.max(af+1.5, Math.min(ab*1.8, 15.00)); break;
-                case 'agressivo': af = Math.max(2.00, Math.min(ab*1.2, 12.00)); mf = Math.max(af+2, Math.min(ab*2.0, 25.00)); break;
-                case 'ultra': af = Math.max(2.50, Math.min(ab*1.25, 15.00)); mf = Math.max(af+3, Math.min(ab*2.2, 35.00)); break;
-                default: af = ab; mf = ab*1.5;
-            }
-            return { alvo: af.toFixed(2), maximo: mf.toFixed(2), alvoBase: ab.toFixed(2) };
-        }
-
-        function calcularProbabilidadeReal(perfil, dados) {
-            let pb = 50;
-            if (dados.ultimos30.length >= 20) pb += 10; else if (dados.ultimos30.length >= 10) pb += 5;
-            if (dados.desvio > 5) pb -= 10; else if (dados.desvio < 1.5) pb += 10;
-            if (dados.momento.estado === 'explosivo') pb += 15; else if (dados.momento.estado === 'quente') pb += 8; else if (dados.momento.estado === 'frio') pb -= 5;
-            if (dados.tendencia.tendencia !== 'neutra') pb += 5;
-            if (dados.ciclos.ciclico) pb += 8;
-            if (dados.quedasSeguidas >= 3) pb += 10;
-            switch (perfil) { case 'conservador': break; case 'moderado': pb += 10; break; case 'agressivo': pb += 18; break; case 'ultra': pb += 25; break; }
-            return Math.round(Math.max(35, Math.min(97, pb)));
-        }
-
-        function gerarPensamentoIA(dados) {
-            const p = [];
-            if (dados.momento.estado === 'explosivo') p.push('🔥 Explosivo');
-            else if (dados.momento.estado === 'quente') p.push('📈 Aquecendo');
-            else if (dados.momento.estado === 'frio') p.push('❄️ Frio');
-            if (dados.tendencia.tendencia === 'subida') p.push('📊 Alta');
-            else if (dados.tendencia.tendencia === 'descida') p.push('📉 Baixa');
-            if (dados.ciclos.ciclico) p.push('🔄 Cíclico');
-            if (dados.quedasSeguidas >= 3) p.push('⏱️ ' + dados.quedasSeguidas + ' quedas');
-            p.push('EMA:' + dados.ema.toFixed(2));
-            return p.join(' • ');
-        }
-
-        window.registrarEGerar = function() {
+        window.registrarEGerarSinal = function() {
             const input = document.getElementById('input-crash');
             let valor = input.value.trim().replace(',', '.');
             if (!valor) { mostrarToast('⚠️ Digite o valor!'); return; }
@@ -853,383 +604,257 @@
             if (isNaN(num) || num < 1) { mostrarToast('⚠️ Inválido!'); return; }
 
             if (sinaisGerados.length > 0 && sinaisGerados[0].acerto === 'pendente' && sinaisGerados[0].alvo) {
-                sinaisGerados[0].acerto = num >= parseFloat(sinaisGerados[0].alvo) ? 'sim' : 'nao';
+                const alvo = parseFloat(sinaisGerados[0].alvo);
+                sinaisGerados[0].acerto = num >= alvo ? 'sim' : 'nao';
                 sinaisGerados[0].resultadoReal = num;
-                salvarDadosSinais(); atualizarSinaisUI();
-                mostrarToast(sinaisGerados[0].acerto === 'sim' ? '✅ SINAL ACERTOU!' : '❌ Não bateu');
+                salvarHistoricoSinais(); atualizarSinaisUI();
+                mostrarToast(sinaisGerados[0].acerto === 'sim' ? '✅ SINAL ACERTOU!' : '❌ Não bateu.');
             }
 
             historico.push({ multiplicador: num, hora: horaAgora(), origem: 'manual' });
             if (historico.length > 100) historico.shift();
-            salvarDadosSinais(); input.value = ''; input.focus();
+            salvarHistoricoSinais(); input.value = ''; input.focus();
 
             if (historico.length >= 3) {
-                const u30 = historico.slice(-30).map(h => h.multiplicador);
-                const dados = {
-                    ultimos30: u30, media30: mediaMovel(u30, 30),
-                    ema: mediaMovelExponencial(u30, 0.3), desvio: desvioPadrao(u30),
-                    tendencia: regressaoLinear(u30.slice(-15)), momento: analisarMomento(u30),
-                    ciclos: detectarCiclos(u30, 3),
-                    quedasSeguidas: (() => { let q = 0; for (let i = u30.length-1; i >= 0; i--) { if (u30[i] < 2) q++; else break; } return q; })()
-                };
-
-                const est = calcularAlvoEstrategico(perfilAtual, dados);
-                const prob = calcularProbabilidadeReal(perfilAtual, dados);
-                const pens = gerarPensamentoIA(dados);
-
-                let icone = '🎯';
-                if (dados.momento.estado === 'explosivo') icone = '💣';
-                else if (dados.momento.estado === 'quente') icone = '🔥';
-                else if (dados.momento.estado === 'frio') icone = '❄️';
-
+                const r = calcularProbabilidade(perfilAtual);
                 document.getElementById('sinal-box').innerHTML = `
-                    <div style="font-size:2em;">${icone}</div>
-                    <div class="probabilidade">${prob}%</div>
-                    <div style="font-size:0.6em;color:#8b8fa8;">probabilidade</div>
-                    <div class="alvo-sugerido">🎯 ${est.alvo}x</div>
-                    <div class="alvo-maximo">📈 Máx: ${est.maximo}x</div>
-                    <div class="ia-pensando">🧠 ${pens}</div>
+                    <div style="font-size:3em;">${r.icone}</div>
+                    <div class="probabilidade">${r.probabilidade}%</div>
+                    <div style="font-size:0.7em;color:#8b8fa8;">de chance de atingir</div>
+                    <div class="alvo-sugerido">🎯 ${r.alvo}x</div>
+                    <div class="alvo-maximo">📈 Máximo provável: ${r.maximo}x</div>
+                    <div class="mensagem-curta">${r.mensagem}</div>
                 `;
-
-                sinaisGerados.unshift({
-                    hora: horaAgora(), perfil: perfilAtual, icone,
-                    alvo: est.alvo, maximo: est.maximo, probabilidade: prob,
-                    mensagem: '', pensamento: pens, acerto: 'pendente', resultadoReal: null
-                });
+                sinaisGerados.unshift({ hora: horaAgora(), perfil: perfilAtual, icone: r.icone, alvo: r.alvo, maximo: r.maximo, probabilidade: r.probabilidade, mensagem: r.mensagem, acerto: 'pendente', resultadoReal: null });
                 if (sinaisGerados.length > 50) sinaisGerados.pop();
-                salvarDadosSinais();
+                salvarHistoricoSinais();
             }
             atualizarHistoricoUI(); atualizarSinaisUI();
         };
 
-        // ========== ADMIN ==========
-        let clicksAdmin = 0, timerAdmin;
+        // ============ NOVA FUNÇÃO calcularProbabilidade (JUSTA) ============
+        function calcularProbabilidade(perfil) {
+            const ultimos = historico.slice(-30).map(h => h.multiplicador);
+            const total = ultimos.length || 1;
+            const ultimo = ultimos[ultimos.length - 1];
+            
+            const ultimos10 = ultimos.slice(-10);
+            const acima3x = ultimos10.filter(x => x > 3).length;
+            const acima5x = ultimos10.filter(x => x > 5).length;
+            const acima10x = ultimos10.filter(x => x > 10).length;
+            const acima20x = ultimos10.filter(x => x > 20).length;
+            
+            const momentoQuente = (acima5x >= 2) || (acima10x >= 1);
+            const momentoMuitoQuente = (acima10x >= 2) || (acima20x >= 1);
+            const momentoExplosivo = (acima20x >= 2) || (ultimo > 30);
+            
+            let quedas = 0;
+            for (let i = ultimos.length - 1; i >= 0; i--) { if (ultimos[i] < 2) quedas++; else break; }
+            
+            const passaram120 = ultimos.filter(x => x >= 1.20).length;
+            const passaram150 = ultimos.filter(x => x >= 1.50).length;
+            const passaram300 = ultimos.filter(x => x >= 3.00).length;
+            const passaram500 = ultimos.filter(x => x >= 5.00).length;
+            
+            function alvo(min, max) { return (Math.random() * (max - min) + min).toFixed(2); }
+
+            if (perfil === 'conservador') {
+                if (momentoExplosivo) {
+                    const prob = Math.round(45 + Math.random() * 30);
+                    const a = alvo(4, 8); const m = alvo(8, 15);
+                    return { icone: '🔥', alvo: a, maximo: m, probabilidade: prob, mensagem: '🔥 ALTAS! Chance de ' + a + 'x a ' + m + 'x', momentoQuente: true };
+                } else if (momentoMuitoQuente) {
+                    const prob = Math.round(40 + Math.random() * 35);
+                    const a = alvo(3, 7); const m = alvo(7, 12);
+                    return { icone: '🟡', alvo: a, maximo: m, probabilidade: prob, mensagem: '🟡 Momento favorável! Possível ' + a + 'x a ' + m + 'x', momentoQuente: true };
+                } else if (momentoQuente) {
+                    const prob = Math.round(35 + Math.random() * 35);
+                    const a = alvo(2, 5); const m = alvo(5, 10);
+                    return { icone: '🟢', alvo: a, maximo: m, probabilidade: prob, mensagem: 'Possível ' + a + 'x a ' + m + 'x. Sem certeza!', momentoQuente: true };
+                } else if (quedas >= 3) {
+                    const prob = Math.round(50 + Math.random() * 30);
+                    const a = alvo(1.50, 3.00); const m = alvo(3, 6);
+                    return { icone: '🟢', alvo: a, maximo: m, probabilidade: prob, mensagem: quedas + ' quedas! Provável ' + a + 'x a ' + m + 'x', momentoQuente: false };
+                } else {
+                    const bom = Math.random() > 0.5;
+                    const prob = bom ? Math.round(45 + Math.random() * 30) : Math.round(20 + Math.random() * 30);
+                    const a = bom ? alvo(1.50, 4.00) : alvo(4, 8);
+                    const m = bom ? (parseFloat(a) + 2).toFixed(2) : (parseFloat(a) + 4).toFixed(2);
+                    return { icone: bom ? '🟢' : '🔴', alvo: a, maximo: m, probabilidade: prob, mensagem: bom ? 'Chance de ' + a + 'x a ' + m + 'x' : 'Arriscado! ' + a + 'x a ' + m + 'x', momentoQuente: false };
+                }
+            }
+
+            if (perfil === 'moderado') {
+                if (momentoExplosivo) {
+                    const prob = Math.round(65 + Math.random() * 25);
+                    const a = alvo(7, 12); const m = alvo(12, 25);
+                    return { icone: '💣', alvo: a, maximo: m, probabilidade: prob, mensagem: '💣 EXPLOSIVO! Alta probabilidade de ' + a + 'x a ' + m + 'x', momentoQuente: true };
+                } else if (momentoMuitoQuente) {
+                    const prob = Math.round(60 + Math.random() * 30);
+                    const a = alvo(5, 10); const m = alvo(10, 20);
+                    return { icone: '🔥', alvo: a, maximo: m, probabilidade: prob, mensagem: '🔥 MUITO QUENTE! ' + a + 'x a ' + m + 'x provável!', momentoQuente: true };
+                } else if (momentoQuente) {
+                    const prob = Math.round(55 + Math.random() * 30);
+                    const a = alvo(4, 8); const m = alvo(8, 15);
+                    return { icone: '🎯', alvo: a, maximo: m, probabilidade: prob, mensagem: '🎯 Alvo moderado: ' + a + 'x a ' + m + 'x', momentoQuente: true };
+                } else if (quedas >= 2) {
+                    const prob = Math.round(55 + Math.random() * 25);
+                    const a = alvo(3, 6); const m = alvo(6, 10);
+                    return { icone: '⏱️', alvo: a, maximo: m, probabilidade: prob, mensagem: quedas + ' quedas! Alvo: ' + a + 'x a ' + m + 'x', momentoQuente: false };
+                } else {
+                    const prob = Math.round(50 + Math.random() * 25);
+                    const a = alvo(2, 5); const m = alvo(5, 10);
+                    return { icone: '✅', alvo: a, maximo: m, probabilidade: prob, mensagem: 'Moderado: ' + a + 'x a ' + m + 'x', momentoQuente: false };
+                }
+            }
+
+            if (perfil === 'agressivo') {
+                if (momentoExplosivo) {
+                    const prob = Math.round(75 + Math.random() * 20);
+                    const a = alvo(5, 8); const m = alvo(8, 10);
+                    return { icone: '🚀', alvo: a, maximo: m, probabilidade: prob, mensagem: '🚀 ALTA PRECISÃO: ' + a + 'x a ' + m + 'x', momentoQuente: true };
+                } else if (momentoMuitoQuente) {
+                    const prob = Math.round(70 + Math.random() * 25);
+                    const a = alvo(4, 7); const m = alvo(7, 10);
+                    return { icone: '💎', alvo: a, maximo: m, probabilidade: prob, mensagem: '💎 Precisão: ' + a + 'x a ' + m + 'x', momentoQuente: true };
+                } else if (momentoQuente) {
+                    const prob = Math.round(65 + Math.random() * 25);
+                    const a = alvo(3, 6); const m = alvo(6, 9);
+                    return { icone: '🔥', alvo: a, maximo: m, probabilidade: prob, mensagem: '🔥 Agressivo: ' + a + 'x a ' + m + 'x', momentoQuente: true };
+                } else if (quedas >= 3) {
+                    const prob = Math.round(70 + Math.random() * 20);
+                    const a = alvo(2, 5); const m = alvo(5, 8);
+                    return { icone: '⚡', alvo: a, maximo: m, probabilidade: prob, mensagem: quedas + ' quedas! ' + a + 'x a ' + m + 'x', momentoQuente: false };
+                } else {
+                    const prob = Math.round(65 + Math.random() * 20);
+                    const a = alvo(1.50, 3.50); const m = alvo(3.50, 7);
+                    return { icone: '💎', alvo: a, maximo: m, probabilidade: prob, mensagem: 'Agressivo: ' + a + 'x a ' + m + 'x', momentoQuente: false };
+                }
+            }
+
+            return { icone: '❓', alvo: '1.50', maximo: '3.00', probabilidade: 50, mensagem: 'Análise padrão.', momentoQuente: false };
+        }
+
+        function atualizarHistoricoUI() {
+            const row = document.getElementById('historico-row');
+            if (historico.length === 0) { row.innerHTML = '<span style="color:#8b8fa8;">Registre crashes para começar</span>'; return; }
+            row.innerHTML = historico.slice(-20).reverse().map(h => {
+                let c = 'win'; if (h.multiplicador < 2) c = 'loss'; else if (h.multiplicador > 10) c = 'big';
+                return `<span class="hist-cell ${c}" title="${h.hora}">${h.multiplicador.toFixed(2)}x</span>`;
+            }).join('');
+        }
+
+        window.limparHistorico = async function() {
+            if (confirm('Limpar histórico?')) {
+                historico = []; sinaisGerados = [];
+                await salvarUsuario({ historico: [], sinais: [] });
+                atualizarHistoricoUI(); atualizarSinaisUI();
+                document.getElementById('sinal-box').innerHTML = '<span style="color:#8b8fa8;">Digite o crash atual e clique no botão acima</span>';
+                mostrarToast('🗑 Histórico limpo!');
+            }
+        };
+
+        function atualizarSinaisUI() {
+            const lista = document.getElementById('sinais-gerados');
+            if (sinaisGerados.length === 0) { lista.innerHTML = '<div style="text-align:center;color:#8b8fa8;">Nenhum sinal gerado ainda</div>'; return; }
+            lista.innerHTML = sinaisGerados.slice(0, 20).map(s => `
+                <div class="sinal-card">
+                    <div class="info">
+                        <div class="hora">${s.hora} • ${s.perfil.toUpperCase()}</div>
+                        <div class="msg">${s.icone} ${s.alvo}x (${s.probabilidade || '?'}%) | Máx: ${s.maximo || '?'}x</div>
+                        <span style="font-size:0.6em;color:${s.acerto==='sim'?'#00ff88':s.acerto==='nao'?'#ff4757':'#ffd700'}">${s.acerto==='sim'?'✅ Acertou':s.acerto==='nao'?'❌ Não bateu':'⏳ Pendente'}</span>
+                    </div>
+                </div>`).join('');
+        }
+
+        window.abrirPlacard = function() { window.open(configBot.linkAfiliado || 'https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723', '_blank'); };
+
+        let clicks = 0, ctimer;
         document.getElementById('logo-admin').addEventListener('click', () => {
-            clicksAdmin++; clearTimeout(timerAdmin);
-            timerAdmin = setTimeout(() => clicksAdmin = 0, 5000);
-            if (clicksAdmin >= 15) {
-                clicksAdmin = 0;
-                document.getElementById('tela-login-admin').classList.add('on');
-                document.getElementById('input-senha-admin').focus();
-            }
+            clicks++; clearTimeout(ctimer); ctimer = setTimeout(() => clicks = 0, 5000);
+            if (clicks >= 15) { clicks = 0; document.getElementById('tela-login-admin').classList.add('on'); document.getElementById('input-senha-admin').focus(); }
         });
-
-        window.validarAdmin = async function() {
-            const senha = document.getElementById('input-senha-admin').value;
-            const btn = document.getElementById('btn-entrar-admin');
-            const erro = document.getElementById('erro-login');
-
-            if (!senha) { erro.textContent = 'Digite a senha.'; erro.classList.add('on'); return; }
-            btn.innerText = 'Verificando...'; btn.disabled = true; erro.classList.remove('on');
-
-            try {
-                // Carrega config mais recente
-                const snap = await get(ref(db, 'config/bot_config'));
-                if (snap.exists()) {
-                    configBot = { ...configBot, ...snap.val() };
-                }
-                const senhaServidor = configBot.senhaAdmin || '1BOTPLACARD1';
-
-                if (senha === senhaServidor) {
-                    document.getElementById('tela-login-admin').classList.remove('on');
-                    document.getElementById('input-senha-admin').value = '';
-                    abrirAdmin();
-                    mostrarToast('✅ Bem-vindo Admin!');
-                } else {
-                    erro.textContent = 'Senha incorreta!';
-                    erro.classList.add('on');
-                }
-            } catch (e) {
-                console.error('Erro:', e);
-                if (senha === '1BOTPLACARD1') {
-                    document.getElementById('tela-login-admin').classList.remove('on');
-                    document.getElementById('input-senha-admin').value = '';
-                    abrirAdmin();
-                    mostrarToast('✅ Acesso emergencial!');
-                } else {
-                    erro.textContent = 'Erro de conexão.';
-                    erro.classList.add('on');
-                }
-            }
-            btn.disabled = false; btn.innerText = 'ENTRAR';
-        };
-
-        document.getElementById('input-senha-admin').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') window.validarAdmin();
-        });
-
-        window.trocarAbaAdmin = function(aba) {
-            abaAdminAtual = aba;
-            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
-            const tabBtn = document.querySelector(`.admin-tab[onclick*="${aba}"]`);
-            if (tabBtn) tabBtn.classList.add('active');
-            const tabContent = document.getElementById('aba-' + aba);
-            if (tabContent) tabContent.classList.add('active');
-            if (aba === 'pedidos') carregarPedidos();
-            if (aba === 'vips') carregarVIPs();
-        };
 
         async function abrirAdmin() {
             document.getElementById('admin-overlay').classList.add('on');
             document.getElementById('adm-link').value = configBot.linkAfiliado || '';
             document.getElementById('adm-link-telegram').value = configBot.linkTelegram || '';
-            document.getElementById('adm-link-whatsapp').value = configBot.linkWhatsapp || '';
             document.getElementById('adm-mpesa').value = configBot.mpesa || '';
             document.getElementById('adm-emola').value = configBot.emola || '';
             document.getElementById('adm-valor-moderado').value = configBot.valorModerado || 300;
             document.getElementById('adm-valor-agressivo').value = configBot.valorAgressivo || 500;
-            document.getElementById('adm-valor-ultra').value = configBot.valorUltra || 1000;
-            document.getElementById('adm-nova-senha').value = '';
-            trocarAbaAdmin('config');
             carregarPedidos();
         }
 
         async function carregarPedidos() {
             const div = document.getElementById('admin-pedidos');
-            div.innerHTML = '<p style="color:#ffd700;">⏳ Carregando...</p>';
             try {
                 const snap = await get(ref(db, 'pedidos'));
-                console.log('📋 Pedidos carregados:', snap.exists() ? Object.keys(snap.val()).length : 0);
                 if (snap.exists()) {
-                    const pedidos = Object.values(snap.val()).sort((a, b) => b.id - a.id);
-                    div.innerHTML = pedidos.length ? pedidos.map(p => `
+                    const p = Object.values(snap.val()).sort((a, b) => b.id - a.id);
+                    div.innerHTML = p.length ? p.map(p => `
                         <div class="pedido-card">
-                            <p><strong>#${p.id}</strong> - ${p.data || 'N/A'}</p>
-                            <p>👤 ${p.nome || 'N/A'} | 📱 ${p.numero || 'N/A'}</p>
-                            <p>🎯 ${(p.perfil || '').toUpperCase()} | 💰 ${p.valor || 0} MT</p>
-                            <p>🆔 ${p.usuarioId || 'N/A'}</p>
-                            <p>📊 <span style="color:${p.status==='aprovado'?'#00ff88':p.status==='recusado'?'#ff4757':'#ffd700'}">${(p.status||'').toUpperCase()}</span></p>
-                            ${p.status==='pendente'?`<div class="pedido-botoes"><button class="btn-aprovar" onclick="aprovarPedido('${p.id}')">✅ APROVAR</button><button class="btn-recusar" onclick="recusarPedido('${p.id}')">❌ RECUSAR</button></div>`:''}
-                        </div>`).join('') : '<p style="color:#8b8fa8;">Nenhum pedido encontrado.</p>';
-                } else {
-                    div.innerHTML = '<p style="color:#8b8fa8;">Nenhum pedido encontrado.</p>';
-                }
-            } catch (e) {
-                console.error('❌ Erro ao carregar pedidos:', e);
-                div.innerHTML = '<p style="color:#ff4757;">Erro ao carregar pedidos.</p>';
-            }
+                            <p><strong>#${p.id}</strong> - ${p.data}</p>
+                            <p>👤 ${p.nome} | 📱 ${p.numero}</p>
+                            <p>🎯 ${p.perfil.toUpperCase()} | 💰 ${p.valor} MT</p>
+                            <p>📊 <span style="color:${p.status==='aprovado'?'#00ff88':p.status==='recusado'?'#ff4757':'#ffd700'}">${p.status.toUpperCase()}</span></p>
+                            ${p.status==='pendente'?`<div class="pedido-botoes"><button class="btn-aprovar" onclick="aprovar('${p.id}')">✅ APROVAR</button><button class="btn-recusar" onclick="recusar('${p.id}')">❌ RECUSAR</button></div>`:''}
+                        </div>`).join('') : '<p style="color:#8b8fa8;">Nenhum pedido.</p>';
+                } else { div.innerHTML = '<p style="color:#8b8fa8;">Nenhum pedido.</p>'; }
+            } catch(e) { div.innerHTML = '<p style="color:#ff4757;">Erro.</p>'; }
         }
 
-        async function carregarVIPs() {
-            const divVips = document.getElementById('admin-vips');
-            const divHistorico = document.getElementById('admin-historico-vip');
-            divVips.innerHTML = '<p style="color:#ffd700;">⏳ Carregando...</p>';
-            divHistorico.innerHTML = '<p style="color:#ffd700;">⏳ Carregando...</p>';
-
-            try {
-                // Carrega todos os pedidos
-                const snapPedidos = await get(ref(db, 'pedidos'));
-                const todosPedidos = snapPedidos.exists() ? Object.values(snapPedidos.val()) : [];
-                const aprovados = todosPedidos.filter(p => p.status === 'aprovado');
-                const pendentes = todosPedidos.filter(p => p.status === 'pendente');
-                const recusados = todosPedidos.filter(p => p.status === 'recusado');
-                console.log('📊 Pedidos:', { total: todosPedidos.length, aprovados: aprovados.length, pendentes: pendentes.length, recusados: recusados.length });
-
-                // Carrega todos os usuários
-                const snapUsuarios = await get(ref(db, 'usuarios'));
-                const usuarios = snapUsuarios.exists() ? Object.values(snapUsuarios.val()) : [];
-                const usuariosVIP = usuarios.filter(u => u.perfisLiberados && u.perfisLiberados.some(p => p !== 'conservador'));
-                console.log('👑 Usuários VIP:', usuariosVIP.length);
-
-                // Lista VIPs ativos
-                divVips.innerHTML = usuariosVIP.length ? usuariosVIP.map(u => `
-                    <div class="pedido-card">
-                        <p><strong>🆔 ${u.id}</strong></p>
-                        <p>👑 Perfis: ${(u.perfisLiberados||[]).join(', ').toUpperCase()}</p>
-                        <p>📅 Desde: ${u.criadoEm ? new Date(u.criadoEm).toLocaleDateString('pt-BR') : 'N/A'}</p>
-                        <p>💳 Depositou: ${u.depositou ? '✅ Sim' : '❌ Não'}</p>
-                        <button class="btn-remover-vip" onclick="removerVIP('${u.id}')">🗑 Remover</button>
-                    </div>`).join('') : '<p style="color:#8b8fa8;">Nenhum VIP ativo.</p>';
-
-                // Histórico de compras
-                divHistorico.innerHTML = '<p style="color:#ffd700;font-size:0.7em;">📊 Total: ' + todosPedidos.length + ' | ✅ Apr: ' + aprovados.length + ' | ⏳ Pen: ' + pendentes.length + ' | ❌ Rec: ' + recusados.length + '</p>';
-                divHistorico.innerHTML += aprovados.length ? aprovados.slice(0, 20).map(p => `
-                    <div class="pedido-card">
-                        <p><strong>#${p.id}</strong> - ${p.data || 'N/A'}</p>
-                        <p>👤 ${p.nome || 'N/A'} | 📱 ${p.numero || 'N/A'}</p>
-                        <p>🎯 ${(p.perfil||'').toUpperCase()} | 💰 ${p.valor || 0} MT</p>
-                        <p>🆔 ${p.usuarioId || 'N/A'}</p>
-                    </div>`).join('') : '<p style="color:#8b8fa8;">Nenhuma compra aprovada.</p>';
-            } catch (e) {
-                console.error('❌ Erro ao carregar VIPs:', e);
-                divVips.innerHTML = '<p style="color:#ff4757;">Erro ao carregar.</p>';
-                divHistorico.innerHTML = '<p style="color:#ff4757;">Erro ao carregar.</p>';
-            }
-        }
-
-        window.aprovarPedido = async function(id) {
-            try {
-                await update(ref(db, 'pedidos/' + id), { status: 'aprovado', dataAprovacao: new Date().toISOString() });
-                const snap = await get(ref(db, 'pedidos/' + id));
-                if (snap.exists()) {
-                    const p = snap.val();
-                    if (p.usuarioId) {
-                        const us = await get(ref(db, 'usuarios/' + p.usuarioId));
-                        if (us.exists()) {
-                            const pf = us.val().perfisLiberados || ['conservador'];
-                            if (!pf.includes(p.perfil)) {
-                                pf.push(p.perfil);
-                                await update(ref(db, 'usuarios/' + p.usuarioId), { perfisLiberados: pf });
-                            }
-                        }
-                    }
-                }
-                await carregarPedidos();
-                if (abaAdminAtual === 'vips') await carregarVIPs();
-                mostrarToast('✅ Aprovado!');
-            } catch (e) {
-                console.error('❌ Erro ao aprovar:', e);
-                mostrarToast('❌ Erro!');
-            }
-        };
-
-        window.recusarPedido = async function(id) {
-            try {
-                await update(ref(db, 'pedidos/' + id), { status: 'recusado' });
-                await carregarPedidos();
-                if (abaAdminAtual === 'vips') await carregarVIPs();
-                mostrarToast('❌ Recusado.');
-            } catch (e) {
-                console.error('❌ Erro ao recusar:', e);
-            }
-        };
-
-        window.removerVIP = async function(uid) {
-            if (!confirm('Remover TODOS os perfis VIP?')) return;
-            try {
-                await update(ref(db, 'usuarios/' + uid), { perfisLiberados: ['conservador'], perfilAtual: 'conservador' });
-                if (abaAdminAtual === 'vips') await carregarVIPs();
-                mostrarToast('🗑 Removido!');
-            } catch (e) {
-                console.error('❌ Erro ao remover VIP:', e);
-            }
-        };
-
-        window.registrarVIPManual = async function() {
-            const uid = document.getElementById('adm-registrar-id').value.trim();
-            const nome = document.getElementById('adm-registrar-nome').value.trim();
-            const numero = document.getElementById('adm-registrar-numero').value.trim();
-            const perfil = document.getElementById('adm-registrar-perfil').value;
-            const valor = parseInt(document.getElementById('adm-registrar-valor').value) || 0;
-            if (!uid || !nome || !numero) { mostrarToast('⚠️ Preencha todos!'); return; }
-
-            const pedido = {
-                id: Date.now(), usuarioId: uid, nome, numero, perfil, valor,
-                data: horaAgora(), dataCompleta: new Date().toISOString(),
-                status: 'aprovado', dataAprovacao: new Date().toISOString(), registroManual: true
-            };
-
-            try {
-                await set(ref(db, 'pedidos/' + pedido.id), pedido);
-                const us = await get(ref(db, 'usuarios/' + uid));
+        window.aprovar = async function(id) {
+            await update(ref(db, 'pedidos/' + id), { status: 'aprovado' });
+            const snap = await get(ref(db, 'pedidos/' + id));
+            if (snap.exists()) {
+                const p = snap.val();
+                const us = await get(ref(db, 'usuarios/' + p.usuarioId));
                 if (us.exists()) {
                     const pf = us.val().perfisLiberados || ['conservador'];
-                    if (!pf.includes(perfil)) {
-                        pf.push(perfil);
-                        await update(ref(db, 'usuarios/' + uid), { perfisLiberados: pf });
-                    }
+                    if (!pf.includes(p.perfil)) { pf.push(p.perfil); await update(ref(db, 'usuarios/' + p.usuarioId), { perfisLiberados: pf }); }
                 }
-                document.getElementById('adm-registrar-id').value = '';
-                document.getElementById('adm-registrar-nome').value = '';
-                document.getElementById('adm-registrar-numero').value = '';
-                document.getElementById('adm-registrar-valor').value = '';
-                if (abaAdminAtual === 'vips') await carregarVIPs();
-                mostrarToast('✅ VIP registrado!');
-            } catch (e) {
-                console.error('❌ Erro:', e);
-                mostrarToast('❌ Erro!');
             }
+            carregarPedidos(); mostrarToast('✅ Aprovado!');
         };
 
-        window.alterarSenhaAdmin = async function() {
-            const novaSenha = document.getElementById('adm-nova-senha').value.trim();
-            if (!novaSenha || novaSenha.length < 4) { mostrarToast('⚠️ Mínimo 4 caracteres!'); return; }
-            configBot.senhaAdmin = novaSenha;
-            try {
-                await update(ref(db, 'config/bot_config'), { senhaAdmin: novaSenha });
-                document.getElementById('adm-nova-senha').value = '';
-                mostrarToast('🔒 Senha alterada!');
-            } catch (e) {
-                console.error('❌ Erro:', e);
-                mostrarToast('❌ Erro!');
-            }
-        };
+        window.recusar = async function(id) { await update(ref(db, 'pedidos/' + id), { status: 'recusado' }); carregarPedidos(); mostrarToast('❌ Recusado.'); };
 
         window.salvarAdmin = async function() {
             configBot.linkAfiliado = document.getElementById('adm-link').value.trim();
             configBot.linkTelegram = document.getElementById('adm-link-telegram').value.trim();
-            configBot.linkWhatsapp = document.getElementById('adm-link-whatsapp').value.trim();
             configBot.mpesa = document.getElementById('adm-mpesa').value.trim();
             configBot.emola = document.getElementById('adm-emola').value.trim();
             configBot.valorModerado = parseInt(document.getElementById('adm-valor-moderado').value) || 300;
             configBot.valorAgressivo = parseInt(document.getElementById('adm-valor-agressivo').value) || 500;
-            configBot.valorUltra = parseInt(document.getElementById('adm-valor-ultra').value) || 1000;
-
-            try {
-                await set(ref(db, 'config/bot_config'), configBot);
-                console.log('✅ Config salva:', configBot);
-                document.getElementById('btn-criar-conta').href = configBot.linkAfiliado || 'https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723';
-                document.getElementById('btn-link-deposito').href = configBot.linkAfiliado || 'https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723';
-                atualizarLinkTelegram();
-                atualizarLinkWhatsapp();
-                mostrarToast('💾 Salvo!');
-                fecharAdmin();
-            } catch (e) {
-                console.error('❌ Erro ao salvar:', e);
-                mostrarToast('❌ Erro!');
-            }
+            try { await set(ref(db, 'config/bot_config'), configBot); } catch(e) {}
+            document.getElementById('btn-criar-conta').href = configBot.linkAfiliado;
+            document.getElementById('btn-link-deposito').href = configBot.linkAfiliado;
+            atualizarLinkTelegram(); alert('✅ Salvo!'); fecharAdmin();
         };
 
-        window.fecharAdmin = function() {
-            document.getElementById('admin-overlay').classList.remove('on');
-        };
+        window.fecharAdmin = function() { document.getElementById('admin-overlay').classList.remove('on'); };
 
-        // ========== INIT ==========
         async function init() {
-            console.log('🚀 Iniciando BOT AVIATOR...');
             await carregarConfig();
-
-            const idTemp = gerarIdUnico();
-            usuarioId = idTemp;
-            const existe = await carregarUsuario(idTemp);
-            if (!existe) await criarUsuario();
-
-            // Listener em tempo real
+            const idTemp = gerarIdUnico(); usuarioId = idTemp;
+            const existe = await carregarUsuario(idTemp); if (!existe) await criarUsuario();
             onValue(ref(db, 'usuarios/' + usuarioId), (snap) => {
                 if (snap.exists()) {
                     const data = snap.val();
                     perfisLiberados = data.perfisLiberados || ['conservador'];
                     perfilAtual = data.perfilAtual || 'conservador';
-                    historico = data.historico || [];
-                    sinaisGerados = data.sinais || [];
-                    usuarioDados = data;
-                    if (document.getElementById('painel').classList.contains('active')) {
-                        atualizarPerfisUI();
-                        atualizarHistoricoUI();
-                        atualizarSinaisUI();
-                    }
+                    historico = data.historico || []; sinaisGerados = data.sinais || []; usuarioDados = data;
+                    if (document.getElementById('painel').classList.contains('active')) { atualizarPerfisUI(); atualizarHistoricoUI(); atualizarSinaisUI(); }
                 }
             });
-
-            setInterval(() => {
-                const el = document.getElementById('hora-oficial');
-                if (el) el.textContent = horaAgora();
-            }, 1000);
+            setInterval(() => { const el = document.getElementById('hora-oficial'); if (el) el.textContent = horaAgora(); }, 1000);
             document.getElementById('hora-oficial').textContent = horaAgora();
-
-            setInterval(() => {
-                const el = document.getElementById('contador-online');
-                if (el) el.textContent = Math.floor(Math.random() * 60000 + 20000).toLocaleString('pt-BR');
-            }, 3500);
-
-            document.getElementById('input-crash')?.addEventListener('keydown', e => {
-                if (e.key === 'Enter') window.registrarEGerar();
-            });
-
+            setInterval(() => { const el = document.getElementById('contador-online'); if (el) el.textContent = Math.floor(Math.random()*60000+20000).toLocaleString('pt-BR'); }, 3500);
+            document.getElementById('contador-online').textContent = Math.floor(Math.random()*60000+20000).toLocaleString('pt-BR');
+            document.getElementById('input-crash')?.addEventListener('keydown', e => { if (e.key === 'Enter') window.registrarEGerarSinal(); });
             if (usuarioDados && usuarioDados.botLiberado) abrirPainel();
         }
-
         init();
     </script>
 </body>
