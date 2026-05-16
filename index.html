@@ -18,6 +18,7 @@
             --laranja: #ff8c00;
             --roxo: #9b59b6;
             --telegram: #0088cc;
+            --whatsapp: #25D366;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
@@ -243,7 +244,7 @@
         .admin-overlay.on { display: flex; }
         .admin-box {
             background: #1a1f4e; border: 2px solid #ffd700; border-radius: 14px;
-            padding: 18px; max-width: 420px; width: 90%; max-height: 85vh; overflow-y: auto;
+            padding: 18px; max-width: 450px; width: 95%; max-height: 90vh; overflow-y: auto;
         }
         .admin-box h3 { color: #ffd700; text-align: center; margin-bottom: 12px; }
         .admin-box label { color: #8b8fa8; font-size: 0.75em; display: block; margin: 8px 0 3px; }
@@ -254,6 +255,13 @@
         .btn-admin { width: 100%; padding: 10px; margin: 4px 0; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; font-size: 0.85em; }
         .btn-save { background: #00d4aa; color: #000; }
         .btn-close { background: transparent; color: #ff4757; border: 1px solid #ff4757; }
+        .btn-whatsapp-admin {
+            width: 100%; padding: 12px; border-radius: 8px; border: 2px solid var(--whatsapp);
+            background: rgba(37,211,102,0.1); color: var(--whatsapp); font-weight: bold;
+            cursor: pointer; margin-bottom: 10px; font-size: 0.9em; text-align: center;
+            text-decoration: none; display: none;
+        }
+        .btn-whatsapp-admin.on { display: block; }
 
         .pedido-card { background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-bottom: 6px; }
         .pedido-card p { font-size: 0.8em; margin: 3px 0; color: #ccc; }
@@ -274,6 +282,14 @@
             text-decoration: none; display: none; text-align: center;
         }
         .btn-telegram.on { display: block; }
+        .btn-whatsapp {
+            width: 100%; padding: 14px; border-radius: 10px;
+            border: 2px solid var(--whatsapp); background: rgba(37,211,102,0.1);
+            color: var(--whatsapp); font-weight: bold; font-size: 0.9em;
+            cursor: pointer; margin-bottom: 10px; letter-spacing: 1px;
+            text-decoration: none; display: none; text-align: center;
+        }
+        .btn-whatsapp.on { display: block; }
 
         .toast {
             position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
@@ -329,6 +345,7 @@
         </div>
         <button class="btn-placard" onclick="abrirPlacard()">🎮 ABRIR PLACARD</button>
         <a class="btn-telegram" id="btn-telegram" target="_blank">💬 SUPORTE NO TELEGRAM</a>
+        <a class="btn-whatsapp" id="btn-whatsapp" target="_blank">💬 GRUPO WHATSAPP</a>
 
         <div class="main-panel">
             <div class="section-title">📝 DIGITE O ÚLTIMO CRASH PARA GERAR O PRÓXIMO SINAL</div>
@@ -371,13 +388,32 @@
     <div class="admin-overlay" id="admin-overlay">
         <div class="admin-box">
             <h3>🔧 PAINEL ADMIN</h3>
-            <div class="admin-section"><h4>🔗 Link de Afiliado Placard</h4><input type="text" id="adm-link"></div>
+            
+            <div class="admin-section"><h4>🔗 Link de Afiliado Placard</h4><input type="text" id="adm-link" placeholder="Link da Placard"></div>
             <div class="admin-section"><h4>💬 Link Telegram Suporte</h4><input type="text" id="adm-link-telegram" placeholder="https://t.me/seucanal"></div>
-            <div class="admin-section"><h4>📱 M-PESA (Vodacom)</h4><input type="text" id="adm-mpesa"></div>
-            <div class="admin-section"><h4>📱 e-MOLA (Movitel)</h4><input type="text" id="adm-emola"></div>
+            <div class="admin-section"><h4>📱 Link Grupo WhatsApp</h4><input type="text" id="adm-link-whatsapp" placeholder="https://chat.whatsapp.com/..."></div>
+            <div class="admin-section"><h4>📱 M-PESA (Vodacom)</h4><input type="text" id="adm-mpesa" placeholder="84 123 4567"></div>
+            <div class="admin-section"><h4>📱 e-MOLA (Movitel)</h4><input type="text" id="adm-emola" placeholder="84 765 4321"></div>
             <div class="admin-section"><h4>💰 Valores VIP</h4><label>Moderado (MT):</label><input type="number" id="adm-valor-moderado" placeholder="300"><label>Agressivo (MT):</label><input type="number" id="adm-valor-agressivo" placeholder="500"></div>
-            <button class="btn-admin btn-save" onclick="salvarAdmin()">💾 SALVAR</button>
-            <div class="admin-section" style="margin-top:15px;"><h4>📋 Pedidos</h4><div id="admin-pedidos"><p style="color:#8b8fa8;">Carregando...</p></div></div>
+            
+            <div class="admin-section">
+                <h4>🔍 Pesquisar Usuário por ID</h4>
+                <input type="text" id="adm-buscar-usuario" placeholder="ID do usuário">
+                <button class="btn-admin btn-save" onclick="buscarUsuario()" style="margin-top:5px;">🔍 BUSCAR</button>
+                <div id="adm-resultado-usuario" style="margin-top:8px;font-size:0.8em;color:#ccc;"></div>
+            </div>
+            
+            <div class="admin-section">
+                <h4>🔐 Trocar Senha do Admin</h4>
+                <input type="password" id="adm-senha-atual" placeholder="Senha atual">
+                <input type="password" id="adm-senha-nova" placeholder="Nova senha">
+                <input type="password" id="adm-senha-confirmar" placeholder="Confirmar nova senha">
+                <button class="btn-admin btn-save" onclick="trocarSenhaAdmin()" style="margin-top:5px;">🔐 TROCAR SENHA</button>
+            </div>
+            
+            <button class="btn-admin btn-save" onclick="salvarAdmin()">💾 SALVAR CONFIGURAÇÕES</button>
+            
+            <div class="admin-section" style="margin-top:15px;"><h4>📋 Pedidos Pendentes</h4><div id="admin-pedidos"><p style="color:#8b8fa8;">Carregando...</p></div></div>
             <button class="btn-admin btn-close" onclick="fecharAdmin()">❌ FECHAR</button>
         </div>
     </div>
@@ -385,7 +421,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getDatabase, ref, get, set, update, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDgQ3zeei9eqn8uEy1loeDOKye7S9nyEXU",
@@ -400,46 +435,71 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        const dbFirestore = getFirestore(app);
         window.db = db;
 
         (function() {
-            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) || (e.ctrlKey && e.key === 'U')) {
                     e.preventDefault(); return false;
                 }
             });
-            console.clear();
         })();
 
         window.validarAcessoAdmin = async function() {
-            const senhaDigitada = document.getElementById("input-senha-admin").value;
-            const btn = document.getElementById("btn-entrar-admin");
-            const erro = document.getElementById("erro-login");
-            if (!senhaDigitada) { erro.textContent = "Por favor, digite a senha."; erro.classList.add("on"); return; }
-            btn.innerText = "Verificando..."; btn.disabled = true; erro.classList.remove("on");
+            var senhaDigitada = document.getElementById("input-senha-admin").value;
+            var btn = document.getElementById("btn-entrar-admin");
+            var erro = document.getElementById("erro-login");
+            
+            if (!senhaDigitada) { 
+                erro.textContent = "Por favor, digite a senha."; 
+                erro.classList.add("on"); 
+                return; 
+            }
+            
+            btn.innerText = "Verificando..."; 
+            btn.disabled = true; 
+            erro.classList.remove("on");
+            
             try {
-                const docRef = doc(dbFirestore, "Config", "Acessar senha");
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    const senhaServidor = docSnap.data()["1BOTPLACARD1"];
+                var senhaRef = ref(db, 'config/admin_senha');
+                var snap = await get(senhaRef);
+                
+                if (snap.exists()) {
+                    var senhaServidor = snap.val();
                     if (senhaDigitada === senhaServidor) {
                         document.getElementById("tela-login-admin").classList.remove("on");
                         document.getElementById("input-senha-admin").value = "";
-                        abrirAdmin(); mostrarToast("✅ Bem-vindo de volta!");
+                        abrirAdmin(); 
+                        mostrarToast("✅ Bem-vindo de volta!");
                     } else {
-                        erro.textContent = "Senha incorreta. Tente novamente."; erro.classList.add("on");
-                        btn.innerText = "ENTRAR NO BOT"; btn.disabled = false;
+                        erro.textContent = "Senha incorreta. Tente novamente."; 
+                        erro.classList.add("on");
+                        btn.innerText = "ENTRAR NO BOT"; 
+                        btn.disabled = false;
                     }
                 } else {
-                    erro.textContent = "Documento não encontrado no Firestore."; erro.classList.add("on");
-                    btn.disabled = false; btn.innerText = "ENTRAR NO BOT";
+                    var senhaPadrao = "admin123";
+                    await set(senhaRef, senhaPadrao);
+                    
+                    if (senhaDigitada === senhaPadrao) {
+                        document.getElementById("tela-login-admin").classList.remove("on");
+                        document.getElementById("input-senha-admin").value = "";
+                        abrirAdmin(); 
+                        mostrarToast("✅ Senha padrão ativada! Altere no painel admin.");
+                    } else {
+                        erro.textContent = "Senha incorreta. Tente novamente."; 
+                        erro.classList.add("on");
+                        btn.innerText = "ENTRAR NO BOT"; 
+                        btn.disabled = false;
+                    }
                 }
             } catch (error) {
                 console.error("Erro:", error);
-                erro.textContent = "Erro de conexão com o servidor."; erro.classList.add("on");
-                btn.disabled = false; btn.innerText = "ENTRAR NO BOT";
+                erro.textContent = "Erro de conexão. Tente novamente."; 
+                erro.classList.add("on");
+                btn.disabled = false; 
+                btn.innerText = "ENTRAR NO BOT";
             }
         };
 
@@ -451,8 +511,12 @@
         let usuarioDados = {};
         let configBot = {
             linkAfiliado: 'https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723',
-            linkTelegram: '', mpesa: '84 123 4567', emola: '84 765 4321',
-            valorModerado: 300, valorAgressivo: 500
+            linkTelegram: '',
+            linkWhatsapp: '',
+            mpesa: '84 123 4567',
+            emola: '84 765 4321',
+            valorModerado: 300,
+            valorAgressivo: 500
         };
         let historico = [];
         let sinaisGerados = [];
@@ -460,42 +524,47 @@
         let perfisLiberados = ['conservador'];
 
         function horaAgora() {
-            const d = new Date();
+            var d = new Date();
             return d.getHours().toString().padStart(2,'0') + ':' +
                    d.getMinutes().toString().padStart(2,'0') + ':' +
                    d.getSeconds().toString().padStart(2,'0');
         }
 
         function mostrarToast(msg) {
-            const t = document.getElementById('toast');
+            var t = document.getElementById('toast');
             t.textContent = msg; t.classList.add('on');
-            setTimeout(() => t.classList.remove('on'), 3000);
+            setTimeout(function() { t.classList.remove('on'); }, 3000);
         }
 
         function gerarIdUnico() { return 'U' + Date.now().toString(36) + Math.random().toString(36).substr(2, 10); }
 
-        function atualizarLinkTelegram() {
-            const link = configBot.linkTelegram || '';
-            const btn = document.getElementById('btn-telegram');
-            if (link && btn) { btn.href = link; btn.classList.add('on'); }
-            else if (btn) { btn.classList.remove('on'); }
+        function atualizarLinks() {
+            var linkTelegram = configBot.linkTelegram || '';
+            var btnTelegram = document.getElementById('btn-telegram');
+            if (linkTelegram && btnTelegram) { btnTelegram.href = linkTelegram; btnTelegram.classList.add('on'); }
+            else if (btnTelegram) { btnTelegram.classList.remove('on'); }
+            
+            var linkWhatsapp = configBot.linkWhatsapp || '';
+            var btnWhatsapp = document.getElementById('btn-whatsapp');
+            if (linkWhatsapp && btnWhatsapp) { btnWhatsapp.href = linkWhatsapp; btnWhatsapp.classList.add('on'); }
+            else if (btnWhatsapp) { btnWhatsapp.classList.remove('on'); }
         }
 
         async function carregarConfig() {
             try {
-                const snap = await get(ref(db, 'config/bot_config'));
-                if (snap.exists()) { const fb = snap.val(); configBot = { ...configBot, ...fb }; }
+                var snap = await get(ref(db, 'config/bot_config'));
+                if (snap.exists()) { var fb = snap.val(); configBot = Object.assign({}, configBot, fb); }
                 else { await set(ref(db, 'config/bot_config'), configBot); }
             } catch(e) {}
-            const linkAfiliado = configBot.linkAfiliado || 'https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723';
+            var linkAfiliado = configBot.linkAfiliado || 'https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723';
             document.getElementById('btn-criar-conta').href = linkAfiliado;
             document.getElementById('btn-link-deposito').href = linkAfiliado;
-            atualizarLinkTelegram();
+            atualizarLinks();
         }
 
         async function carregarUsuario(id) {
             try {
-                const snap = await get(ref(db, 'usuarios/' + id));
+                var snap = await get(ref(db, 'usuarios/' + id));
                 if (snap.exists()) {
                     usuarioDados = snap.val(); usuarioId = id;
                     perfilAtual = usuarioDados.perfilAtual || 'conservador';
@@ -523,12 +592,12 @@
 
         async function salvarHistoricoSinais() {
             if (!usuarioId) return;
-            try { await update(ref(db, 'usuarios/' + usuarioId), { historico, sinais: sinaisGerados }); } catch(e) {}
+            try { await update(ref(db, 'usuarios/' + usuarioId), { historico: historico, sinais: sinaisGerados }); } catch(e) {}
         }
 
         window.jaTenhoConta = async function() {
             if (!usuarioId) { await criarUsuario(); }
-            else { const existe = await carregarUsuario(usuarioId); if (!existe) await criarUsuario(); }
+            else { var existe = await carregarUsuario(usuarioId); if (!existe) await criarUsuario(); }
             await carregarConfig();
             if (usuarioDados.botLiberado) { abrirPainel(); }
             else { document.getElementById('tela-inicial').classList.add('hidden'); document.getElementById('tela-verificacao').classList.add('active'); }
@@ -549,13 +618,20 @@
         }
 
         function atualizarPerfisUI() {
-            document.querySelectorAll('.btn-perfil').forEach(btn => {
-                const p = btn.dataset.perfil;
-                if (perfisLiberados.includes(p)) { btn.classList.remove('bloqueado'); const l = btn.querySelector('.lock-icon'); if (l) l.style.display = 'none'; }
-                else { btn.classList.add('bloqueado'); const l = btn.querySelector('.lock-icon'); if (l) l.style.display = 'inline'; }
+            document.querySelectorAll('.btn-perfil').forEach(function(btn) {
+                var p = btn.dataset.perfil;
+                if (perfisLiberados.includes(p)) { 
+                    btn.classList.remove('bloqueado'); 
+                    var l = btn.querySelector('.lock-icon'); 
+                    if (l) l.style.display = 'none'; 
+                } else { 
+                    btn.classList.add('bloqueado'); 
+                    var l = btn.querySelector('.lock-icon'); 
+                    if (l) l.style.display = 'inline'; 
+                }
                 btn.classList.toggle('active', p === perfilAtual && perfisLiberados.includes(p));
             });
-            const badge = document.getElementById('badge-nivel');
+            var badge = document.getElementById('badge-nivel');
             if (badge) {
                 if (perfisLiberados.includes('agressivo')) badge.innerHTML = '<span class="badge-vip agressivo">AGGRESSIVE VIP</span>';
                 else if (perfisLiberados.includes('moderado')) badge.innerHTML = '<span class="badge-vip moderado">MODERADO VIP</span>';
@@ -571,11 +647,11 @@
 
         window.clicarPerfilBloqueado = function(p) {
             if (perfisLiberados.includes(p)) { window.selecionarPerfil(p); return; }
-            const modal = document.getElementById('modal-pagamento');
+            var modal = document.getElementById('modal-pagamento');
             document.getElementById('modal-conteudo').style.display = 'block';
             document.getElementById('modal-sucesso').style.display = 'none';
             document.getElementById('modal-perfil-nome').textContent = p.toUpperCase();
-            const valor = p === 'moderado' ? configBot.valorModerado : configBot.valorAgressivo;
+            var valor = p === 'moderado' ? configBot.valorModerado : configBot.valorAgressivo;
             document.getElementById('modal-valor').innerHTML = '💰 <strong>' + valor + ' MT</strong>';
             document.getElementById('modal-dados').innerHTML = '<p>📱 Vodacom: <span>' + configBot.mpesa + '</span></p><p>📱 Movitel: <span>' + configBot.emola + '</span></p>';
             modal.dataset.perfil = p; modal.classList.add('on');
@@ -584,12 +660,12 @@
         window.fecharModal = function() { document.getElementById('modal-pagamento').classList.remove('on'); };
 
         window.enviarPedido = async function() {
-            const nome = document.getElementById('modal-nome').value.trim();
-            const numero = document.getElementById('modal-numero').value.trim();
-            const perfil = document.getElementById('modal-pagamento').dataset.perfil;
+            var nome = document.getElementById('modal-nome').value.trim();
+            var numero = document.getElementById('modal-numero').value.trim();
+            var perfil = document.getElementById('modal-pagamento').dataset.perfil;
             if (!nome || !numero) { mostrarToast('⚠️ Preencha todos os campos!'); return; }
-            const valor = perfil === 'moderado' ? configBot.valorModerado : configBot.valorAgressivo;
-            const pedido = { id: Date.now(), usuarioId, nome, numero, perfil, valor, data: horaAgora(), status: 'pendente' };
+            var valor = perfil === 'moderado' ? configBot.valorModerado : configBot.valorAgressivo;
+            var pedido = { id: Date.now(), usuarioId: usuarioId, nome: nome, numero: numero, perfil: perfil, valor: valor, data: horaAgora(), status: 'pendente' };
             try { await set(ref(db, 'pedidos/' + pedido.id), pedido); } catch(e) {}
             document.getElementById('modal-conteudo').style.display = 'none';
             document.getElementById('modal-sucesso').style.display = 'block';
@@ -597,14 +673,14 @@
         };
 
         window.registrarEGerarSinal = function() {
-            const input = document.getElementById('input-crash');
-            let valor = input.value.trim().replace(',', '.');
+            var input = document.getElementById('input-crash');
+            var valor = input.value.trim().replace(',', '.');
             if (!valor) { mostrarToast('⚠️ Digite o valor!'); return; }
-            const num = parseFloat(valor);
+            var num = parseFloat(valor);
             if (isNaN(num) || num < 1) { mostrarToast('⚠️ Inválido!'); return; }
 
             if (sinaisGerados.length > 0 && sinaisGerados[0].acerto === 'pendente' && sinaisGerados[0].alvo) {
-                const alvo = parseFloat(sinaisGerados[0].alvo);
+                var alvo = parseFloat(sinaisGerados[0].alvo);
                 sinaisGerados[0].acerto = num >= alvo ? 'sim' : 'nao';
                 sinaisGerados[0].resultadoReal = num;
                 salvarHistoricoSinais(); atualizarSinaisUI();
@@ -616,15 +692,13 @@
             salvarHistoricoSinais(); input.value = ''; input.focus();
 
             if (historico.length >= 3) {
-                const r = calcularProbabilidade(perfilAtual);
-                document.getElementById('sinal-box').innerHTML = `
-                    <div style="font-size:3em;">${r.icone}</div>
-                    <div class="probabilidade">${r.probabilidade}%</div>
-                    <div style="font-size:0.7em;color:#8b8fa8;">de chance de atingir</div>
-                    <div class="alvo-sugerido">🎯 ${r.alvo}x</div>
-                    <div class="alvo-maximo">📈 Máximo provável: ${r.maximo}x</div>
-                    <div class="mensagem-curta">${r.mensagem}</div>
-                `;
+                var r = calcularProbabilidade(perfilAtual);
+                document.getElementById('sinal-box').innerHTML = '<div style="font-size:3em;">' + r.icone + '</div>' +
+                    '<div class="probabilidade">' + r.probabilidade + '%</div>' +
+                    '<div style="font-size:0.7em;color:#8b8fa8;">de chance de atingir</div>' +
+                    '<div class="alvo-sugerido">🎯 ' + r.alvo + 'x</div>' +
+                    '<div class="alvo-maximo">📈 Máximo provável: ' + r.maximo + 'x</div>' +
+                    '<div class="mensagem-curta">' + r.mensagem + '</div>';
                 sinaisGerados.unshift({ hora: horaAgora(), perfil: perfilAtual, icone: r.icone, alvo: r.alvo, maximo: r.maximo, probabilidade: r.probabilidade, mensagem: r.mensagem, acerto: 'pendente', resultadoReal: null });
                 if (sinaisGerados.length > 50) sinaisGerados.pop();
                 salvarHistoricoSinais();
@@ -632,115 +706,108 @@
             atualizarHistoricoUI(); atualizarSinaisUI();
         };
 
-        // ============ NOVA FUNÇÃO calcularProbabilidade (JUSTA) ============
         function calcularProbabilidade(perfil) {
-            const ultimos = historico.slice(-30).map(h => h.multiplicador);
-            const total = ultimos.length || 1;
-            const ultimo = ultimos[ultimos.length - 1];
+            var ultimos = historico.slice(-30).map(function(h) { return h.multiplicador; });
+            var ultimo = ultimos[ultimos.length - 1];
             
-            const ultimos10 = ultimos.slice(-10);
-            const acima3x = ultimos10.filter(x => x > 3).length;
-            const acima5x = ultimos10.filter(x => x > 5).length;
-            const acima10x = ultimos10.filter(x => x > 10).length;
-            const acima20x = ultimos10.filter(x => x > 20).length;
+            var ultimos10 = ultimos.slice(-10);
+            var acima3x = ultimos10.filter(function(x) { return x > 3; }).length;
+            var acima5x = ultimos10.filter(function(x) { return x > 5; }).length;
+            var acima10x = ultimos10.filter(function(x) { return x > 10; }).length;
+            var acima20x = ultimos10.filter(function(x) { return x > 20; }).length;
             
-            const momentoQuente = (acima5x >= 2) || (acima10x >= 1);
-            const momentoMuitoQuente = (acima10x >= 2) || (acima20x >= 1);
-            const momentoExplosivo = (acima20x >= 2) || (ultimo > 30);
+            var momentoQuente = (acima5x >= 2) || (acima10x >= 1);
+            var momentoMuitoQuente = (acima10x >= 2) || (acima20x >= 1);
+            var momentoExplosivo = (acima20x >= 2) || (ultimo > 30);
             
-            let quedas = 0;
-            for (let i = ultimos.length - 1; i >= 0; i--) { if (ultimos[i] < 2) quedas++; else break; }
-            
-            const passaram120 = ultimos.filter(x => x >= 1.20).length;
-            const passaram150 = ultimos.filter(x => x >= 1.50).length;
-            const passaram300 = ultimos.filter(x => x >= 3.00).length;
-            const passaram500 = ultimos.filter(x => x >= 5.00).length;
+            var quedas = 0;
+            for (var i = ultimos.length - 1; i >= 0; i--) { if (ultimos[i] < 2) quedas++; else break; }
             
             function alvo(min, max) { return (Math.random() * (max - min) + min).toFixed(2); }
 
             if (perfil === 'conservador') {
                 if (momentoExplosivo) {
-                    const prob = Math.round(45 + Math.random() * 30);
-                    const a = alvo(4, 8); const m = alvo(8, 15);
-                    return { icone: '🔥', alvo: a, maximo: m, probabilidade: prob, mensagem: '🔥 ALTAS! Chance de ' + a + 'x a ' + m + 'x', momentoQuente: true };
+                    var prob = Math.round(45 + Math.random() * 30);
+                    var a = alvo(4, 8); var m = alvo(8, 15);
+                    return { icone: '🔥', alvo: a, maximo: m, probabilidade: prob, mensagem: '🔥 ALTAS! Chance de ' + a + 'x a ' + m + 'x' };
                 } else if (momentoMuitoQuente) {
-                    const prob = Math.round(40 + Math.random() * 35);
-                    const a = alvo(3, 7); const m = alvo(7, 12);
-                    return { icone: '🟡', alvo: a, maximo: m, probabilidade: prob, mensagem: '🟡 Momento favorável! Possível ' + a + 'x a ' + m + 'x', momentoQuente: true };
+                    var prob = Math.round(40 + Math.random() * 35);
+                    var a = alvo(3, 7); var m = alvo(7, 12);
+                    return { icone: '🟡', alvo: a, maximo: m, probabilidade: prob, mensagem: '🟡 Momento favorável! Possível ' + a + 'x a ' + m + 'x' };
                 } else if (momentoQuente) {
-                    const prob = Math.round(35 + Math.random() * 35);
-                    const a = alvo(2, 5); const m = alvo(5, 10);
-                    return { icone: '🟢', alvo: a, maximo: m, probabilidade: prob, mensagem: 'Possível ' + a + 'x a ' + m + 'x. Sem certeza!', momentoQuente: true };
+                    var prob = Math.round(35 + Math.random() * 35);
+                    var a = alvo(2, 5); var m = alvo(5, 10);
+                    return { icone: '🟢', alvo: a, maximo: m, probabilidade: prob, mensagem: 'Possível ' + a + 'x a ' + m + 'x' };
                 } else if (quedas >= 3) {
-                    const prob = Math.round(50 + Math.random() * 30);
-                    const a = alvo(1.50, 3.00); const m = alvo(3, 6);
-                    return { icone: '🟢', alvo: a, maximo: m, probabilidade: prob, mensagem: quedas + ' quedas! Provável ' + a + 'x a ' + m + 'x', momentoQuente: false };
+                    var prob = Math.round(50 + Math.random() * 30);
+                    var a = alvo(1.50, 3.00); var m = alvo(3, 6);
+                    return { icone: '🟢', alvo: a, maximo: m, probabilidade: prob, mensagem: quedas + ' quedas! Provável ' + a + 'x a ' + m + 'x' };
                 } else {
-                    const bom = Math.random() > 0.5;
-                    const prob = bom ? Math.round(45 + Math.random() * 30) : Math.round(20 + Math.random() * 30);
-                    const a = bom ? alvo(1.50, 4.00) : alvo(4, 8);
-                    const m = bom ? (parseFloat(a) + 2).toFixed(2) : (parseFloat(a) + 4).toFixed(2);
-                    return { icone: bom ? '🟢' : '🔴', alvo: a, maximo: m, probabilidade: prob, mensagem: bom ? 'Chance de ' + a + 'x a ' + m + 'x' : 'Arriscado! ' + a + 'x a ' + m + 'x', momentoQuente: false };
+                    var bom = Math.random() > 0.5;
+                    var prob = bom ? Math.round(45 + Math.random() * 30) : Math.round(20 + Math.random() * 30);
+                    var a = bom ? alvo(1.50, 4.00) : alvo(4, 8);
+                    var m = bom ? (parseFloat(a) + 2).toFixed(2) : (parseFloat(a) + 4).toFixed(2);
+                    return { icone: bom ? '🟢' : '🔴', alvo: a, maximo: m, probabilidade: prob, mensagem: bom ? 'Chance de ' + a + 'x a ' + m + 'x' : 'Arriscado! ' + a + 'x a ' + m + 'x' };
                 }
             }
 
             if (perfil === 'moderado') {
                 if (momentoExplosivo) {
-                    const prob = Math.round(65 + Math.random() * 25);
-                    const a = alvo(7, 12); const m = alvo(12, 25);
-                    return { icone: '💣', alvo: a, maximo: m, probabilidade: prob, mensagem: '💣 EXPLOSIVO! Alta probabilidade de ' + a + 'x a ' + m + 'x', momentoQuente: true };
+                    var prob = Math.round(65 + Math.random() * 25);
+                    var a = alvo(7, 12); var m = alvo(12, 25);
+                    return { icone: '💣', alvo: a, maximo: m, probabilidade: prob, mensagem: '💣 EXPLOSIVO! Alta probabilidade de ' + a + 'x a ' + m + 'x' };
                 } else if (momentoMuitoQuente) {
-                    const prob = Math.round(60 + Math.random() * 30);
-                    const a = alvo(5, 10); const m = alvo(10, 20);
-                    return { icone: '🔥', alvo: a, maximo: m, probabilidade: prob, mensagem: '🔥 MUITO QUENTE! ' + a + 'x a ' + m + 'x provável!', momentoQuente: true };
+                    var prob = Math.round(60 + Math.random() * 30);
+                    var a = alvo(5, 10); var m = alvo(10, 20);
+                    return { icone: '🔥', alvo: a, maximo: m, probabilidade: prob, mensagem: '🔥 MUITO QUENTE! ' + a + 'x a ' + m + 'x provável!' };
                 } else if (momentoQuente) {
-                    const prob = Math.round(55 + Math.random() * 30);
-                    const a = alvo(4, 8); const m = alvo(8, 15);
-                    return { icone: '🎯', alvo: a, maximo: m, probabilidade: prob, mensagem: '🎯 Alvo moderado: ' + a + 'x a ' + m + 'x', momentoQuente: true };
+                    var prob = Math.round(55 + Math.random() * 30);
+                    var a = alvo(4, 8); var m = alvo(8, 15);
+                    return { icone: '🎯', alvo: a, maximo: m, probabilidade: prob, mensagem: '🎯 Alvo moderado: ' + a + 'x a ' + m + 'x' };
                 } else if (quedas >= 2) {
-                    const prob = Math.round(55 + Math.random() * 25);
-                    const a = alvo(3, 6); const m = alvo(6, 10);
-                    return { icone: '⏱️', alvo: a, maximo: m, probabilidade: prob, mensagem: quedas + ' quedas! Alvo: ' + a + 'x a ' + m + 'x', momentoQuente: false };
+                    var prob = Math.round(55 + Math.random() * 25);
+                    var a = alvo(3, 6); var m = alvo(6, 10);
+                    return { icone: '⏱️', alvo: a, maximo: m, probabilidade: prob, mensagem: quedas + ' quedas! Alvo: ' + a + 'x a ' + m + 'x' };
                 } else {
-                    const prob = Math.round(50 + Math.random() * 25);
-                    const a = alvo(2, 5); const m = alvo(5, 10);
-                    return { icone: '✅', alvo: a, maximo: m, probabilidade: prob, mensagem: 'Moderado: ' + a + 'x a ' + m + 'x', momentoQuente: false };
+                    var prob = Math.round(50 + Math.random() * 25);
+                    var a = alvo(2, 5); var m = alvo(5, 10);
+                    return { icone: '✅', alvo: a, maximo: m, probabilidade: prob, mensagem: 'Moderado: ' + a + 'x a ' + m + 'x' };
                 }
             }
 
             if (perfil === 'agressivo') {
                 if (momentoExplosivo) {
-                    const prob = Math.round(75 + Math.random() * 20);
-                    const a = alvo(5, 8); const m = alvo(8, 10);
-                    return { icone: '🚀', alvo: a, maximo: m, probabilidade: prob, mensagem: '🚀 ALTA PRECISÃO: ' + a + 'x a ' + m + 'x', momentoQuente: true };
+                    var prob = Math.round(75 + Math.random() * 20);
+                    var a = alvo(5, 8); var m = alvo(8, 10);
+                    return { icone: '🚀', alvo: a, maximo: m, probabilidade: prob, mensagem: '🚀 ALTA PRECISÃO: ' + a + 'x a ' + m + 'x' };
                 } else if (momentoMuitoQuente) {
-                    const prob = Math.round(70 + Math.random() * 25);
-                    const a = alvo(4, 7); const m = alvo(7, 10);
-                    return { icone: '💎', alvo: a, maximo: m, probabilidade: prob, mensagem: '💎 Precisão: ' + a + 'x a ' + m + 'x', momentoQuente: true };
+                    var prob = Math.round(70 + Math.random() * 25);
+                    var a = alvo(4, 7); var m = alvo(7, 10);
+                    return { icone: '💎', alvo: a, maximo: m, probabilidade: prob, mensagem: '💎 Precisão: ' + a + 'x a ' + m + 'x' };
                 } else if (momentoQuente) {
-                    const prob = Math.round(65 + Math.random() * 25);
-                    const a = alvo(3, 6); const m = alvo(6, 9);
-                    return { icone: '🔥', alvo: a, maximo: m, probabilidade: prob, mensagem: '🔥 Agressivo: ' + a + 'x a ' + m + 'x', momentoQuente: true };
+                    var prob = Math.round(65 + Math.random() * 25);
+                    var a = alvo(3, 6); var m = alvo(6, 9);
+                    return { icone: '🔥', alvo: a, maximo: m, probabilidade: prob, mensagem: '🔥 Agressivo: ' + a + 'x a ' + m + 'x' };
                 } else if (quedas >= 3) {
-                    const prob = Math.round(70 + Math.random() * 20);
-                    const a = alvo(2, 5); const m = alvo(5, 8);
-                    return { icone: '⚡', alvo: a, maximo: m, probabilidade: prob, mensagem: quedas + ' quedas! ' + a + 'x a ' + m + 'x', momentoQuente: false };
+                    var prob = Math.round(70 + Math.random() * 20);
+                    var a = alvo(2, 5); var m = alvo(5, 8);
+                    return { icone: '⚡', alvo: a, maximo: m, probabilidade: prob, mensagem: quedas + ' quedas! ' + a + 'x a ' + m + 'x' };
                 } else {
-                    const prob = Math.round(65 + Math.random() * 20);
-                    const a = alvo(1.50, 3.50); const m = alvo(3.50, 7);
-                    return { icone: '💎', alvo: a, maximo: m, probabilidade: prob, mensagem: 'Agressivo: ' + a + 'x a ' + m + 'x', momentoQuente: false };
+                    var prob = Math.round(65 + Math.random() * 20);
+                    var a = alvo(1.50, 3.50); var m = alvo(3.50, 7);
+                    return { icone: '💎', alvo: a, maximo: m, probabilidade: prob, mensagem: 'Agressivo: ' + a + 'x a ' + m + 'x' };
                 }
             }
 
-            return { icone: '❓', alvo: '1.50', maximo: '3.00', probabilidade: 50, mensagem: 'Análise padrão.', momentoQuente: false };
+            return { icone: '❓', alvo: '1.50', maximo: '3.00', probabilidade: 50, mensagem: 'Análise padrão.' };
         }
 
         function atualizarHistoricoUI() {
-            const row = document.getElementById('historico-row');
+            var row = document.getElementById('historico-row');
             if (historico.length === 0) { row.innerHTML = '<span style="color:#8b8fa8;">Registre crashes para começar</span>'; return; }
-            row.innerHTML = historico.slice(-20).reverse().map(h => {
-                let c = 'win'; if (h.multiplicador < 2) c = 'loss'; else if (h.multiplicador > 10) c = 'big';
-                return `<span class="hist-cell ${c}" title="${h.hora}">${h.multiplicador.toFixed(2)}x</span>`;
+            row.innerHTML = historico.slice(-20).reverse().map(function(h) {
+                var c = 'win'; if (h.multiplicador < 2) c = 'loss'; else if (h.multiplicador > 10) c = 'big';
+                return '<span class="hist-cell ' + c + '" title="' + h.hora + '">' + h.multiplicador.toFixed(2) + 'x</span>';
             }).join('');
         }
 
@@ -755,63 +822,205 @@
         };
 
         function atualizarSinaisUI() {
-            const lista = document.getElementById('sinais-gerados');
+            var lista = document.getElementById('sinais-gerados');
             if (sinaisGerados.length === 0) { lista.innerHTML = '<div style="text-align:center;color:#8b8fa8;">Nenhum sinal gerado ainda</div>'; return; }
-            lista.innerHTML = sinaisGerados.slice(0, 20).map(s => `
-                <div class="sinal-card">
-                    <div class="info">
-                        <div class="hora">${s.hora} • ${s.perfil.toUpperCase()}</div>
-                        <div class="msg">${s.icone} ${s.alvo}x (${s.probabilidade || '?'}%) | Máx: ${s.maximo || '?'}x</div>
-                        <span style="font-size:0.6em;color:${s.acerto==='sim'?'#00ff88':s.acerto==='nao'?'#ff4757':'#ffd700'}">${s.acerto==='sim'?'✅ Acertou':s.acerto==='nao'?'❌ Não bateu':'⏳ Pendente'}</span>
-                    </div>
-                </div>`).join('');
+            lista.innerHTML = sinaisGerados.slice(0, 20).map(function(s) {
+                return '<div class="sinal-card"><div class="info"><div class="hora">' + s.hora + ' • ' + s.perfil.toUpperCase() + '</div><div class="msg">' + s.icone + ' ' + s.alvo + 'x (' + (s.probabilidade || '?') + '%) | Máx: ' + (s.maximo || '?') + 'x</div><span style="font-size:0.6em;color:' + (s.acerto==='sim'?'#00ff88':s.acerto==='nao'?'#ff4757':'#ffd700') + '">' + (s.acerto==='sim'?'✅ Acertou':s.acerto==='nao'?'❌ Não bateu':'⏳ Pendente') + '</span></div></div>';
+            }).join('');
         }
 
         window.abrirPlacard = function() { window.open(configBot.linkAfiliado || 'https://media1.placard.co.mz/redirect.aspx?pid=11631&bid=1723', '_blank'); };
 
-        let clicks = 0, ctimer;
-        document.getElementById('logo-admin').addEventListener('click', () => {
-            clicks++; clearTimeout(ctimer); ctimer = setTimeout(() => clicks = 0, 5000);
+        var clicks = 0, ctimer;
+        document.getElementById('logo-admin').addEventListener('click', function() {
+            clicks++; clearTimeout(ctimer); ctimer = setTimeout(function() { clicks = 0; }, 5000);
             if (clicks >= 15) { clicks = 0; document.getElementById('tela-login-admin').classList.add('on'); document.getElementById('input-senha-admin').focus(); }
         });
+
+        // ========== NOVAS FUNÇÕES DO ADMIN ==========
 
         async function abrirAdmin() {
             document.getElementById('admin-overlay').classList.add('on');
             document.getElementById('adm-link').value = configBot.linkAfiliado || '';
             document.getElementById('adm-link-telegram').value = configBot.linkTelegram || '';
+            document.getElementById('adm-link-whatsapp').value = configBot.linkWhatsapp || '';
             document.getElementById('adm-mpesa').value = configBot.mpesa || '';
             document.getElementById('adm-emola').value = configBot.emola || '';
             document.getElementById('adm-valor-moderado').value = configBot.valorModerado || 300;
             document.getElementById('adm-valor-agressivo').value = configBot.valorAgressivo || 500;
+            
+            // Limpa campos
+            document.getElementById('adm-senha-atual').value = '';
+            document.getElementById('adm-senha-nova').value = '';
+            document.getElementById('adm-senha-confirmar').value = '';
+            document.getElementById('adm-buscar-usuario').value = '';
+            document.getElementById('adm-resultado-usuario').innerHTML = '';
+            
             carregarPedidos();
         }
 
-        async function carregarPedidos() {
-            const div = document.getElementById('admin-pedidos');
+        window.buscarUsuario = async function() {
+            var id = document.getElementById('adm-buscar-usuario').value.trim();
+            var resultado = document.getElementById('adm-resultado-usuario');
+            
+            if (!id) {
+                resultado.innerHTML = '<span style="color:#ff4757;">⚠️ Digite um ID!</span>';
+                return;
+            }
+            
+            resultado.innerHTML = '<span style="color:#ffd700;">🔍 Buscando...</span>';
+            
             try {
-                const snap = await get(ref(db, 'pedidos'));
+                var snap = await get(ref(db, 'usuarios/' + id));
                 if (snap.exists()) {
-                    const p = Object.values(snap.val()).sort((a, b) => b.id - a.id);
-                    div.innerHTML = p.length ? p.map(p => `
-                        <div class="pedido-card">
-                            <p><strong>#${p.id}</strong> - ${p.data}</p>
-                            <p>👤 ${p.nome} | 📱 ${p.numero}</p>
-                            <p>🎯 ${p.perfil.toUpperCase()} | 💰 ${p.valor} MT</p>
-                            <p>📊 <span style="color:${p.status==='aprovado'?'#00ff88':p.status==='recusado'?'#ff4757':'#ffd700'}">${p.status.toUpperCase()}</span></p>
-                            ${p.status==='pendente'?`<div class="pedido-botoes"><button class="btn-aprovar" onclick="aprovar('${p.id}')">✅ APROVAR</button><button class="btn-recusar" onclick="recusar('${p.id}')">❌ RECUSAR</button></div>`:''}
-                        </div>`).join('') : '<p style="color:#8b8fa8;">Nenhum pedido.</p>';
+                    var u = snap.val();
+                    var status = u.botLiberado ? '✅ Liberado' : '❌ Bloqueado';
+                    var corStatus = u.botLiberado ? '#00ff88' : '#ff4757';
+                    var perfis = u.perfisLiberados ? u.perfisLiberados.join(', ') : 'conservador';
+                    
+                    resultado.innerHTML = '<div style="background:rgba(0,255,136,0.1);padding:10px;border-radius:8px;margin-top:5px;">' +
+                        '<p><strong>ID:</strong> ' + id + '</p>' +
+                        '<p><strong>Criado:</strong> ' + (u.criadoEm || 'N/A') + '</p>' +
+                        '<p><strong>Status:</strong> <span style="color:' + corStatus + '">' + status + '</span></p>' +
+                        '<p><strong>Perfil Atual:</strong> ' + (u.perfilAtual || 'conservador') + '</p>' +
+                        '<p><strong>Perfis Liberados:</strong> ' + perfis + '</p>' +
+                        '<p><strong>Depositou:</strong> ' + (u.depositou ? 'Sim' : 'Não') + '</p>' +
+                        '<div style="margin-top:8px;">' +
+                        '<button class="btn-aprovar" onclick="liberarBot(\'' + id + '\')" style="margin-right:5px;">✅ Liberar Bot</button>' +
+                        '<button class="btn-recusar" onclick="bloquearBot(\'' + id + '\')">❌ Bloquear Bot</button>' +
+                        '</div></div>';
+                } else {
+                    resultado.innerHTML = '<span style="color:#ff4757;">❌ Usuário não encontrado!</span>';
+                }
+            } catch(e) {
+                resultado.innerHTML = '<span style="color:#ff4757;">❌ Erro ao buscar!</span>';
+                console.error(e);
+            }
+        };
+
+        window.liberarBot = async function(id) {
+            try {
+                await update(ref(db, 'usuarios/' + id), {
+                    botLiberado: true,
+                    depositou: true
+                });
+                mostrarToast('✅ Bot do usuário liberado!');
+                window.buscarUsuario();
+            } catch(e) {
+                mostrarToast('❌ Erro ao liberar!');
+            }
+        };
+
+        window.bloquearBot = async function(id) {
+            if (!confirm('Tem certeza que deseja BLOQUEAR este usuário?')) return;
+            
+            try {
+                await update(ref(db, 'usuarios/' + id), {
+                    botLiberado: false,
+                    depositou: false
+                });
+                mostrarToast('❌ Bot do usuário bloqueado!');
+                window.buscarUsuario();
+            } catch(e) {
+                mostrarToast('❌ Erro ao bloquear!');
+            }
+        };
+
+        window.trocarSenhaAdmin = async function() {
+            var senhaAtual = document.getElementById('adm-senha-atual').value.trim();
+            var senhaNova = document.getElementById('adm-senha-nova').value.trim();
+            var senhaConfirmar = document.getElementById('adm-senha-confirmar').value.trim();
+            
+            if (!senhaAtual || !senhaNova || !senhaConfirmar) {
+                mostrarToast('⚠️ Preencha todos os campos!');
+                return;
+            }
+            
+            if (senhaNova !== senhaConfirmar) {
+                mostrarToast('⚠️ Senhas não conferem!');
+                return;
+            }
+            
+            if (senhaNova.length < 6) {
+                mostrarToast('⚠️ Senha deve ter pelo menos 6 caracteres!');
+                return;
+            }
+            
+            try {
+                var senhaRef = ref(db, 'config/admin_senha');
+                var snap = await get(senhaRef);
+                var senhaCorreta = 'admin123';
+                
+                if (snap.exists()) {
+                    senhaCorreta = snap.val();
+                }
+                
+                if (senhaAtual !== senhaCorreta) {
+                    mostrarToast('❌ Senha atual incorreta!');
+                    return;
+                }
+                
+                await set(senhaRef, senhaNova);
+                
+                document.getElementById('adm-senha-atual').value = '';
+                document.getElementById('adm-senha-nova').value = '';
+                document.getElementById('adm-senha-confirmar').value = '';
+                
+                mostrarToast('✅ Senha alterada com sucesso!');
+                alert('✅ Senha alterada! Sua nova senha é: ' + senhaNova + '\n\n⚠️ GUARDE EM LOCAL SEGURO!');
+                
+            } catch(e) {
+                console.error(e);
+                mostrarToast('❌ Erro ao trocar senha!');
+            }
+        };
+
+        window.salvarAdmin = async function() {
+            configBot.linkAfiliado = document.getElementById('adm-link').value.trim();
+            configBot.linkTelegram = document.getElementById('adm-link-telegram').value.trim();
+            configBot.linkWhatsapp = document.getElementById('adm-link-whatsapp').value.trim();
+            configBot.mpesa = document.getElementById('adm-mpesa').value.trim();
+            configBot.emola = document.getElementById('adm-emola').value.trim();
+            configBot.valorModerado = parseInt(document.getElementById('adm-valor-moderado').value) || 300;
+            configBot.valorAgressivo = parseInt(document.getElementById('adm-valor-agressivo').value) || 500;
+            
+            try { 
+                await set(ref(db, 'config/bot_config'), configBot); 
+            } catch(e) {
+                console.error(e);
+            }
+            
+            document.getElementById('btn-criar-conta').href = configBot.linkAfiliado;
+            document.getElementById('btn-link-deposito').href = configBot.linkAfiliado;
+            atualizarLinks();
+            
+            mostrarToast('✅ Configurações salvas!');
+            fecharAdmin();
+        };
+
+        window.fecharAdmin = function() { document.getElementById('admin-overlay').classList.remove('on'); };
+
+        async function carregarPedidos() {
+            var div = document.getElementById('admin-pedidos');
+            try {
+                var snap = await get(ref(db, 'pedidos'));
+                if (snap.exists()) {
+                    var p = Object.values(snap.val()).sort(function(a, b) { return b.id - a.id; });
+                    div.innerHTML = p.length ? p.map(function(p) {
+                        return '<div class="pedido-card"><p><strong>#' + p.id + '</strong> - ' + p.data + '</p><p>👤 ' + p.nome + ' | 📱 ' + p.numero + '</p><p>🎯 ' + p.perfil.toUpperCase() + ' | 💰 ' + p.valor + ' MT</p><p>📊 <span style="color:' + (p.status==='aprovado'?'#00ff88':p.status==='recusado'?'#ff4757':'#ffd700') + '">' + p.status.toUpperCase() + '</span></p>' + (p.status==='pendente'?'<div class="pedido-botoes"><button class="btn-aprovar" onclick="aprovar(\'' + p.id + '\')">✅ APROVAR</button><button class="btn-recusar" onclick="recusar(\'' + p.id + '\')">❌ RECUSAR</button></div>':'') + '</div>';
+                    }).join('') : '<p style="color:#8b8fa8;">Nenhum pedido.</p>';
                 } else { div.innerHTML = '<p style="color:#8b8fa8;">Nenhum pedido.</p>'; }
-            } catch(e) { div.innerHTML = '<p style="color:#ff4757;">Erro.</p>'; }
+            } catch(e) { div.innerHTML = '<p style="color:#ff4757;">Erro ao carregar.</p>'; }
         }
 
         window.aprovar = async function(id) {
             await update(ref(db, 'pedidos/' + id), { status: 'aprovado' });
-            const snap = await get(ref(db, 'pedidos/' + id));
+            var snap = await get(ref(db, 'pedidos/' + id));
             if (snap.exists()) {
-                const p = snap.val();
-                const us = await get(ref(db, 'usuarios/' + p.usuarioId));
+                var p = snap.val();
+                var us = await get(ref(db, 'usuarios/' + p.usuarioId));
                 if (us.exists()) {
-                    const pf = us.val().perfisLiberados || ['conservador'];
+                    var pf = us.val().perfisLiberados || ['conservador'];
                     if (!pf.includes(p.perfil)) { pf.push(p.perfil); await update(ref(db, 'usuarios/' + p.usuarioId), { perfisLiberados: pf }); }
                 }
             }
@@ -820,39 +1029,25 @@
 
         window.recusar = async function(id) { await update(ref(db, 'pedidos/' + id), { status: 'recusado' }); carregarPedidos(); mostrarToast('❌ Recusado.'); };
 
-        window.salvarAdmin = async function() {
-            configBot.linkAfiliado = document.getElementById('adm-link').value.trim();
-            configBot.linkTelegram = document.getElementById('adm-link-telegram').value.trim();
-            configBot.mpesa = document.getElementById('adm-mpesa').value.trim();
-            configBot.emola = document.getElementById('adm-emola').value.trim();
-            configBot.valorModerado = parseInt(document.getElementById('adm-valor-moderado').value) || 300;
-            configBot.valorAgressivo = parseInt(document.getElementById('adm-valor-agressivo').value) || 500;
-            try { await set(ref(db, 'config/bot_config'), configBot); } catch(e) {}
-            document.getElementById('btn-criar-conta').href = configBot.linkAfiliado;
-            document.getElementById('btn-link-deposito').href = configBot.linkAfiliado;
-            atualizarLinkTelegram(); alert('✅ Salvo!'); fecharAdmin();
-        };
-
-        window.fecharAdmin = function() { document.getElementById('admin-overlay').classList.remove('on'); };
-
         async function init() {
             await carregarConfig();
-            const idTemp = gerarIdUnico(); usuarioId = idTemp;
-            const existe = await carregarUsuario(idTemp); if (!existe) await criarUsuario();
-            onValue(ref(db, 'usuarios/' + usuarioId), (snap) => {
+            var idTemp = gerarIdUnico(); usuarioId = idTemp;
+            var existe = await carregarUsuario(idTemp); if (!existe) await criarUsuario();
+            onValue(ref(db, 'usuarios/' + usuarioId), function(snap) {
                 if (snap.exists()) {
-                    const data = snap.val();
+                    var data = snap.val();
                     perfisLiberados = data.perfisLiberados || ['conservador'];
                     perfilAtual = data.perfilAtual || 'conservador';
                     historico = data.historico || []; sinaisGerados = data.sinais || []; usuarioDados = data;
                     if (document.getElementById('painel').classList.contains('active')) { atualizarPerfisUI(); atualizarHistoricoUI(); atualizarSinaisUI(); }
                 }
             });
-            setInterval(() => { const el = document.getElementById('hora-oficial'); if (el) el.textContent = horaAgora(); }, 1000);
+            setInterval(function() { var el = document.getElementById('hora-oficial'); if (el) el.textContent = horaAgora(); }, 1000);
             document.getElementById('hora-oficial').textContent = horaAgora();
-            setInterval(() => { const el = document.getElementById('contador-online'); if (el) el.textContent = Math.floor(Math.random()*60000+20000).toLocaleString('pt-BR'); }, 3500);
+            setInterval(function() { var el = document.getElementById('contador-online'); if (el) el.textContent = Math.floor(Math.random()*60000+20000).toLocaleString('pt-BR'); }, 3500);
             document.getElementById('contador-online').textContent = Math.floor(Math.random()*60000+20000).toLocaleString('pt-BR');
-            document.getElementById('input-crash')?.addEventListener('keydown', e => { if (e.key === 'Enter') window.registrarEGerarSinal(); });
+            var inputCrash = document.getElementById('input-crash');
+            if (inputCrash) { inputCrash.addEventListener('keydown', function(e) { if (e.key === 'Enter') window.registrarEGerarSinal(); }); }
             if (usuarioDados && usuarioDados.botLiberado) abrirPainel();
         }
         init();
